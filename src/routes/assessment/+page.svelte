@@ -129,6 +129,8 @@
   let showResults = false;
   let saveEmail = '';
   let saveStatus: 'idle' | 'sending' | 'sent' | 'error' = 'idle';
+  let agreedTerms = false;
+  let agreedPrivacy = false;
 
   // ── Answer helpers ────────────────────────────────────────
   function getA(id: string): unknown { return $answers[id]; }
@@ -193,12 +195,21 @@
     showResults = false;
     saveStatus = 'idle';
     saveEmail = '';
+    agreedTerms = false;
+    agreedPrivacy = false;
   }
 
   async function handleMagicLink() {
-    if (!saveEmail.trim()) return;
+    if (!saveEmail.trim() || !agreedTerms || !agreedPrivacy) return;
     saveStatus = 'sending';
     const { error } = await signInWithMagicLink(saveEmail.trim());
+    if (!error) {
+      // Store consent intent — written to Supabase profiles on first auth callback
+      localStorage.setItem('mmm_consent_v1', JSON.stringify({
+        consented_at: new Date().toISOString(),
+        terms_version: 'v1-2026-04'
+      }));
+    }
     saveStatus = error ? 'error' : 'sent';
   }
 
@@ -363,6 +374,17 @@
       {#if saveStatus === 'sent'}
         <div class="save-success">✓ Check your email — magic link sent. Click it to save your profile.</div>
       {:else}
+        <div class="consent-checkboxes">
+          <label class="consent-label">
+            <input type="checkbox" bind:checked={agreedTerms} />
+            <span>I agree to the <a href="/terms" target="_blank">Terms of Use</a></span>
+          </label>
+          <label class="consent-label">
+            <input type="checkbox" bind:checked={agreedPrivacy} />
+            <span>I have read the <a href="/privacy" target="_blank">Privacy Notice</a> and consent to processing of my personal information under POPIA</span>
+          </label>
+          <p class="consent-minor">If you are under 18, please ask a parent or guardian to review these terms before continuing.</p>
+        </div>
         <div class="save-form">
           <input
             class="text-input"
@@ -371,7 +393,7 @@
             bind:value={saveEmail}
             disabled={saveStatus === 'sending'}
           />
-          <button class="btn btn-next" disabled={saveStatus === 'sending' || !saveEmail.trim()} on:click={handleMagicLink}>
+          <button class="btn btn-next" disabled={saveStatus === 'sending' || !saveEmail.trim() || !agreedTerms || !agreedPrivacy} on:click={handleMagicLink}>
             {saveStatus === 'sending' ? 'Sending…' : 'Save with Email →'}
           </button>
         </div>
@@ -716,4 +738,46 @@
   }
 
   .google-btn:hover { border-color: var(--text); }
+
+  .consent-checkboxes {
+    background: rgba(246,201,14,.05);
+    border: 1px solid rgba(246,201,14,.15);
+    border-radius: 10px;
+    padding: 1rem;
+    margin-bottom: .8rem;
+    display: flex;
+    flex-direction: column;
+    gap: .6rem;
+  }
+
+  .consent-label {
+    display: flex;
+    align-items: flex-start;
+    gap: .6rem;
+    cursor: pointer;
+    font-size: .82rem;
+    color: var(--text);
+    line-height: 1.5;
+  }
+
+  .consent-label input[type="checkbox"] {
+    margin-top: .15rem;
+    flex-shrink: 0;
+    width: 15px;
+    height: 15px;
+    accent-color: var(--accent);
+    cursor: pointer;
+  }
+
+  .consent-label a {
+    color: var(--accent2);
+    text-decoration: underline;
+  }
+
+  .consent-minor {
+    font-size: .76rem !important;
+    color: var(--muted) !important;
+    margin: .25rem 0 0 !important;
+    line-height: 1.4 !important;
+  }
 </style>
