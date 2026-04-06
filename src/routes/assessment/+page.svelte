@@ -490,7 +490,7 @@
         {#if q.type === 'single'}
           <div class="options {'cols' in q ? q.cols : ''}">
             {#each ('options' in q ? q.options : []) as o}
-              <button class="opt {getA(q.id) === o.val ? 'selected' : ''}" on:click={() => setA(q.id, o.val)}>
+              <button class="opt {$answers[q.id] === o.val ? 'selected' : ''}" on:click={() => setA(q.id, o.val)}>
                 <div class="opt-dot"></div>
                 <div class="opt-text">
                   <div class="opt-label">{o.label}</div>
@@ -503,7 +503,7 @@
         {:else if q.type === 'multi'}
           <div class="options {'cols' in q ? q.cols : ''}">
             {#each ('options' in q ? q.options : []) as o}
-              {@const sel = arr(getA(q.id)).includes(o.val)}
+              {@const sel = arr($answers[q.id]).includes(o.val)}
               <button class="check-opt {sel ? 'selected' : ''}" on:click={() => toggleMulti(q.id, o.val)}>
                 <div class="check-box">{sel ? '✓' : ''}</div>
                 <div class="opt-label">{o.label}</div>
@@ -512,7 +512,7 @@
           </div>
 
         {:else if q.type === 'slider'}
-          {@const sliderVal = num(getA(q.id), 'def' in q ? q.def : 30)}
+          {@const sliderVal = num($answers[q.id], 'def' in q ? q.def : 30)}
           <div class="slider-wrap">
             <div class="slider-labels">
               <span>{'min' in q ? q.min : 0}{'unit' in q ? q.unit : ''}</span>
@@ -532,14 +532,14 @@
         {:else if q.type === 'field_select'}
           <div class="field-select-grid">
             {#each FIELDS as f}
-              <button class="field-btn {getA('field') === f.id ? 'selected' : ''}" on:click={() => toggleField(f.id)}>
+              <button class="field-btn {$answers['field'] === f.id ? 'selected' : ''}" on:click={() => toggleField(f.id)}>
                 <div class="field-icon">{f.icon}</div>
                 <div class="field-label">{f.label}</div>
               </button>
             {/each}
           </div>
-          {#if FIELDS.find(f => f.id === getA('field'))}
-            {@const fd = FIELDS.find(f => f.id === getA('field'))}
+          {#if FIELDS.find(f => f.id === $answers['field'])}
+            {@const fd = FIELDS.find(f => f.id === $answers['field'])}
             {#if fd}
               <div style="font-size: .78rem; color: var(--muted); background: var(--surface2); border-radius: 8px; padding: .6rem .8rem; font-weight: 300">
                 ℹ️ <strong style="color: var(--text)">{fd.label}:</strong> {fd.notes}
@@ -548,7 +548,7 @@
           {/if}
 
         {:else if q.type === 'uni_select'}
-          {@const uniSel = arr(getA('universities'))}
+          {@const uniSel = arr($answers['universities'])}
           <div class="uni-grid">
             {#each UNIVERSITIES as u}
               <button class="uni-btn {uniSel.includes(u.id) ? 'selected' : ''}" on:click={() => toggleUni(u.id)}>
@@ -569,7 +569,7 @@
             class="text-input"
             type="text"
             placeholder={'placeholder' in q ? q.placeholder : ''}
-            value={str(getA(q.id))}
+            value={str($answers[q.id])}
             on:input={(e) => setA(q.id, e.currentTarget.value)}
           />
 
