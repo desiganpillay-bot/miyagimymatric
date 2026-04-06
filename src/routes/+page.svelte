@@ -18,7 +18,7 @@
       SBA deadlines, and a study strategy built around how <em>you</em> learn.
     </p>
     <div class="hero-actions">
-      <button class="btn btn-next" onclick={() => goto('/assessment')}>
+      <button class="btn btn-next" on:click={() => goto('/assessment')}>
         Begin Your Assessment ✦
       </button>
       <p class="no-login">No login required to start · saves automatically</p>
@@ -69,9 +69,9 @@
 
   <!-- CTA -->
   <div class="cta-block">
-    <h2>Start in 3 minutes.</h2>
+    <h2>It takes less than five minutes to get started.</h2>
     <p>Answer 6 sections. Get a personalised study profile, live APS, and a recommended strategy for your subjects and universities.</p>
-    <button class="btn btn-finish" onclick={() => goto('/assessment')}>
+    <button class="btn btn-finish" on:click={() => goto('/assessment')}>
       Start My Assessment →
     </button>
   </div>
