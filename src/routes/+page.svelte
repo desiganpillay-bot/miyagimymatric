@@ -78,7 +78,7 @@
 
   <!-- Footer -->
   <footer class="footer">
-    <p>Built for SA learners · IEB + CAPS · Free forever</p>
+    <p>Built for SA learners · IEB + CAPS · Free for now</p>
     <p class="footer-sub">
       SADAG mental health support: <strong>0800 456 789</strong> (free) ·
       DBE past papers: <strong>education.gov.za</strong>
@@ -95,7 +95,7 @@
 
   h1 {
     font-family: var(--font-head);
-    font-size: clamp(2.5rem, 8vw, 4.5rem);
+    font-size: clamp(2rem, 6vw, 3.5rem);
     font-weight: 800;
     line-height: 1;
     margin-bottom: .5rem;
