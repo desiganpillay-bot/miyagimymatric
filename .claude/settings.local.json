@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install:*)",
+      "Read(//usr/local/bin/**)",
+      "Bash(source ~/.nvm/nvm.sh)",
+      "Read(//Users/desiganpillay/Downloads/Claude Code/Projects/Matric Study Guide/$HOME/.nvm/versions/**)",
+      "Read(//usr/local/lib/**)",
+      "Read(//opt/**)",
+      "Bash(/usr/bin/env bash:*)",
+      "Bash(brew list:*)",
+      "Bash(pkgutil --pkgs)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(command -v npm)",
+      "Read(//Users/desiganpillay/.nvm/versions/**)",
+      "Bash(ls \"/Users/desiganpillay/Downloads/Claude Code/Projects/Matric Study Guide/.env\"*)"
+    ]
+  }
+}
