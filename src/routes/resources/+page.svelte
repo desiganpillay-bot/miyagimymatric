@@ -112,15 +112,14 @@
       <div class="resource-card">
         <div class="resource-header">
           <div>
-            <div class="resource-name">Vodacom e-School</div>
-            <div class="resource-url">vodacom.co.za/e-school</div>
+            <div class="resource-name">Mindset Learn</div>
+            <div class="resource-url">mindset.co.za</div>
           </div>
           <div class="badges-wrap">
-            <span class="badge-chip zero">Zero-rated</span>
             <span class="badge-chip free">Free</span>
           </div>
         </div>
-        <p class="resource-desc">Curriculum-aligned content across multiple subjects. Available to all Vodacom customers at no data cost. Video lessons, notes, and exercises.</p>
+        <p class="resource-desc">Video lessons across all major matric subjects. Produced with DHET support and curriculum-aligned. Available on YouTube and via the Vodacom Digital Classroom network.</p>
       </div>
     </div>
 
@@ -142,7 +141,7 @@
           <div class="resource-header">
             <div>
               <div class="resource-name">IEB Past Papers — Official</div>
-              <div class="resource-url">ieb.co.za/past-papers</div>
+              <div class="resource-url">ieb.co.za/assessment/high-schools/nsc-past-papers</div>
             </div>
             <div class="badges-wrap">
               <span class="badge-chip free">Last 5 years free</span>
@@ -222,7 +221,7 @@
           <div class="resource-header">
             <div>
               <div class="resource-name">IEB Papers — Stretch Practice Only</div>
-              <div class="resource-url">ieb.co.za</div>
+              <div class="resource-url">ieb.co.za/assessment/high-schools/nsc-past-papers</div>
             </div>
             <div class="badges-wrap">
               <span class="badge-chip caution">⚠️ Not your curriculum</span>
