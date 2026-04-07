@@ -10,52 +10,43 @@
 <div class="app">
   <!-- Header -->
   <header class="hero">
-    <div class="badge">Grade 10 · 11 · 12 · SA Learners</div>
+    <div class="badge">IEB · CAPS · NSC · Grade 10–12</div>
     <h1>Miyagi<span class="accent-text">My</span>Matric</h1>
     <p class="tagline">Your Matric Sensei</p>
+    <h2 class="hero-promise">From Where You Are<br>to Where You're Going</h2>
     <p class="sub">
-      The study platform that knows SA matric inside out — live APS tracking, personalised timetable,
-      SBA deadlines, and a study strategy built around how <em>you</em> learn.
+      A complete matric planning tool for South African learners. <strong>Assess your position</strong>, build a real timetable, and get every free resource you need — all in one place.
     </p>
     <div class="hero-actions">
       <button class="btn btn-next" on:click={() => goto('/assessment')}>
-        Begin Your Assessment ✦
+        Begin Assessment ↓
       </button>
-      <p class="no-login">No login required to start · saves automatically</p>
+      <button class="btn btn-ghost" on:click={() => goto('/timetable')}>
+        Skip to Timetable
+      </button>
     </div>
+    <p class="no-login">No login required to start · saves automatically</p>
   </header>
 
-  <!-- Features -->
-  <div class="features">
-    <div class="feature-card" style="animation-delay: 0s">
-      <div class="feature-icon">📐</div>
-      <h3>Live APS Calculator</h3>
-      <p>See your APS update in real time as you enter marks. Compares instantly against your target universities and programmes.</p>
+  <!-- 3-step journey -->
+  <div class="steps">
+    <div class="step-card" id="sc1" style="animation-delay: 0s">
+      <div class="step-num">STEP 01</div>
+      <h3>Self-Assessment &amp; APS Analysis</h3>
+      <p>Rate your subjects, set university goals, and get a personalised study hours recommendation.</p>
+      <a href="/assessment" class="step-link">Start here →</a>
     </div>
-    <div class="feature-card" style="animation-delay: 0.07s">
-      <div class="feature-icon">📅</div>
-      <h3>Smart Timetable</h3>
-      <p>Build a weekly study plan around your subjects, peak focus times, and exam dates. Prelims and finals built in.</p>
+    <div class="step-card" id="sc2" style="animation-delay: 0.08s">
+      <div class="step-num accent">STEP 02</div>
+      <h3>Personalised Timetable</h3>
+      <p>Generate a subject-balanced weekly schedule — hours matched to your APS gap and goals. Stretch mode on by default.</p>
+      <a href="/timetable" class="step-link">Build timetable →</a>
     </div>
-    <div class="feature-card" style="animation-delay: 0.14s">
-      <div class="feature-icon">⏱</div>
-      <h3>Pomodoro Timer</h3>
-      <p>50/10 format recommended by SA educators — study hard, break intentionally. Every session logged automatically.</p>
-    </div>
-    <div class="feature-card" style="animation-delay: 0.21s">
-      <div class="feature-icon">📋</div>
-      <h3>SBA Tracker</h3>
-      <p>Never miss a submission. SBA tasks are worth 25% of your final mark — track every one with deadline alerts.</p>
-    </div>
-    <div class="feature-card" style="animation-delay: 0.28s">
-      <div class="feature-icon">📄</div>
-      <h3>Report Upload</h3>
-      <p>Upload your school report and we'll read your marks automatically. Up to 3 reports — track your progress over time.</p>
-    </div>
-    <div class="feature-card" style="animation-delay: 0.35s">
-      <div class="feature-icon">🔥</div>
-      <h3>Study Streaks</h3>
-      <p>Build a daily study habit with streaks and XP. Small consistent sessions beat last-minute cramming every time.</p>
+    <div class="step-card" style="animation-delay: 0.16s">
+      <div class="step-num">STEP 03</div>
+      <h3>Free SA Resources</h3>
+      <p>Curated SA-specific tools, zero-rated platforms, past papers, and mental health support.</p>
+      <a href="/resources" class="step-link">Explore resources →</a>
     </div>
   </div>
 
@@ -124,7 +115,7 @@
     <h2>It takes less than five minutes to get started.</h2>
     <p>Answer 6 sections. Get a personalised study profile, live APS, and a recommended strategy for your subjects and universities.</p>
     <button class="btn btn-finish" on:click={() => goto('/assessment')}>
-      Start My Assessment →
+      Begin Assessment →
     </button>
   </div>
 
@@ -169,72 +160,123 @@
     color: var(--accent);
     letter-spacing: .12em;
     text-transform: uppercase;
-    margin-bottom: 1.2rem;
+    margin-bottom: 1rem;
+  }
+
+  .hero-promise {
+    font-family: var(--font-head);
+    font-size: clamp(1.5rem, 4vw, 2.4rem);
+    font-weight: 800;
+    line-height: 1.15;
+    color: var(--text);
+    margin-bottom: 1rem;
   }
 
   .sub {
     color: var(--muted);
-    font-size: 1rem;
+    font-size: .95rem;
     font-weight: 300;
     max-width: 520px;
-    margin: 0 auto 2rem;
+    margin: 0 auto 1.8rem;
     line-height: 1.7;
   }
 
+  .sub strong { color: var(--text); font-weight: 500; }
+
   .hero-actions {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
-    gap: .6rem;
+    justify-content: center;
+    gap: .75rem;
+    flex-wrap: wrap;
+    margin-bottom: .6rem;
   }
+
+  .btn-ghost {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: var(--font-head);
+    font-weight: 600;
+    font-size: .88rem;
+    padding: .7rem 1.4rem;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: border-color .2s;
+  }
+  .btn-ghost:hover { border-color: rgba(246,201,14,.4); }
 
   .no-login {
     font-size: .75rem;
     color: var(--muted);
     font-weight: 300;
+    margin-bottom: 0;
   }
 
-  /* Feature grid */
-  .features {
+  /* 3-step journey */
+  .steps {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 1rem;
     margin: 2.5rem 0;
   }
 
-  .feature-card {
+  .step-card {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 16px;
     padding: 1.4rem;
     animation: fadeUp .4s ease both;
     transition: border-color .2s, transform .2s;
+    display: flex;
+    flex-direction: column;
+    gap: .6rem;
   }
 
-  .feature-card:hover {
-    border-color: var(--border);
+  .step-card:hover {
+    border-color: rgba(246,201,14,.25);
     transform: translateY(-2px);
   }
 
-  .feature-icon {
-    font-size: 1.8rem;
-    margin-bottom: .7rem;
+  .step-num {
+    font-family: var(--font-head);
+    font-size: .65rem;
+    font-weight: 700;
+    color: var(--muted);
+    letter-spacing: .1em;
+    text-transform: uppercase;
   }
 
-  .feature-card h3 {
+  .step-num.accent { color: var(--accent); }
+
+  .step-card h3 {
     font-family: var(--font-head);
     font-size: .9rem;
     font-weight: 700;
     color: var(--text);
-    margin-bottom: .5rem;
+    margin: 0;
+    line-height: 1.3;
   }
 
-  .feature-card p {
+  .step-card p {
     font-size: .8rem;
     color: var(--muted);
     font-weight: 300;
     line-height: 1.6;
+    margin: 0;
+    flex: 1;
   }
+
+  .step-link {
+    font-family: var(--font-head);
+    font-size: .78rem;
+    font-weight: 700;
+    color: var(--accent2);
+    text-decoration: none;
+    transition: color .2s;
+  }
+  .step-link:hover { color: var(--accent); }
 
   /* Tools section */
   .tools-section {
@@ -362,8 +404,8 @@
   }
 
   /* Mobile */
-  @media (max-width: 560px) {
-    .features {
+  @media (max-width: 640px) {
+    .steps {
       grid-template-columns: 1fr;
     }
 
@@ -372,5 +414,7 @@
     }
 
     .hero { padding: 2rem 0 1.5rem; }
+
+    .hero-actions { flex-direction: column; }
   }
 </style>
