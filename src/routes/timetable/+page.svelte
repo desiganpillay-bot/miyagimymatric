@@ -485,7 +485,7 @@
         subjectMarks   = state.subjectMarks   || {};
         subjectRatings = state.subjectRatings  || {};
         profile        = state.answers         || {};
-        hasAssessment  = !!(state.done);
+        hasAssessment  = subjects.length > 0;
 
         const subjects = Object.keys(subjectMarks).filter(s => subjectMarks[s]);
         if (subjects.length > 0) {
