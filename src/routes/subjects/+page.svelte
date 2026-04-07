@@ -1,5 +1,19 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
+
   let active = 'mathematics';
+  let examSystem: 'ieb' | 'caps' | 'unsure' = 'unsure';
+
+  onMount(() => {
+    try {
+      const raw = localStorage.getItem('mmm_assessment_v1');
+      if (raw) {
+        const state = JSON.parse(raw);
+        const sys = state?.answers?.exam_system;
+        if (sys === 'ieb' || sys === 'caps') examSystem = sys;
+      }
+    } catch {}
+  });
 
   const subjects = [
     { id: 'mathematics',       label: 'Mathematics',        icon: '📐' },
@@ -219,6 +233,13 @@
     <div class="badge">Subject Guides</div>
     <h1>Subject Strategy</h1>
     <p class="subtitle">Evidence-based strategies for SA matric subjects — what to prioritise and how to study it.</p>
+    {#if examSystem === 'ieb'}
+      <div class="curriculum-banner ieb">📋 <strong>IEB learner</strong> — strategies and paper structures shown are IEB-specific. IEB exams test higher-order thinking (analysis, evaluation, opinion) more than CAPS.</div>
+    {:else if examSystem === 'caps'}
+      <div class="curriculum-banner caps">📋 <strong>CAPS / NSC learner</strong> — strategies shown are aligned to the CAPS curriculum and NSC exam structure.</div>
+    {:else}
+      <div class="curriculum-banner unsure">⚠️ Exam system not set. <a href="/assessment" class="banner-link">Complete your assessment</a> to see curriculum-specific guidance.</div>
+    {/if}
   </header>
 
   <!-- Tab bar -->
@@ -257,6 +278,25 @@
           </div>
         {/each}
       </div>
+
+      <!-- Curriculum-specific callout -->
+      {#if examSystem === 'ieb' || examSystem === 'caps'}
+        {#if active === 'accounting' && examSystem === 'ieb'}
+          <div class="curr-callout ieb">📋 <strong>IEB Accounting has two separate papers.</strong> Paper 1 (Processing) focuses on journals, ledgers, and bookkeeping. Paper 2 (Reasoning & Analysis) focuses on financial statements and ratios. Prepare for both independently — they test different skills.</div>
+        {:else if active === 'accounting' && examSystem === 'caps'}
+          <div class="curr-callout caps">📋 <strong>CAPS Accounting is a single paper</strong> covering all topics. Allocate time proportionally — financial statements and ratio interpretation carry the most marks.</div>
+        {:else if active === 'life_sciences' && examSystem === 'ieb'}
+          <div class="curr-callout ieb">📋 <strong>IEB Paper 2 includes a compulsory 40-mark source-based essay</strong> requiring your own opinion supported by evidence. This does not appear in CAPS. Practise writing structured arguments weekly from Term 2.</div>
+        {:else if active === 'english' && examSystem === 'ieb'}
+          <div class="curr-callout ieb">📋 <strong>IEB English demands higher-order analysis throughout.</strong> Comprehension questions ask for evaluation and inference, not just retrieval. Literature essays must argue a position — "The author shows..." not "It says...". Bloom's taxonomy levels 4–6 dominate.</div>
+        {:else if active === 'history' && examSystem === 'ieb'}
+          <div class="curr-callout ieb">📋 <strong>IEB History requires source booklet analysis with bias, reliability, and perspective evaluation.</strong> Every source-based answer needs origin + purpose + limitation + own knowledge. The essay mark scheme rewards structured argument over content volume.</div>
+        {:else if active === 'sciences' && examSystem === 'ieb'}
+          <div class="curr-callout ieb">📋 <strong>IEB Physical Sciences Paper 1 includes a 10-minute reading period</strong> before you write. Use it to read all questions and plan your calculation approach. IEB questions often require application to unfamiliar contexts — not just formula substitution.</div>
+        {:else if active === 'mathematics' && examSystem === 'ieb'}
+          <div class="curr-callout ieb">📋 <strong>IEB Mathematics has the same paper structure as CAPS</strong> but questions at the higher end demand more interpretation and application. Ensure you can explain your reasoning, not just calculate answers.</div>
+        {/if}
+      {/if}
 
       <!-- Tips -->
       <div class="section-head">Study Strategy</div>
@@ -321,6 +361,18 @@
   .caution-card { display: flex; gap: 0.75rem; align-items: flex-start; background: rgba(248,113,113,.07); border: 1px solid rgba(248,113,113,.25); border-radius: 10px; padding: 1rem; }
   .caution-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 0.1rem; }
   .caution-text { font-size: 0.85rem; color: var(--text); line-height: 1.5; }
+
+  /* Curriculum banners */
+  .curriculum-banner { border-radius: 10px; padding: 0.65rem 1rem; font-size: 0.8rem; line-height: 1.5; margin-top: 0.75rem; }
+  .curriculum-banner.ieb { background: rgba(56,189,248,.08); border: 1px solid rgba(56,189,248,.25); color: var(--accent2); }
+  .curriculum-banner.caps { background: rgba(74,222,128,.08); border: 1px solid rgba(74,222,128,.25); color: var(--accent3); }
+  .curriculum-banner.unsure { background: rgba(246,201,14,.08); border: 1px solid rgba(246,201,14,.2); color: var(--accent); }
+  .curriculum-banner strong { color: inherit; }
+  .banner-link { color: inherit; font-weight: 700; }
+  .curr-callout { border-radius: 10px; padding: 0.75rem 1rem; font-size: 0.82rem; line-height: 1.6; margin-bottom: 1rem; }
+  .curr-callout.ieb { background: rgba(56,189,248,.07); border: 1px solid rgba(56,189,248,.25); color: var(--text); }
+  .curr-callout.caps { background: rgba(74,222,128,.07); border: 1px solid rgba(74,222,128,.25); color: var(--text); }
+  .curr-callout strong { color: inherit; }
 
   @keyframes fadeDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
   @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }

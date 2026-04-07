@@ -1,7 +1,10 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
+
   type Category = 'zero_rated' | 'past_papers' | 'video' | 'tools' | 'mental_health';
 
   let active = 'zero_rated';
+  let examSystem: 'ieb' | 'caps' | 'unsure' = 'unsure';
 
   const CATEGORIES = [
     { id: 'zero_rated',    label: 'Zero-Rated',       icon: '📶' },
@@ -10,6 +13,17 @@
     { id: 'tools',         label: 'Study Tools',       icon: '🛠️' },
     { id: 'mental_health', label: 'Mental Health',     icon: '💚' },
   ];
+
+  onMount(() => {
+    try {
+      const raw = localStorage.getItem('mmm_assessment_v1');
+      if (raw) {
+        const state = JSON.parse(raw);
+        const sys = state?.answers?.exam_system;
+        if (sys === 'ieb' || sys === 'caps') examSystem = sys;
+      }
+    } catch {}
+  });
 </script>
 
 <svelte:head>
@@ -23,6 +37,13 @@
     <div class="badge">Free SA Resources</div>
     <h1>Study Resources</h1>
     <p class="subtitle">The best free tools for SA matric learners. All vetted. Zero-rated platforms are free to access on MTN and Vodacom.</p>
+    {#if examSystem === 'ieb'}
+      <div class="curriculum-banner ieb">📋 Showing resources for <strong>IEB learners</strong> — based on your assessment. IEB papers differ significantly from CAPS. Use IEB-specific resources.</div>
+    {:else if examSystem === 'caps'}
+      <div class="curriculum-banner caps">📋 Showing resources for <strong>CAPS / NSC learners</strong> — based on your assessment. Focus on DBE papers, not IEB papers.</div>
+    {:else}
+      <div class="curriculum-banner unsure">⚠️ Your exam system is not set. <a href="/assessment" class="banner-link">Complete your assessment</a> to see curriculum-specific resources.</div>
+    {/if}
   </header>
 
   <!-- Tab bar -->
@@ -111,48 +132,105 @@
         <p>Past papers are the single most effective study tool. Do them under exam conditions, then mark and diagnose — do not just read through them.</p>
       </div>
 
-      <div class="resource-card featured">
-        <div class="resource-header">
-          <div>
-            <div class="resource-name">SA Exam Papers</div>
-            <div class="resource-url">saexampapers.co.za</div>
-          </div>
-          <div class="badges-wrap">
-            <span class="badge-chip free">Free</span>
-            <span class="badge-chip best">Best collection</span>
-          </div>
+      {#if examSystem === 'ieb'}
+        <!-- IEB LEARNERS -->
+        <div class="curriculum-alert ieb">
+          <strong>You write IEB.</strong> Use IEB papers only — CAPS/DBE papers have a different structure, different question styles, and different mark allocations. Practising CAPS papers as an IEB learner will give you false confidence and teach you the wrong approach.
         </div>
-        <p class="resource-desc">The largest freely accessible past paper collection in SA. Papers from 2008+. Includes DBE, IEB, and provincial papers. Also includes memos for most papers. 40+ subjects covered.</p>
-        <p class="resource-tip">💡 Search by subject, year, and paper number. Download several years at once and work through them systematically — oldest to newest, so you can track your progress.</p>
-      </div>
 
-      <div class="resource-card featured">
-        <div class="resource-header">
-          <div>
-            <div class="resource-name">DBE Past Papers</div>
-            <div class="resource-url">education.gov.za</div>
+        <div class="resource-card featured">
+          <div class="resource-header">
+            <div>
+              <div class="resource-name">IEB Past Papers — Official</div>
+              <div class="resource-url">ieb.co.za/past-papers</div>
+            </div>
+            <div class="badges-wrap">
+              <span class="badge-chip free">Last 5 years free</span>
+              <span class="badge-chip official">IEB Official ✓</span>
+            </div>
           </div>
-          <div class="badges-wrap">
-            <span class="badge-chip zero">Zero-rated</span>
-            <span class="badge-chip official">Official</span>
-          </div>
+          <p class="resource-desc">The official source for IEB papers. Last 5 years available free. These are the exact papers you will write — use these first and always.</p>
+          <p class="resource-tip">💡 IEB papers require analysis, evaluation, and opinion — not just recall. When practising, write full sentences and justify every answer, even when the question looks simple.</p>
         </div>
-        <p class="resource-desc">Official NSC papers with official memorandums. 2016–2024. The most reliable source — these are the original files, not scanned copies. Includes November (final) exams and supplementary exams.</p>
-      </div>
 
-      <div class="resource-card">
-        <div class="resource-header">
-          <div>
-            <div class="resource-name">IEB Past Papers</div>
-            <div class="resource-url">ieb.co.za</div>
+        <div class="resource-card featured">
+          <div class="resource-header">
+            <div>
+              <div class="resource-name">SA Exam Papers — IEB Section</div>
+              <div class="resource-url">saexampapers.co.za</div>
+            </div>
+            <div class="badges-wrap">
+              <span class="badge-chip free">Free</span>
+              <span class="badge-chip best">Papers from 2008</span>
+            </div>
           </div>
-          <div class="badges-wrap">
-            <span class="badge-chip free">Last 5 years free</span>
-            <span class="badge-chip official">IEB Official</span>
-          </div>
+          <p class="resource-desc">Largest IEB paper archive — 2008 to present. Filter by IEB specifically. Includes memos. Use this for older papers once you've exhausted the official IEB site.</p>
         </div>
-        <p class="resource-desc">IEB papers differ significantly from NSC in style and cognitive demand. IEB questions require more analysis, evaluation, and opinion. Even if you write NSC, doing IEB questions is excellent stretch practice for top learners aiming for 80%+.</p>
-      </div>
+
+        <div class="resource-card">
+          <div class="resource-header">
+            <div>
+              <div class="resource-name">CAPS / DBE Papers — Stretch Practice Only</div>
+              <div class="resource-url">education.gov.za</div>
+            </div>
+            <div class="badges-wrap">
+              <span class="badge-chip zero">Zero-rated</span>
+              <span class="badge-chip caution">⚠️ Not your curriculum</span>
+            </div>
+          </div>
+          <p class="resource-desc">CAPS papers are structurally different from IEB. Only use them if you have exhausted IEB papers and want additional calculation or factual recall practice — never for essay or analysis questions.</p>
+        </div>
+
+      {:else}
+        <!-- CAPS / NSC LEARNERS (default) -->
+        {#if examSystem === 'caps'}
+        <div class="curriculum-alert caps">
+          <strong>You write CAPS / NSC.</strong> Focus on DBE papers. IEB papers have different question styles — practising them can teach you the wrong approach for your exam.
+        </div>
+        {/if}
+
+        <div class="resource-card featured">
+          <div class="resource-header">
+            <div>
+              <div class="resource-name">DBE Past Papers — Official</div>
+              <div class="resource-url">education.gov.za</div>
+            </div>
+            <div class="badges-wrap">
+              <span class="badge-chip zero">Zero-rated</span>
+              <span class="badge-chip official">Official NSC ✓</span>
+            </div>
+          </div>
+          <p class="resource-desc">Official NSC papers with official memorandums. 2016–2024. These are the exact papers you will write. The most reliable source — original files, not scans. Includes November finals and supplementary exams.</p>
+          <p class="resource-tip">💡 Download the last 5 years for each of your subjects. Work through them from oldest to newest — this shows you how question styles evolve and what repeats.</p>
+        </div>
+
+        <div class="resource-card featured">
+          <div class="resource-header">
+            <div>
+              <div class="resource-name">SA Exam Papers — NSC Section</div>
+              <div class="resource-url">saexampapers.co.za</div>
+            </div>
+            <div class="badges-wrap">
+              <span class="badge-chip free">Free</span>
+              <span class="badge-chip best">Papers from 2008</span>
+            </div>
+          </div>
+          <p class="resource-desc">Largest NSC paper archive — 2008 to present. Also includes provincial papers (Eastern Cape, Western Cape, etc.) which are useful for additional practice. Always use DBE papers first.</p>
+        </div>
+
+        <div class="resource-card">
+          <div class="resource-header">
+            <div>
+              <div class="resource-name">IEB Papers — Stretch Practice Only</div>
+              <div class="resource-url">ieb.co.za</div>
+            </div>
+            <div class="badges-wrap">
+              <span class="badge-chip caution">⚠️ Not your curriculum</span>
+            </div>
+          </div>
+          <p class="resource-desc">IEB papers are harder and structured differently. Only use them if you are aiming for 80%+ and have finished all available CAPS papers. Good for stretch practice on calculation and factual subjects — not for essay technique.</p>
+        </div>
+      {/if}
 
       <div class="resource-card">
         <div class="resource-header">
@@ -164,14 +242,14 @@
             <span class="badge-chip free">Free</span>
           </div>
         </div>
-        <p class="resource-desc">Mobile app with DBE + IEB papers from 2008+. 40+ subjects. Papers download for offline use — ideal for learners without reliable data. FNB App of the Year 2024.</p>
+        <p class="resource-desc">Mobile app with DBE + IEB papers from 2008+. 40+ subjects. Papers download for offline use — ideal for learners without reliable data. Filter by your exam system when downloading.</p>
       </div>
 
       <div class="info-card">
         <h3>How to use past papers correctly</h3>
         <ol class="step-list">
           <li>Complete under timed, exam conditions — no notes, no phone</li>
-          <li>Mark strictly using the official memo</li>
+          <li>Mark strictly using the official memo for <strong>your exam system</strong></li>
           <li>Identify root cause of every error (concept gap vs time vs careless)</li>
           <li>Revise only the concepts you got wrong</li>
           <li>Retry those questions blind, 2 days later</li>
@@ -518,6 +596,19 @@
   /* Caution */
   .caution-card { background: rgba(248,113,113,.07); border: 1px solid rgba(248,113,113,.2); border-radius: 12px; padding: 1rem 1.25rem; font-size: 0.875rem; color: var(--muted); line-height: 1.6; }
   .caution-card strong { color: var(--danger); }
+
+  /* Curriculum banner + alert */
+  .curriculum-banner { border-radius: 10px; padding: 0.65rem 1rem; font-size: 0.8rem; line-height: 1.5; margin-top: 0.75rem; }
+  .curriculum-banner.ieb { background: rgba(56,189,248,.08); border: 1px solid rgba(56,189,248,.25); color: var(--accent2); }
+  .curriculum-banner.caps { background: rgba(74,222,128,.08); border: 1px solid rgba(74,222,128,.25); color: var(--accent3); }
+  .curriculum-banner.unsure { background: rgba(246,201,14,.08); border: 1px solid rgba(246,201,14,.2); color: var(--accent); }
+  .curriculum-banner strong { color: inherit; }
+  .banner-link { color: inherit; font-weight: 700; }
+  .curriculum-alert { border-radius: 12px; padding: 0.85rem 1rem; font-size: 0.85rem; line-height: 1.6; margin-bottom: 0.5rem; }
+  .curriculum-alert.ieb { background: rgba(56,189,248,.08); border: 1px solid rgba(56,189,248,.3); color: var(--text); }
+  .curriculum-alert.caps { background: rgba(74,222,128,.08); border: 1px solid rgba(74,222,128,.3); color: var(--text); }
+  .curriculum-alert strong { color: inherit; }
+  .badge-chip.caution { background: rgba(248,113,113,.1); color: var(--danger); }
 
   @keyframes fadeDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
   @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
