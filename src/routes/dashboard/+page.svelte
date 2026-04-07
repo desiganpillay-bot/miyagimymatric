@@ -3,6 +3,8 @@
   import { goto } from '$app/navigation';
   import { getSupabase } from '$lib/supabase';
   import { apsResult } from '$lib/stores/assessment';
+  import { rangeMid } from '$lib/aps';
+  import { getRiskTopics } from '$lib/highValueTopics';
 
   // ── Types ──────────────────────────────────────────────────
   type Profile = {
@@ -18,6 +20,9 @@
   // ── State ──────────────────────────────────────────────────
   let loading = true;
   let authed = false;
+  let localAPS = 0;
+  let localSubjects: { name: string; mark: number }[] = [];
+  let hasLocalAssessment = false;
 
   let profile: Profile | null = null;
   let targetAps: number | null = null;
@@ -53,6 +58,19 @@
     ? daysUntil(new Date(nextTask.due_date)) <= 7
     : false;
 
+  // High-risk topics — subjects below 60% from localStorage
+  $: riskTopics = (() => {
+    try {
+      const raw = localStorage.getItem('mmm_assessment_v1');
+      if (!raw) return [];
+      const state = JSON.parse(raw);
+      const marks: Record<string, string> = state.subjectMarks || {};
+      const numericMarks: Record<string, number> = {};
+      Object.entries(marks).forEach(([s, r]) => { if (r) numericMarks[s] = rangeMid(r); });
+      return getRiskTopics(numericMarks, 60);
+    } catch { return []; }
+  })();
+
   // Mark colour helper
   function markColor(pct: number): string {
     if (pct >= 60) return 'var(--accent3)';
@@ -66,6 +84,23 @@
     const { data: { session } } = await sb.auth.getSession();
 
     if (!session) {
+      // Check localStorage for assessment data — show useful state even without sign-in
+      try {
+        const raw = localStorage.getItem('mmm_assessment_v1');
+        if (raw) {
+          const state = JSON.parse(raw);
+          const marks: Record<string, string> = state.subjectMarks || {};
+          const subjects = Object.entries(marks)
+            .filter(([, v]) => v)
+            .map(([name, range]) => ({ name, mark: rangeMid(range) }))
+            .sort((a, b) => a.mark - b.mark);
+          if (subjects.length > 0) {
+            hasLocalAssessment = true;
+            localSubjects = subjects;
+            localAPS = $apsResult.total;
+          }
+        }
+      } catch {}
       loading = false;
       return;
     }
@@ -134,17 +169,49 @@
   {:else if !authed}
     <!-- ── Unauthenticated ───────────────────────────────── -->
     <div class="unauth-wrap">
-      <div class="badge">Your Sensei Awaits</div>
-      <h1>Your Dashboard</h1>
-      <p class="subtitle">Complete your self-assessment first, then save your profile to unlock your personalised dashboard.</p>
-      <div class="unauth-card">
-        <div class="unauth-icon">🎯</div>
-        <h2>No profile found</h2>
-        <p>Take the 5-minute self-assessment to get your APS score, subject insights, and a personalised study plan.</p>
-        <button class="btn btn-next" on:click={() => goto('/assessment')}>
-          Start My Assessment →
-        </button>
-      </div>
+      {#if hasLocalAssessment}
+        <!-- Assessment done, not signed in -->
+        <div class="badge">Your Plan is Ready</div>
+        <h1>Your Dashboard</h1>
+        <p class="subtitle">Your assessment is saved on this device. Sign in to sync across devices — or go straight to your tools.</p>
+
+        <div class="plan-ready-card">
+          <div class="plan-aps-row">
+            <div class="plan-aps-block">
+              <div class="plan-aps-num">{localAPS}</div>
+              <div class="plan-aps-label">Current APS / 42</div>
+            </div>
+            <div class="plan-subjects">
+              <div class="plan-subjects-label">Subjects needing most work</div>
+              {#each localSubjects.slice(0, 3) as s}
+                <div class="plan-subject-row">
+                  <span class="plan-subj-name">{s.name}</span>
+                  <span class="plan-subj-mark" style="color: {s.mark < 50 ? 'var(--danger)' : s.mark < 60 ? 'var(--accent)' : 'var(--accent3)'}">~{s.mark}%</span>
+                </div>
+              {/each}
+            </div>
+          </div>
+          <div class="plan-actions">
+            <button class="btn btn-next" on:click={() => goto('/timetable')}>Build My Timetable →</button>
+            <button class="btn btn-ghost-sm" on:click={() => goto('/sba')}>Track SBA Tasks →</button>
+            <button class="btn btn-ghost-sm" on:click={() => goto('/assessment')}>Sign In to Save →</button>
+          </div>
+        </div>
+
+      {:else}
+        <!-- No assessment at all -->
+        <div class="badge">Your Sensei Awaits</div>
+        <h1>Your Dashboard</h1>
+        <p class="subtitle">Complete your self-assessment first to unlock your personalised dashboard.</p>
+        <div class="unauth-card">
+          <div class="unauth-icon">🎯</div>
+          <h2>Start here</h2>
+          <p>Take the 5-minute self-assessment to get your APS score, subject insights, and a personalised study plan.</p>
+          <button class="btn btn-next" on:click={() => goto('/assessment')}>
+            Start My Assessment →
+          </button>
+        </div>
+      {/if}
     </div>
 
   {:else}
@@ -261,6 +328,33 @@
         <p class="empty-state">No upcoming SBA tasks recorded. Add them to stay on track.</p>
       {/if}
     </div>
+
+    <!-- Row 5: High-Value Topics (sure to be tested) -->
+    {#if riskTopics.length > 0}
+    <div class="card risk-card">
+      <div class="card-label">⚠️ Sure to be Tested — Your Weak Subjects</div>
+      <p class="risk-intro">These topics carry the most exam marks in your lowest-scoring subjects. Focus here first.</p>
+      {#each riskTopics as r}
+        <div class="risk-subject">
+          <div class="risk-subject-header">
+            <span class="risk-subj-name">{r.subject}</span>
+            <span class="risk-subj-mark" style="color: {r.mark < 50 ? 'var(--danger)' : 'var(--accent)'}">~{r.mark}%</span>
+          </div>
+          {#each r.topics as t}
+            <div class="risk-topic">
+              <div class="risk-topic-top">
+                <span class="risk-topic-name">{t.topic}</span>
+                <span class="risk-topic-paper">{t.paper}</span>
+                <span class="risk-topic-weight">~{t.weight}% of paper</span>
+              </div>
+              <p class="risk-topic-tip">💡 {t.tip}</p>
+            </div>
+          {/each}
+        </div>
+      {/each}
+      <a href="/timetable" class="risk-cta">Build a timetable focused on these topics →</a>
+    </div>
+    {/if}
 
     <div class="dash-footer">
       <a href="/assessment">← Update assessment</a>
@@ -679,6 +773,39 @@
       grid-column: 1 / -1;
     }
   }
+
+  /* ── High-value risk topics ──────────────────────── */
+  .risk-card { border-color: rgba(248,113,113,.2); }
+  .risk-intro { font-size: 0.8rem; color: var(--muted); margin: 0 0 1rem; line-height: 1.5; }
+  .risk-subject { margin-bottom: 1.25rem; }
+  .risk-subject:last-of-type { margin-bottom: 0.5rem; }
+  .risk-subject-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
+  .risk-subj-name { font-family: var(--font-head); font-size: 0.9rem; font-weight: 800; color: var(--text); }
+  .risk-subj-mark { font-family: var(--font-head); font-size: 0.9rem; font-weight: 700; }
+  .risk-topic { background: var(--surface2); border-radius: 8px; padding: 0.6rem 0.75rem; margin-bottom: 0.4rem; }
+  .risk-topic-top { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.3rem; }
+  .risk-topic-name { font-size: 0.85rem; font-weight: 600; color: var(--text); flex: 1; }
+  .risk-topic-paper { font-size: 0.68rem; background: rgba(56,189,248,.1); color: var(--accent2); border-radius: 999px; padding: 0.15rem 0.5rem; white-space: nowrap; }
+  .risk-topic-weight { font-size: 0.68rem; background: rgba(248,113,113,.1); color: var(--danger); border-radius: 999px; padding: 0.15rem 0.5rem; white-space: nowrap; font-family: var(--font-head); font-weight: 700; }
+  .risk-topic-tip { font-size: 0.75rem; color: var(--muted); margin: 0; line-height: 1.5; }
+  .risk-cta { display: inline-block; margin-top: 0.75rem; font-size: 0.8rem; color: var(--accent2); text-decoration: none; font-family: var(--font-head); font-weight: 600; }
+  .risk-cta:hover { text-decoration: underline; }
+
+  /* ── Plan-ready card ─────────────────────────────── */
+  .plan-ready-card { background: var(--surface); border: 1px solid rgba(246,201,14,.25); border-radius: 16px; padding: 1.5rem; max-width: 480px; margin: 1.5rem auto 0; text-align: left; }
+  .plan-aps-row { display: flex; gap: 1.5rem; margin-bottom: 1.25rem; align-items: flex-start; }
+  .plan-aps-block { text-align: center; flex-shrink: 0; }
+  .plan-aps-num { font-family: var(--font-head); font-size: 2.5rem; font-weight: 800; color: var(--accent); line-height: 1; }
+  .plan-aps-label { font-size: 0.7rem; color: var(--muted); margin-top: 0.25rem; }
+  .plan-subjects { flex: 1; }
+  .plan-subjects-label { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; font-family: var(--font-head); font-weight: 700; margin-bottom: 0.5rem; }
+  .plan-subject-row { display: flex; justify-content: space-between; align-items: center; padding: 0.3rem 0; border-bottom: 1px solid var(--border); font-size: 0.85rem; }
+  .plan-subject-row:last-child { border-bottom: none; }
+  .plan-subj-name { color: var(--text); }
+  .plan-subj-mark { font-family: var(--font-head); font-weight: 700; font-size: 0.9rem; }
+  .plan-actions { display: flex; flex-direction: column; gap: 0.5rem; }
+  .btn-ghost-sm { background: transparent; border: 1px solid var(--border); color: var(--muted); font-family: var(--font-head); font-size: 0.85rem; font-weight: 600; padding: 0.65rem 1.25rem; border-radius: 999px; cursor: pointer; transition: all 0.2s; }
+  .btn-ghost-sm:hover { border-color: var(--accent2); color: var(--accent2); }
 
   /* ── Animations ──────────────────────────────────── */
   @keyframes fadeDown {

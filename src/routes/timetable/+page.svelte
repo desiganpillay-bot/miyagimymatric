@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { rangeMid, computeAPS } from '$lib/aps';
+  import { getHighValueTopics } from '$lib/highValueTopics';
 
   // ── Types ─────────────────────────────────────────────────────────
   type SlotType = 'sleep' | 'school' | 'lunch' | 'dinner' | 'leisure' | 'pp' | 'sr' | 'study' | 'free';
@@ -532,6 +533,7 @@
 
   // ── Derived ───────────────────────────────────────────────────────
   $: modalResources = modalSlot ? getTTResources(modalSlot.subjName, modalSlot.type) : [];
+  $: modalHighValue = (modalSlot && modalSlot.type === 'study') ? getHighValueTopics(modalSlot.subjName, 2) : [];
   $: apsGap    = targetAPS - currentAPS;
   $: termHours = hoursPerWeek * 10;
   $: allocSorted  = [...ttSubjects].sort((a, b) => (alloc[b.name] || 0) - (alloc[a.name] || 0));
@@ -755,6 +757,20 @@
         <div class="modal-task-lbl">Today's Task</div>
         <p>{modalSlot.task || 'Complete your assessment to unlock personalised tasks.'}</p>
       </div>
+      {#if modalHighValue.length > 0}
+      <div class="modal-hv-box">
+        <div class="modal-task-lbl">Sure to be Tested</div>
+        {#each modalHighValue as t}
+          <div class="modal-hv-topic">
+            <div class="modal-hv-top">
+              <span class="modal-hv-name">{t.topic}</span>
+              <span class="modal-hv-weight">~{t.weight}% of paper</span>
+            </div>
+            <p class="modal-hv-tip">{t.paper}</p>
+          </div>
+        {/each}
+      </div>
+      {/if}
       <div class="modal-resources">
         <div class="modal-res-lbl">Free SA Resources</div>
         {#each modalResources as r}
@@ -907,6 +923,12 @@
   .modal-task-box { background: var(--surface2); border-radius: 12px; padding: 1rem; margin-bottom: 1rem; }
   .modal-task-lbl { font-family: var(--font-head); font-size: .62rem; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: .08em; margin-bottom: .45rem; }
   .modal-task-box p { font-size: .85rem; line-height: 1.65; color: var(--text); margin: 0; }
+  .modal-hv-box { background: rgba(248,113,113,.06); border: 1px solid rgba(248,113,113,.15); border-radius: 12px; padding: 0.75rem 1rem; margin-bottom: 1rem; display: flex; flex-direction: column; gap: 0.4rem; }
+  .modal-hv-topic { }
+  .modal-hv-top { display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; }
+  .modal-hv-name { font-size: 0.82rem; font-weight: 600; color: var(--text); }
+  .modal-hv-weight { font-size: 0.65rem; background: rgba(248,113,113,.15); color: var(--danger); border-radius: 999px; padding: 0.1rem 0.45rem; font-family: var(--font-head); font-weight: 700; white-space: nowrap; }
+  .modal-hv-tip { font-size: 0.7rem; color: var(--muted); margin: 0.1rem 0 0; }
   .modal-resources { display: flex; flex-direction: column; gap: .45rem; }
   .modal-res-lbl { font-family: var(--font-head); font-size: .62rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; margin-bottom: .2rem; }
   .res-link { display: flex; align-items: center; gap: .7rem; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: .65rem .85rem; text-decoration: none; transition: border-color .2s; }

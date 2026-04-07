@@ -413,8 +413,10 @@
     </div>
 
     <div class="next-steps">
-      <p class="next-steps-label">Ready to plan your studies?</p>
-      <a href="/timetable" class="btn-timetable">Build My Timetable →</a>
+      <p class="next-steps-label">Your plan is ready — what do you want to do next?</p>
+      <a href="/dashboard" class="btn-timetable">View My Dashboard →</a>
+      <a href="/timetable" class="btn-timetable btn-ghost-cta">Build My Timetable →</a>
+      <a href="/sba" class="btn-timetable btn-ghost-cta">Track SBA Tasks →</a>
     </div>
 
     <button class="restart-btn" on:click={restart}>↩ Retake Assessment</button>
@@ -767,6 +769,8 @@
     transition: opacity 0.2s;
   }
   .btn-timetable:hover { opacity: 0.85; }
+  .btn-ghost-cta { background: transparent; border: 1px solid var(--border); color: var(--muted); margin-top: 0.5rem; }
+  .btn-ghost-cta:hover { border-color: var(--accent2); color: var(--accent2); opacity: 1; }
 
   .consent-checkboxes {
     background: rgba(246,201,14,.05);
