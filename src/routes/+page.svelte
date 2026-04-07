@@ -59,6 +59,58 @@
     </div>
   </div>
 
+  <!-- Tools nav -->
+  <div class="tools-section">
+    <h2 class="tools-heading">Your Study Tools</h2>
+    <div class="tools-grid">
+      <a href="/assessment" class="tool-link">
+        <span class="tool-icon">🎯</span>
+        <span class="tool-name">Self-Assessment</span>
+        <span class="tool-desc">APS + university match</span>
+      </a>
+      <a href="/timetable" class="tool-link">
+        <span class="tool-icon">📅</span>
+        <span class="tool-name">Timetable</span>
+        <span class="tool-desc">Weekly study planner</span>
+      </a>
+      <a href="/pomodoro" class="tool-link">
+        <span class="tool-icon">⏱️</span>
+        <span class="tool-name">Pomodoro Timer</span>
+        <span class="tool-desc">50/10 focused sessions</span>
+      </a>
+      <a href="/sba" class="tool-link">
+        <span class="tool-icon">✅</span>
+        <span class="tool-name">SBA Tracker</span>
+        <span class="tool-desc">Deadlines + submissions</span>
+      </a>
+      <a href="/marks" class="tool-link">
+        <span class="tool-icon">📊</span>
+        <span class="tool-name">Marks Tracker</span>
+        <span class="tool-desc">Live APS calculator</span>
+      </a>
+      <a href="/subjects" class="tool-link">
+        <span class="tool-icon">📚</span>
+        <span class="tool-name">Subject Strategy</span>
+        <span class="tool-desc">Per-subject tips + papers</span>
+      </a>
+      <a href="/techniques" class="tool-link">
+        <span class="tool-icon">🧠</span>
+        <span class="tool-name">Study Techniques</span>
+        <span class="tool-desc">Evidence-based methods</span>
+      </a>
+      <a href="/resources" class="tool-link">
+        <span class="tool-icon">📶</span>
+        <span class="tool-name">Resources</span>
+        <span class="tool-desc">Zero-rated + free tools</span>
+      </a>
+      <a href="/dashboard" class="tool-link">
+        <span class="tool-icon">🏠</span>
+        <span class="tool-name">Dashboard</span>
+        <span class="tool-desc">Your progress overview</span>
+      </a>
+    </div>
+  </div>
+
   <!-- Sensei quote -->
   <div class="sensei-block">
     <div class="sensei-quote">
@@ -184,6 +236,63 @@
     line-height: 1.6;
   }
 
+  /* Tools section */
+  .tools-section {
+    margin: 0 0 2.5rem;
+    animation: fadeUp .4s ease both;
+  }
+
+  .tools-heading {
+    font-family: var(--font-head);
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    margin: 0 0 1rem;
+    text-align: center;
+  }
+
+  .tools-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: .65rem;
+  }
+
+  .tool-link {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: .2rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: .9rem 1rem;
+    text-decoration: none;
+    transition: border-color .2s, transform .15s;
+  }
+
+  .tool-link:hover {
+    border-color: rgba(246,201,14,.35);
+    transform: translateY(-1px);
+  }
+
+  .tool-icon { font-size: 1.25rem; }
+
+  .tool-name {
+    font-family: var(--font-head);
+    font-size: .8rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.2;
+  }
+
+  .tool-desc {
+    font-size: .68rem;
+    color: var(--muted);
+    line-height: 1.3;
+  }
+
   /* Sensei block */
   .sensei-block {
     text-align: center;
@@ -256,6 +365,10 @@
   @media (max-width: 560px) {
     .features {
       grid-template-columns: 1fr;
+    }
+
+    .tools-grid {
+      grid-template-columns: repeat(2, 1fr);
     }
 
     .hero { padding: 2rem 0 1.5rem; }
