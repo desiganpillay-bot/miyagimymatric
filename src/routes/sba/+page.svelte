@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { getSupabase } from '$lib/supabase';
 
   // ── Types ──────────────────────────────────────────────────
   type TaskStatus = 'pending' | 'in_progress' | 'submitted';
@@ -63,6 +64,42 @@
   function persist() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
     tasks = [...tasks];
+    syncToSupabase(tasks).catch(() => {});
+  }
+
+  async function syncToSupabase(taskList: SbaTask[]) {
+    const sb = getSupabase();
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) return;
+    const uid = session.user.id;
+    const STATUS_MAP: Record<TaskStatus, string> = {
+      pending: 'upcoming',
+      in_progress: 'in_progress',
+      submitted: 'submitted'
+    };
+    const rows = taskList.map(t => ({
+      id: t.id,
+      user_id: uid,
+      subject_name: t.subject,
+      task_name: t.task_name,
+      task_type: t.task_type === 'exam' ? 'prelim' : t.task_type,
+      due_date: t.due_date || null,
+      weight_pct: t.weight_pct,
+      status: STATUS_MAP[t.status],
+      mark_obtained: t.mark_obtained,
+      mark_total: t.mark_total,
+      is_critical: t.is_critical,
+      notes: t.notes,
+      updated_at: new Date().toISOString()
+    }));
+    await sb.from('sba_tasks').upsert(rows, { onConflict: 'id' });
+  }
+
+  async function syncDeleteFromSupabase(id: string) {
+    const sb = getSupabase();
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) return;
+    await sb.from('sba_tasks').delete().eq('id', id).eq('user_id', session.user.id);
   }
 
   function daysUntil(dateStr: string): number {
@@ -136,6 +173,7 @@
   function deleteTask(id: string) {
     tasks = tasks.filter(t => t.id !== id);
     persist();
+    syncDeleteFromSupabase(id).catch(() => {});
   }
 
   function markSubmitted(id: string) {

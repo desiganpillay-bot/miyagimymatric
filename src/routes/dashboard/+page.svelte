@@ -73,22 +73,6 @@
     authed = true;
     const uid = session.user.id;
 
-    // Write POPIA consent from localStorage if present (first login)
-    const consentRaw = localStorage.getItem('mmm_consent_v1');
-    if (consentRaw) {
-      try {
-        const consent = JSON.parse(consentRaw) as { consented_at: string; terms_version: string };
-        await sb.from('profiles').upsert({
-          id: uid,
-          consented_at: consent.consented_at,
-          terms_version: consent.terms_version
-        }, { onConflict: 'id' });
-        localStorage.removeItem('mmm_consent_v1');
-      } catch {
-        // non-critical — don't block dashboard render
-      }
-    }
-
     // Fetch all dashboard data in parallel
     const [profileRes, goalRes, marksRes, taskRes] = await Promise.all([
       sb.from('profiles')

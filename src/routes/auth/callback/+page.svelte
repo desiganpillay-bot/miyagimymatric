@@ -11,11 +11,25 @@
     const code = $page.url.searchParams.get('code');
 
     if (code) {
-      const { error } = await sb.auth.exchangeCodeForSession(code);
+      const { data, error } = await sb.auth.exchangeCodeForSession(code);
       if (error) {
         status = 'Sign-in failed. Please try again.';
         setTimeout(() => goto('/assessment'), 3000);
         return;
+      }
+      // Persist POPIA consent from localStorage (written during assessment save prompt)
+      if (data.session) {
+        const consentRaw = localStorage.getItem('mmm_consent_v1');
+        if (consentRaw) {
+          try {
+            const consent = JSON.parse(consentRaw) as { consented_at: string; terms_version: string };
+            await sb.from('profiles').upsert(
+              { id: data.session.user.id, consented_at: consent.consented_at, terms_version: consent.terms_version },
+              { onConflict: 'id' }
+            );
+            localStorage.removeItem('mmm_consent_v1');
+          } catch { /* non-critical — don't block redirect */ }
+        }
       }
     }
 
