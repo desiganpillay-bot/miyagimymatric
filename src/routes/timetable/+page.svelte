@@ -486,9 +486,9 @@
         subjectMarks   = state.subjectMarks   || {};
         subjectRatings = state.subjectRatings  || {};
         profile        = state.answers         || {};
-        hasAssessment  = subjects.length > 0;
 
         const subjects = Object.keys(subjectMarks).filter(s => subjectMarks[s]);
+        hasAssessment  = subjects.length > 0;
         if (subjects.length > 0) {
           const tgt = MODE_TARGET[mode];
           ttSubjects = subjects.map(name => {
