@@ -412,6 +412,11 @@
       {/if}
     </div>
 
+    <div class="next-steps">
+      <p class="next-steps-label">Ready to plan your studies?</p>
+      <a href="/timetable" class="btn-timetable">Build My Timetable →</a>
+    </div>
+
     <button class="restart-btn" on:click={restart}>↩ Retake Assessment</button>
 
   {:else}
@@ -738,6 +743,30 @@
   }
 
   .google-btn:hover { border-color: var(--text); }
+
+  .next-steps {
+    text-align: center;
+    margin-top: 1.5rem;
+    animation: fadeUp 0.5s ease both;
+  }
+  .next-steps-label {
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin-bottom: 0.75rem;
+  }
+  .btn-timetable {
+    display: inline-block;
+    background: var(--accent);
+    color: #0d1117;
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 0.9rem;
+    padding: 0.75rem 2rem;
+    border-radius: var(--radius);
+    text-decoration: none;
+    transition: opacity 0.2s;
+  }
+  .btn-timetable:hover { opacity: 0.85; }
 
   .consent-checkboxes {
     background: rgba(246,201,14,.05);

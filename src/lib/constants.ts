@@ -17,6 +17,8 @@ export const SUBJECTS = [
   'isiZulu / isiXhosa / Other Lang',
   'Information Technology',
   'Economics',
+  'Life Orientation',
+  'Computer Applications Technology',
   'Other Subject'
 ] as const;
 

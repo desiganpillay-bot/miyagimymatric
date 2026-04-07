@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { rangeMid } from '$lib/aps';
 
   // ── Types ──────────────────────────────────────────────────
   type Day = 'Mon' | 'Tue' | 'Wed' | 'Thu' | 'Fri' | 'Sat' | 'Sun';
@@ -17,7 +18,7 @@
     'Mathematics', 'Mathematical Literacy', 'Physical Sciences', 'Life Sciences',
     'English HL', 'English FAL', 'Accounting', 'Business Studies',
     'History', 'Geography', 'Afrikaans', 'Information Technology',
-    'Economics', 'Other Subject'
+    'Economics', 'Life Orientation', 'Computer Applications Technology', 'Other Subject'
   ];
 
   const SESSION_TYPES = [
@@ -33,6 +34,8 @@
   let editSubject = SUBJECTS[0];
   let editType: Slot['type'] = 'study';
   let saved = false;
+  let generated = false;
+  let noAssessmentData = false;
 
   const STORAGE_KEY = 'mmm_timetable_v1';
 
@@ -91,6 +94,79 @@
     return SESSION_TYPES.find(t => t.value === slot.type)?.label ?? '';
   }
 
+  function autoGenerate() {
+    const raw = localStorage.getItem('mmm_assessment_v1');
+    if (!raw) {
+      noAssessmentData = true;
+      setTimeout(() => { noAssessmentData = false; }, 3500);
+      return;
+    }
+
+    let parsed: { subjectMarks?: Record<string, string> } = {};
+    try { parsed = JSON.parse(raw); } catch { /* malformed */ }
+
+    const subjectMarks: Record<string, string> = parsed.subjectMarks ?? {};
+
+    type PriorityEntry = { subject: string; slots: number; sessionType: Slot['type'] };
+    const priorities: PriorityEntry[] = [];
+
+    for (const [subject, markRange] of Object.entries(subjectMarks)) {
+      const pct = rangeMid(markRange);
+      if (pct <= 0) continue;
+      if (pct < 50) {
+        priorities.push({ subject, slots: 3, sessionType: 'past_paper' });
+      } else if (pct < 70) {
+        priorities.push({ subject, slots: 2, sessionType: 'revision' });
+      } else {
+        priorities.push({ subject, slots: 1, sessionType: 'study' });
+      }
+    }
+
+    if (priorities.length === 0) {
+      noAssessmentData = true;
+      setTimeout(() => { noAssessmentData = false; }, 3500);
+      return;
+    }
+
+    // Sort high priority (most slots) first
+    priorities.sort((a, b) => b.slots - a.slots);
+
+    // Round-robin queue: interleave one slot per subject per pass
+    type QueueEntry = { subject: string; sessionType: Slot['type'] };
+    const queue: QueueEntry[] = [];
+    const maxSlots = priorities[0].slots;
+    for (let round = 0; round < maxSlots; round++) {
+      for (const p of priorities) {
+        if (round < p.slots) queue.push({ subject: p.subject, sessionType: p.sessionType });
+      }
+    }
+
+    // Available slots: weekday afternoons first, then weekend mornings + afternoons
+    type AvailSlot = { day: Day; time: string };
+    const available: AvailSlot[] = [];
+    for (const day of ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'] as Day[]) {
+      for (const time of ['15:00', '16:00', '17:00', '18:00', '19:00']) {
+        available.push({ day, time });
+      }
+    }
+    for (const day of ['Sat', 'Sun'] as Day[]) {
+      for (const time of ['09:00', '10:00', '11:00', '14:00', '15:00', '16:00']) {
+        available.push({ day, time });
+      }
+    }
+
+    const fresh = emptyTimetable();
+    for (let i = 0; i < queue.length && i < available.length; i++) {
+      const { day, time } = available[i];
+      fresh[day][time] = { subject: queue[i].subject, type: queue[i].sessionType };
+    }
+
+    timetable = fresh;
+    persist();
+    generated = true;
+    setTimeout(() => { generated = false; }, 3000);
+  }
+
   // Weekly study hour count
   $: totalHours = Object.values(timetable).reduce((acc, day) =>
     acc + Object.values(day).filter(s => s && s.type !== 'break').length, 0);
@@ -123,8 +199,17 @@
         </span>
       {/each}
     </div>
+    <button class="btn-generate" on:click={autoGenerate}>
+      ✦ Generate from Assessment
+    </button>
     {#if saved}
       <span class="saved-badge">✓ Saved</span>
+    {/if}
+    {#if generated}
+      <span class="feedback-badge generated">Timetable generated ✓</span>
+    {/if}
+    {#if noAssessmentData}
+      <span class="feedback-badge no-data">Complete your assessment first</span>
     {/if}
   </div>
 
@@ -284,6 +369,32 @@
     font-weight: 600;
     animation: fadeIn 0.2s ease;
   }
+
+  .btn-generate {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 0.78rem;
+    background: transparent;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    border-radius: var(--radius);
+    padding: 0.4rem 0.9rem;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    white-space: nowrap;
+  }
+  .btn-generate:hover { background: var(--accent); color: #0d1117; }
+
+  .feedback-badge {
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    animation: fadeIn 0.2s ease;
+    white-space: nowrap;
+  }
+  .feedback-badge.generated { color: var(--accent3); background: rgba(74,222,128,.1); border: 1px solid rgba(74,222,128,.25); }
+  .feedback-badge.no-data   { color: var(--danger);  background: rgba(248,113,113,.1); border: 1px solid rgba(248,113,113,.25); }
 
   /* Grid */
   .grid-wrap {

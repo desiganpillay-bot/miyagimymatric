@@ -19,7 +19,7 @@
     'Mathematics', 'Mathematical Literacy', 'Physical Sciences', 'Life Sciences',
     'English HL', 'English FAL', 'Accounting', 'Business Studies',
     'History', 'Geography', 'Afrikaans', 'Information Technology',
-    'Economics', 'Life Orientation', 'Other Subject'
+    'Economics', 'Life Orientation', 'Computer Applications Technology', 'Other Subject'
   ];
 
   const MARK_TYPES: { value: MarkType; label: string }[] = [
