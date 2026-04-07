@@ -1,12 +1,19 @@
-import { createBrowserClient } from '@supabase/ssr';
+import { createClient } from '@supabase/supabase-js';
 import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from '$env/static/public';
 
 export function createSupabaseClient() {
-  return createBrowserClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY);
+  return createClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY, {
+    auth: {
+      flowType: 'pkce',
+      storage: typeof window !== 'undefined' ? window.localStorage : undefined,
+      detectSessionInUrl: true,
+      persistSession: true
+    }
+  });
 }
 
 // Singleton for use in browser context
-let _client: ReturnType<typeof createBrowserClient> | null = null;
+let _client: ReturnType<typeof createClient> | null = null;
 
 export function getSupabase() {
   if (!_client) {
