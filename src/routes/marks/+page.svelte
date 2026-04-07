@@ -237,7 +237,7 @@
 
 <!-- Modal -->
 {#if showForm}
-  <div class="modal-backdrop" on:click|self={() => { showForm = false; resetForm(); }}>
+  <div class="modal-backdrop" role="presentation" on:click|self={() => { showForm = false; resetForm(); }} on:keydown={() => {}}>
     <div class="modal">
       <h3>{editingId ? 'Edit Mark' : 'Add Mark'}</h3>
 

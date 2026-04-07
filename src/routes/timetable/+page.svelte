@@ -163,7 +163,7 @@
 
 <!-- Edit modal -->
 {#if editing}
-  <div class="modal-backdrop" on:click|self={() => editing = null}>
+  <div class="modal-backdrop" role="presentation" on:click|self={() => { editing = null; }} on:keydown={() => {}}>
     <div class="modal">
       <h3>{editing.day} · {editing.time}</h3>
 
@@ -181,7 +181,7 @@
             class="type-btn"
             class:selected={editType === t.value}
             style="border-color: {editType === t.value ? t.color : 'var(--border)'}; color: {editType === t.value ? t.color : 'var(--muted)'}"
-            on:click={() => editType = t.value as Slot['type']}
+            on:click={() => { editType = t.value; }}
           >
             {t.label}
           </button>

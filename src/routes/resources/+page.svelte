@@ -1,7 +1,7 @@
 <script lang="ts">
   type Category = 'zero_rated' | 'past_papers' | 'video' | 'tools' | 'mental_health';
 
-  let active: Category = 'zero_rated';
+  let active = 'zero_rated';
 
   const CATEGORIES = [
     { id: 'zero_rated',    label: 'Zero-Rated',       icon: '📶' },
@@ -31,7 +31,7 @@
       <button
         class="tab-btn"
         class:active={active === c.id}
-        on:click={() => active = c.id as Category}
+        on:click={() => { active = c.id; }}
       >
         <span class="tab-icon">{c.icon}</span>
         <span class="tab-label">{c.label}</span>
