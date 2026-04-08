@@ -1,8 +1,31 @@
 <script lang="ts">
   import { onMount } from 'svelte';
 
-  let active = 'mathematics';
+  let active = '';
   let examSystem: 'ieb' | 'caps' | 'unsure' = 'unsure';
+  let learnerSubjects: { id: string; label: string; icon: string; hasContent: boolean }[] = [];
+
+  // Maps assessment subject names → content IDs
+  const SUBJECT_MAP: Record<string, { id: string; icon: string }> = {
+    'Mathematics':                      { id: 'mathematics',   icon: '📐' },
+    'Mathematical Literacy':            { id: 'mathematics',   icon: '📐' },
+    'Physical Sciences':                { id: 'sciences',      icon: '⚗️' },
+    'Life Sciences':                    { id: 'life_sciences', icon: '🧬' },
+    'English HL':                       { id: 'english',       icon: '📖' },
+    'English FAL':                      { id: 'english',       icon: '📖' },
+    'Accounting':                       { id: 'accounting',    icon: '🧾' },
+    'Business Studies':                 { id: 'business',      icon: '📊' },
+    'History':                          { id: 'history',       icon: '🏛️' },
+    'Geography':                        { id: 'geography',     icon: '🗺️' },
+    'Afrikaans':                        { id: 'afrikaans',     icon: '🇿🇦' },
+    'Life Orientation':                 { id: 'lo',            icon: '🌱' },
+    'Computer Applications Technology': { id: 'cat',           icon: '💻' },
+    'Information Technology':           { id: 'it',            icon: '⌨️' },
+    'Economics':                        { id: 'economics',     icon: '📈' },
+    'isiZulu / isiXhosa / Other Lang':  { id: 'other_lang',    icon: '💬' },
+  };
+
+  const CONTENT_IDS = new Set(['mathematics','sciences','life_sciences','english','accounting','business','history','geography']);
 
   onMount(() => {
     try {
@@ -11,20 +34,44 @@
         const state = JSON.parse(raw);
         const sys = state?.answers?.exam_system;
         if (sys === 'ieb' || sys === 'caps') examSystem = sys;
+
+        const marks: Record<string, string> = state.subjectMarks || {};
+        const taken = Object.entries(marks)
+          .filter(([, v]) => v) // only subjects with a mark entered
+          .map(([name]) => {
+            const mapped = SUBJECT_MAP[name];
+            return {
+              id: mapped?.id || name.toLowerCase().replace(/\s+/g, '_'),
+              label: name,
+              icon: mapped?.icon || '📚',
+              hasContent: mapped ? CONTENT_IDS.has(mapped.id) : false
+            };
+          });
+
+        // Deduplicate by id (e.g. English HL + FAL both → 'english')
+        const seen = new Set<string>();
+        learnerSubjects = taken.filter(s => {
+          if (seen.has(s.id)) return false;
+          seen.add(s.id);
+          return true;
+        });
+
+        // Set active to first subject with content, or first subject
+        const first = learnerSubjects.find(s => s.hasContent) || learnerSubjects[0];
+        if (first) active = first.id;
       }
     } catch {}
-  });
 
-  const subjects = [
-    { id: 'mathematics',       label: 'Mathematics',        icon: '📐' },
-    { id: 'sciences',          label: 'Physical Sciences',  icon: '⚗️' },
-    { id: 'life_sciences',     label: 'Life Sciences',      icon: '🧬' },
-    { id: 'english',           label: 'English',            icon: '📖' },
-    { id: 'accounting',        label: 'Accounting',         icon: '🧾' },
-    { id: 'business',          label: 'Business Studies',   icon: '📊' },
-    { id: 'history',           label: 'History',            icon: '🏛️' },
-    { id: 'geography',         label: 'Geography',          icon: '🗺️' }
-  ];
+    // Fallback if no assessment data
+    if (learnerSubjects.length === 0) {
+      learnerSubjects = [
+        { id: 'mathematics',   label: 'Mathematics',       icon: '📐', hasContent: true },
+        { id: 'sciences',      label: 'Physical Sciences', icon: '⚗️', hasContent: true },
+        { id: 'english',       label: 'English',           icon: '📖', hasContent: true },
+      ];
+      active = 'mathematics';
+    }
+  });
 
   const content: Record<string, { overview: string; papers: { name: string; weight: string; focus: string[] }[]; tips: string[]; caution: string }> = {
     mathematics: {
@@ -244,7 +291,7 @@
 
   <!-- Tab bar -->
   <div class="tabs">
-    {#each subjects as s}
+    {#each learnerSubjects as s}
       <button
         class="tab"
         class:active={active === s.id}
@@ -316,6 +363,18 @@
       </div>
 
     </div>
+
+  {:else}
+    {@const current = learnerSubjects.find(s => s.id === active)}
+    <div class="no-content">
+      <div class="no-content-icon">{current?.icon || '📚'}</div>
+      <h2 class="no-content-title">{current?.label || 'Subject'} guide coming soon</h2>
+      <p class="no-content-text">Detailed strategy content for this subject is being developed. In the meantime, use the resources below to get started.</p>
+      <div class="no-content-links">
+        <a href="/resources" class="nc-link">Browse study resources →</a>
+        <a href="/timetable" class="nc-link">Check your timetable →</a>
+      </div>
+    </div>
   {/if}
 </div>
 
@@ -373,6 +432,15 @@
   .curr-callout.ieb { background: rgba(56,189,248,.07); border: 1px solid rgba(56,189,248,.25); color: var(--text); }
   .curr-callout.caps { background: rgba(74,222,128,.07); border: 1px solid rgba(74,222,128,.25); color: var(--text); }
   .curr-callout strong { color: inherit; }
+
+  /* No content state */
+  .no-content { text-align: center; padding: 3rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; animation: fadeIn 0.3s ease both; }
+  .no-content-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+  .no-content-title { font-family: var(--font-head); font-size: 1.2rem; font-weight: 700; color: var(--text); margin: 0 0 0.75rem; }
+  .no-content-text { color: var(--muted); font-size: 0.9rem; line-height: 1.6; max-width: 400px; margin: 0 auto 1.5rem; }
+  .no-content-links { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
+  .nc-link { color: var(--accent2); text-decoration: none; font-size: 0.875rem; font-weight: 600; padding: 0.5rem 1rem; border: 1px solid rgba(56,189,248,.3); border-radius: 999px; transition: all 0.15s; }
+  .nc-link:hover { background: rgba(56,189,248,.08); }
 
   @keyframes fadeDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
   @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
