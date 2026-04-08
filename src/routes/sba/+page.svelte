@@ -205,6 +205,7 @@
     <div class="badge">SBA Tracker</div>
     <h1>SBA Task Tracker</h1>
     <p class="subtitle">SBA is worth 25% of your final mark. Never miss a submission — each task counts.</p>
+    <a href="/timetable" class="timetable-link">📅 View study timetable →</a>
   </header>
 
   <!-- Summary -->
@@ -404,6 +405,8 @@
 
   h1 { font-family: var(--font-head); font-size: clamp(1.8rem, 5vw, 2.5rem); font-weight: 800; color: var(--text); margin: 0 0 0.5rem; }
   .subtitle { color: var(--muted); font-size: 0.875rem; max-width: 500px; margin: 0 auto; }
+  .timetable-link { display: inline-block; margin-top: .75rem; font-size: .8rem; color: var(--accent2); text-decoration: none; font-weight: 600; }
+  .timetable-link:hover { text-decoration: underline; }
 
   /* Summary bar */
   .summary-bar { display: flex; align-items: center; gap: 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 0.75rem 1.25rem; margin-bottom: 1rem; flex-wrap: wrap; animation: fadeUp 0.4s ease both; }

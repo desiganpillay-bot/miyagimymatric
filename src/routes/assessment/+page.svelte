@@ -243,6 +243,9 @@
   $: stressVal = num(a['stress'], 5);
   $: sleepWarning = ['under5','5to6','6to7'].includes(sleepVal);
   $: highStress = stressVal >= 7;
+  $: challenges = arr(a['challenges']);
+  $: hasAnxiety = challenges.includes('anxiety') || highStress;
+  $: hasProcrastination = challenges.includes('procrastination');
   $: rated = SUBJECTS.map(s => ({ name: s, r: $subjectRatings[s], m: $subjectMarks[s] })).filter(s => s.r > 0 || s.m).sort((x, y) => (x.r || 3) - (y.r || 3));
 </script>
 
@@ -417,6 +420,13 @@
       <a href="/dashboard" class="btn-timetable">View My Dashboard →</a>
       <a href="/timetable" class="btn-timetable btn-ghost-cta">Build My Timetable →</a>
       <a href="/sba" class="btn-timetable btn-ghost-cta">Track SBA Tasks →</a>
+      <a href="/techniques" class="btn-timetable btn-ghost-cta">Study Techniques →</a>
+      {#if hasAnxiety || hasProcrastination}
+        <div class="challenge-tip">
+          {#if hasAnxiety}⚡ Your profile shows exam anxiety — the <strong>Pomodoro 50/10</strong> technique in the techniques guide is proven to lower pre-exam stress.{/if}
+          {#if hasProcrastination && !hasAnxiety}🎯 Your profile shows procrastination — try <strong>active recall (blurting)</strong> to make the first 5 minutes feel easy.{/if}
+        </div>
+      {/if}
     </div>
 
     <button class="restart-btn" on:click={restart}>↩ Retake Assessment</button>
@@ -771,6 +781,8 @@
   .btn-timetable:hover { opacity: 0.85; }
   .btn-ghost-cta { background: transparent; border: 1px solid var(--border); color: var(--muted); margin-top: 0.5rem; }
   .btn-ghost-cta:hover { border-color: var(--accent2); color: var(--accent2); opacity: 1; }
+  .challenge-tip { margin-top: 1rem; padding: .75rem 1rem; background: rgba(246,201,14,.06); border: 1px solid rgba(246,201,14,.18); border-radius: 10px; font-size: .8rem; color: var(--muted); line-height: 1.6; text-align: left; }
+  .challenge-tip strong { color: var(--accent); }
 
   .consent-checkboxes {
     background: rgba(246,201,14,.05);

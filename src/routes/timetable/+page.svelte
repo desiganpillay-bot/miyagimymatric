@@ -756,6 +756,7 @@
       <div class="modal-task-box">
         <div class="modal-task-lbl">Today's Task</div>
         <p>{modalSlot.task || 'Complete your assessment to unlock personalised tasks.'}</p>
+        <a href="/pomodoro" class="pomodoro-btn">⏱ Start 50/10 Pomodoro →</a>
       </div>
       {#if modalHighValue.length > 0}
       <div class="modal-hv-box">
@@ -922,7 +923,9 @@
   .modal-meta  { font-size: .73rem; color: var(--muted); margin-bottom: 1rem; }
   .modal-task-box { background: var(--surface2); border-radius: 12px; padding: 1rem; margin-bottom: 1rem; }
   .modal-task-lbl { font-family: var(--font-head); font-size: .62rem; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: .08em; margin-bottom: .45rem; }
-  .modal-task-box p { font-size: .85rem; line-height: 1.65; color: var(--text); margin: 0; }
+  .modal-task-box p { font-size: .85rem; line-height: 1.65; color: var(--text); margin: 0 0 .75rem; }
+  .pomodoro-btn { display: inline-flex; align-items: center; gap: .4rem; font-size: .75rem; font-weight: 700; font-family: var(--font-head); color: var(--accent2); text-decoration: none; padding: .35rem .7rem; border: 1px solid rgba(56,189,248,.25); border-radius: 999px; transition: background .15s; }
+  .pomodoro-btn:hover { background: rgba(56,189,248,.08); }
   .modal-hv-box { background: rgba(248,113,113,.06); border: 1px solid rgba(248,113,113,.15); border-radius: 12px; padding: 0.75rem 1rem; margin-bottom: 1rem; display: flex; flex-direction: column; gap: 0.4rem; }
   .modal-hv-topic { }
   .modal-hv-top { display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; }
