@@ -1,5 +1,8 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
+
   let active = 'recall';
+  let examSystem: 'ieb' | 'caps' | 'unsure' = 'unsure';
 
   const TECHNIQUES = [
     { id: 'recall',       label: 'Active Recall',      icon: '🧠' },
@@ -9,6 +12,16 @@
     { id: 'feynman',      label: 'Feynman',             icon: '💬' },
     { id: 'pastpapers',   label: 'Past Papers',         icon: '📝' },
   ];
+
+  onMount(() => {
+    try {
+      const raw = localStorage.getItem('mmm_assessment_v1');
+      if (raw) {
+        const sys = JSON.parse(raw)?.answers?.exam_system;
+        if (sys === 'ieb' || sys === 'caps') examSystem = sys;
+      }
+    } catch {}
+  });
 </script>
 
 <svelte:head>
@@ -22,6 +35,13 @@
     <div class="badge">Evidence-Based</div>
     <h1>Study Techniques</h1>
     <p class="subtitle">The six methods used by top SA matric students. Each one is backed by research and endorsed by educators.</p>
+    {#if examSystem === 'ieb'}
+      <div class="curr-banner ieb">📋 <strong>IEB learner</strong> — IEB exams weight analysis, evaluation and synthesis heavily (Bloom's levels 4–6). Techniques that build these skills are flagged below.</div>
+    {:else if examSystem === 'caps'}
+      <div class="curr-banner caps">📋 <strong>CAPS / NSC learner</strong> — CAPS exams balance knowledge and application. Past papers and active recall are your highest-leverage tools.</div>
+    {:else}
+      <div class="curr-banner unsure">⚠️ Exam system not set. <a href="/assessment" class="banner-link">Complete your assessment</a> to see curriculum-specific guidance.</div>
+    {/if}
   </header>
 
   <!-- Tab bar -->
@@ -79,6 +99,12 @@
           <li><strong>Accounting:</strong> Reconstruct a full financial statement template before filling in numbers.</li>
         </ul>
       </div>
+
+      {#if examSystem === 'ieb'}
+        <div class="curr-callout ieb">📋 <strong>IEB active recall tip:</strong> IEB questions rarely ask you to repeat a fact — they ask you to <em>apply</em> it. When blurting, push yourself to explain WHY something works, not just WHAT it is. For example: don't just recall "Newton's 3rd law" — recall it AND give an example AND explain why it matters in the context given.</div>
+      {:else if examSystem === 'caps'}
+        <div class="curr-callout caps">📋 <strong>CAPS active recall tip:</strong> About 55% of Maths marks and a large portion of Sciences marks are in knowledge/routine procedure bands — perfect for recall. Prioritise definitions, formulae, and standard worked examples. Every definition should be recalled word-for-word.</div>
+      {/if}
 
       <div class="caution-card">
         <strong>Avoid:</strong> Using highlighting and re-reading as your main study strategy. It feels productive but produces very little learning. Reserve it for the first pass only.
@@ -377,6 +403,12 @@
         </ul>
       </div>
 
+      {#if examSystem === 'ieb'}
+        <div class="curr-callout ieb">📋 <strong>IEB Feynman tip:</strong> IEB examiners specifically reward learners who can argue a position and evaluate evidence — exactly what Feynman builds. For Life Sciences Paper 2, History source analysis, and English literature essays, practise explaining your <em>opinion and why</em> — not just the facts. If you can explain it simply, you can write it under pressure.</div>
+      {:else if examSystem === 'caps'}
+        <div class="curr-callout caps">📋 <strong>CAPS Feynman tip:</strong> Use Feynman for the "explain" and "discuss" questions that appear in every CAPS paper. If you struggle to explain a concept in simple terms, that is exactly where your exam mark will be lost. Focus on Business Studies legislation, Geography processes, and Life Sciences physiology.</div>
+      {/if}
+
       <div class="caution-card">
         <strong>The Feynman test:</strong> If you need more than 3 sentences to explain one concept, you are overcomplicating it or hiding a gap behind words. Keep simplifying.
       </div>
@@ -460,6 +492,12 @@
         </div>
       </div>
 
+      {#if examSystem === 'ieb'}
+        <div class="curr-callout ieb">📋 <strong>IEB past paper tips:</strong> IEB papers are available free for the last 5 years at ieb.co.za. Key differences from CAPS: IEB grants a <strong>10-minute reading period</strong> before you write — use it to plan your approach to all questions. IEB History includes a source booklet requiring bias, reliability and perspective evaluation. IEB Accounting is split into Paper 1 (processing) and Paper 2 (analysis) — practice both separately. Use <a href="/resources" class="inline-link">the resources page</a> to find IEB-specific papers.</div>
+      {:else if examSystem === 'caps'}
+        <div class="curr-callout caps">📋 <strong>CAPS past paper tips:</strong> DBE papers are free at education.gov.za (2016–2024). Provincial papers vary — Eastern Cape and Western Cape are the most useful practice benchmarks. The November paper is always slightly harder than supplementary — prioritise November papers. Use <a href="/resources" class="inline-link">the resources page</a> for direct links.</div>
+      {/if}
+
       <div class="caution-card">
         <strong>Do not:</strong> Read through a past paper and think "I could answer this." That is illusion of competence. Write your answers fully under timed conditions. Only then will you know what you actually know.
       </div>
@@ -476,6 +514,18 @@
   .badge { display: inline-block; background: rgba(246,201,14,.12); color: var(--accent); border: 1px solid rgba(246,201,14,.25); border-radius: 999px; padding: 0.3rem 1rem; font-family: var(--font-head); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 0.75rem; }
   h1 { font-family: var(--font-head); font-size: clamp(1.8rem, 5vw, 2.5rem); font-weight: 800; color: var(--text); margin: 0 0 0.5rem; }
   .subtitle { color: var(--muted); font-size: 0.875rem; max-width: 500px; margin: 0 auto; }
+  .curr-banner { border-radius: 10px; padding: 0.65rem 1rem; font-size: 0.8rem; line-height: 1.5; margin-top: 0.75rem; max-width: 560px; margin-left: auto; margin-right: auto; }
+  .curr-banner.ieb { background: rgba(56,189,248,.08); border: 1px solid rgba(56,189,248,.25); color: var(--accent2); }
+  .curr-banner.caps { background: rgba(74,222,128,.08); border: 1px solid rgba(74,222,128,.25); color: var(--accent3); }
+  .curr-banner.unsure { background: rgba(246,201,14,.08); border: 1px solid rgba(246,201,14,.2); color: var(--accent); }
+  .curr-banner strong { color: inherit; }
+  .banner-link { color: inherit; font-weight: 700; }
+  .curr-callout { border-radius: 10px; padding: 0.75rem 1rem; font-size: 0.82rem; line-height: 1.6; }
+  .curr-callout.ieb { background: rgba(56,189,248,.07); border: 1px solid rgba(56,189,248,.2); color: var(--text); }
+  .curr-callout.caps { background: rgba(74,222,128,.07); border: 1px solid rgba(74,222,128,.2); color: var(--text); }
+  .curr-callout strong { color: inherit; }
+  .inline-link { color: var(--accent2); text-decoration: none; font-weight: 600; }
+  .inline-link:hover { text-decoration: underline; }
 
   /* Tab bar */
   .tab-bar { display: flex; gap: 0.4rem; overflow-x: auto; padding-bottom: 0.5rem; margin-bottom: 1.5rem; scrollbar-width: none; animation: fadeUp 0.4s ease both; }
