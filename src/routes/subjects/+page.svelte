@@ -25,7 +25,7 @@
     'isiZulu / isiXhosa / Other Lang':  { id: 'other_lang',    icon: '💬' },
   };
 
-  const CONTENT_IDS = new Set(['mathematics','sciences','life_sciences','english','accounting','business','history','geography']);
+  const CONTENT_IDS = new Set(['mathematics','sciences','life_sciences','english','accounting','business','history','geography','afrikaans','lo','cat','it','economics']);
 
   onMount(() => {
     try {
@@ -265,6 +265,131 @@
         'Cross-sections: always label your axes, scale, and vertical exaggeration'
       ],
       caution: 'IEB Geography mapwork includes additional GIS components. Know the difference between raster and vector data, and the purpose of buffering.'
+    },
+    afrikaans: {
+      overview: 'Afrikaans is examined as a Home Language (HL) or First Additional Language (FAL). FAL is more accessible and still highly valued — a good FAL mark boosts your APS without the difficulty of HL. All three papers test different skills; Paper 3 (Writing) is where most marks are lost or won.',
+      papers: [
+        {
+          name: 'Paper 1 — Begrip en Taal (Comprehension & Language)',
+          weight: 'Multiple texts, language structures',
+          focus: ['Begrip (comprehension): literal and inferential questions', 'Opsomming (summary): 8 points in your own words', 'Taalstrukture: grammar, figures of speech, language use', 'Advertensies and cartoons: visual text analysis']
+        },
+        {
+          name: 'Paper 2 — Letterkunde (Literature)',
+          weight: 'Prescribed texts',
+          focus: ['Roman (novel): character, theme, conflict, symbolism', 'Gedigte (poetry): toon, beelding, struktuur, perspektief', 'Drama: dramaturg se doel, tegnieke, konteks', 'Short stories: setting, narrative perspective, message']
+        },
+        {
+          name: 'Paper 3 — Skryfvaardighede (Writing)',
+          weight: 'Two written pieces',
+          focus: ['Essay formats: narratief, beskrywend, betogend, besprekend', 'Transaksioneel: formele brief, verslag, toespraak, resensie', 'Register and tone appropriate to context', 'Vocabulary range and sentence variety']
+        }
+      ],
+      tips: [
+        'Paper 3: write one Afrikaans essay per week under timed conditions — 45 minutes',
+        'Vocabulary: learn 5 new Afrikaans words per week and use them in writing',
+        'Literature: go beyond plot — know karakters se motiverings (character motivations) and themes deeply',
+        'Opsomming (summary): count your punte (points) — you need exactly the number asked, not more',
+        'Comprehension: always quote the teks (text) to support your answer — opinion alone scores 0',
+        'Grammar: practise all taalstrukture (language structures) types from past papers — they repeat'
+      ],
+      caution: 'Many learners underestimate Paper 3. Writing one essay per week from Term 1 is more effective than any other Afrikaans intervention. Do not leave writing practice until Term 3.'
+    },
+    lo: {
+      overview: 'Life Orientation is 100% internally assessed — there is no external exam. This makes it unique: your SBA marks ARE your final mark. Every task, portfolio entry, and CAT component counts directly. Missing anything cannot be recovered.',
+      papers: [
+        {
+          name: 'CAPS: SBA Portfolio (80%) + CAT (20%)',
+          weight: '100% internal assessment',
+          focus: ['Personal development: self-concept, mental health, relationships', 'Social and environmental responsibility', 'Democracy, human rights, and the Constitution', 'Physical education / sport participation (compulsory)', 'CAT: written exam on all LO content areas']
+        },
+        {
+          name: 'IEB: SBA Portfolio (70%) + CAT (30%)',
+          weight: '100% internal assessment',
+          focus: ['Personal development and wellbeing', 'Citizenship and social justice', 'Recreation and physical activity', 'Career and study planning', 'CAT: higher-order thinking on LO themes']
+        }
+      ],
+      tips: [
+        'Never miss a submission — LO has no exam to recover marks. What you submit is your final mark.',
+        'Keep a dedicated LO portfolio file — organised, complete, with all evidence',
+        'Physical education component: attend every session and get it signed off',
+        'CAT preparation: use past CAT papers — they follow predictable question formats',
+        'Start each LO task the day it is assigned — do not accumulate multiple tasks',
+        'IEB CAT: requires analysis and opinion, not just knowledge recall — practise structured argument'
+      ],
+      caution: 'LO is not a "free mark" subject. Learners who neglect the portfolio and miss the CAT have lost their entire LO contribution to APS. Treat every task as an exam.'
+    },
+    cat: {
+      overview: 'Computer Applications Technology has a 40% SBA / 60% exam split — different from most subjects. The practical component (PAT) is a major SBA project completed over the year. Both theory and practical skills are examined, and neither can be neglected.',
+      papers: [
+        {
+          name: 'Paper 1 — Theory',
+          weight: '60 marks',
+          focus: ['Hardware: components, peripherals, storage, mobile devices', 'Software: operating systems, application software, licensing', 'Networks: LAN/WAN, Internet, protocols, security', 'Social implications: privacy, copyright, cyberbullying, netiquette', 'System technologies: cloud, processing, input/output']
+        },
+        {
+          name: 'Paper 2 — Practical (in-exam)',
+          weight: '180 marks',
+          focus: ['Word processing (MS Word or LibreOffice): advanced formatting, mail merge, tables', 'Spreadsheets (MS Excel or Calc): formulas, functions, charts, data validation', 'Databases (MS Access or Base): tables, queries, forms, reports', 'Presentations: slide design, animations, transitions', 'Internet and email tasks']
+        }
+      ],
+      tips: [
+        'PAT (Practical Assessment Task): start early in Term 1 — it is submitted before prelims and counts towards SBA',
+        'Spreadsheet functions: practise VLOOKUP, IF, SUMIF, COUNTIF until automatic',
+        'Database queries: practise complex SELECT queries with criteria and sorting',
+        'Theory Paper 1: use past papers — question types are highly predictable year to year',
+        'Practical Paper 2: speed matters — practise under timed conditions regularly',
+        'Mail merge: know the full process end-to-end — it appears in most practical papers'
+      ],
+      caution: 'CAT has a 40/60 SBA/exam split (unlike the 25/75 for most subjects). Your PAT counts significantly — submit it on time and at high quality. A poor PAT cannot be recovered in the exam.'
+    },
+    it: {
+      overview: 'Information Technology is one of the most technically demanding matric subjects. It requires both programming skill and systems knowledge. The practical exam requires you to write working code under pressure — consistent coding practice throughout the year is non-negotiable.',
+      papers: [
+        {
+          name: 'Paper 1 — Practical Programming',
+          weight: '120 marks — written in Delphi or Java',
+          focus: ['Object-oriented programming: classes, objects, methods, inheritance', 'File handling: read/write text files, sequential and random access', 'Sorting algorithms: bubble, insertion, selection — code from scratch', 'Searching algorithms: linear and binary search', 'SQL: SELECT, INSERT, UPDATE, DELETE with criteria and joins', 'GUI development: forms, buttons, event handlers']
+        },
+        {
+          name: 'Paper 2 — Theory',
+          weight: '120 marks',
+          focus: ['Social and ethical implications: privacy, IP, cybercrime, AI', 'Hardware and software: system software, application software', 'Networks: topologies, protocols, Internet infrastructure, security', 'Database design: ERD, normalisation, relationships', 'Systems development life cycle: analysis, design, implementation, testing']
+        }
+      ],
+      tips: [
+        'Code every day — even 20 minutes. Programming is a physical skill, not just knowledge',
+        'Past practical papers: attempt every question in your chosen language (Delphi or Java)',
+        'SQL: practise all query types with AND/OR/LIKE/JOIN — examiners test edge cases',
+        'File handling: know sequential and random access file operations from memory',
+        'Sorting: write bubble, insertion and selection sort from scratch without reference',
+        'Theory Paper 2: use mind maps for networks and social implications — lots of terminology'
+      ],
+      caution: 'IT has a 40/60 SBA/exam split. The PAT is a full software development project — treat it as a major deliverable. Learners who neglect the PAT lose 40% of their total mark before the exam starts.'
+    },
+    economics: {
+      overview: 'Economics examines micro and macroeconomics across two papers. Essay writing is central — the mark scheme rewards structured argument with economic terminology, not just general knowledge. Understanding how concepts link is more valuable than memorising definitions in isolation.',
+      papers: [
+        {
+          name: 'Paper 1 — Macroeconomics',
+          weight: '150 marks',
+          focus: ['The circular flow of income and national accounts (GDP, GNP)', 'Business cycles: phases, causes, indicators', 'Public sector: government spending, taxation, fiscal policy', 'Money and banking: monetary policy, interest rates, inflation', 'International trade: balance of payments, exchange rates, trade policy']
+        },
+        {
+          name: 'Paper 2 — Microeconomics',
+          weight: '150 marks',
+          focus: ['Demand and supply: elasticity, market equilibrium, price controls', 'Market structures: perfect competition, monopoly, oligopoly, monopolistic competition', 'Labour markets: wages, trade unions, unemployment, minimum wage', 'Economic and social indicators: HDI, Gini coefficient, poverty measures', 'Inflation: causes, types, effects, CPI calculation']
+        }
+      ],
+      tips: [
+        'Essay structure: define key terms in intro → develop 3–4 linked arguments → evaluate and conclude',
+        'Economic data questions: always reference the graph/table in your answer — do not describe in general',
+        'Macroeconomics: understand the circular flow deeply — most Paper 1 questions link back to it',
+        'Graphs: practise drawing and labelling demand/supply shifts, business cycles, and circular flow diagrams',
+        'Terminology: use correct economic terms in every answer — vague language loses interpretation marks',
+        'Past papers: Economics question patterns are highly consistent — do at least 5 full papers'
+      ],
+      caution: 'Economics essays are not general knowledge questions. Every paragraph must use correct economic terminology and link to economic theory. Answers that read like "common sense" without economic concepts score poorly.'
     }
   };
 </script>
@@ -342,6 +467,26 @@
           <div class="curr-callout ieb">📋 <strong>IEB Physical Sciences Paper 1 includes a 10-minute reading period</strong> before you write. Use it to read all questions and plan your calculation approach. IEB questions often require application to unfamiliar contexts — not just formula substitution.</div>
         {:else if active === 'mathematics' && examSystem === 'ieb'}
           <div class="curr-callout ieb">📋 <strong>IEB Mathematics has the same paper structure as CAPS</strong> but questions at the higher end demand more interpretation and application. Ensure you can explain your reasoning, not just calculate answers.</div>
+        {:else if active === 'afrikaans' && examSystem === 'ieb'}
+          <div class="curr-callout ieb">📋 <strong>IEB Afrikaans HL/FAL</strong> places greater emphasis on higher-order literary analysis. Essay questions require evaluation and argument, not plot summary. The skryfstuk (writing) mark scheme rewards original voice and accurate register.</div>
+        {:else if active === 'afrikaans' && examSystem === 'caps'}
+          <div class="curr-callout caps">📋 <strong>CAPS Afrikaans</strong> follows the standard three-paper structure. Paper 3 writing accounts for a significant portion — practise rotating essay formats weekly. Taalstrukture (language structures) in Paper 1 are predictable and highly learnable from past papers.</div>
+        {:else if active === 'lo' && examSystem === 'ieb'}
+          <div class="curr-callout ieb">📋 <strong>IEB Life Orientation CAT is 30% of your total LO mark</strong> and requires higher-order thinking — analysis, evaluation, and opinion. It is not a knowledge recall test. Practise structured argument using IEB past CAT papers specifically.</div>
+        {:else if active === 'lo' && examSystem === 'caps'}
+          <div class="curr-callout caps">📋 <strong>CAPS LO CAT is 20% of your total mark.</strong> It covers all LO content areas with structured questions. Past CAT papers are available from the DBE — use them. The remaining 80% is your portfolio: every task submitted counts directly.</div>
+        {:else if active === 'cat' && examSystem === 'ieb'}
+          <div class="curr-callout ieb">📋 <strong>IEB CAT practical paper</strong> includes advanced integration of applications — expect tasks that combine Word, Excel and Access in a single scenario. The PAT project requires a full systems development approach with documentation.</div>
+        {:else if active === 'cat' && examSystem === 'caps'}
+          <div class="curr-callout caps">📋 <strong>CAPS CAT</strong> has a 40/60 SBA/exam split. The PAT counts heavily — it is submitted before prelims and cannot be redone. Theory Paper 1 questions are highly consistent year to year; past papers are your best preparation tool.</div>
+        {:else if active === 'it' && examSystem === 'ieb'}
+          <div class="curr-callout ieb">📋 <strong>IEB IT practical paper</strong> uses either Delphi or Java — choose one and commit to it. IEB questions often present unfamiliar scenarios requiring you to apply OOP principles creatively, not just recall patterns. Expect object design questions.</div>
+        {:else if active === 'it' && examSystem === 'caps'}
+          <div class="curr-callout caps">📋 <strong>CAPS IT</strong> has a 40/60 SBA/exam split. The PAT is a full software project — plan it in Term 1. Paper 1 practical questions follow consistent patterns; past papers reveal exactly what SQL, file handling, and sorting scenarios repeat.</div>
+        {:else if active === 'economics' && examSystem === 'ieb'}
+          <div class="curr-callout ieb">📋 <strong>IEB Economics</strong> requires deeper evaluation and synthesis. Essay questions ask you to "discuss critically" or "evaluate the effectiveness" — generic answers without economic theory score poorly. Data response questions include unfamiliar contexts; apply principles, not memorised examples.</div>
+        {:else if active === 'economics' && examSystem === 'caps'}
+          <div class="curr-callout caps">📋 <strong>CAPS Economics</strong> essays follow a consistent structure: definitions → body with economic theory → conclusion with recommendation. Past paper memos show exactly what markers award marks for — study the memos, not just the questions.</div>
         {/if}
       {/if}
 
