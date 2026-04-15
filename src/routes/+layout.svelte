@@ -3,6 +3,7 @@
   import { page } from '$app/stores';
 
   const NAV = [
+    { href: '/',            icon: '🏠',  label: 'Home'        },
     { href: '/dashboard',   icon: '⬡',  label: 'Dashboard'   },
     { href: '/assessment',  icon: '🎯',  label: 'Assess'      },
     { href: '/timetable',   icon: '📅',  label: 'Timetable'   },
@@ -11,13 +12,18 @@
   ];
 
   $: current = $page.url.pathname;
+
+  function isActive(href: string): boolean {
+    if (href === '/') return current === '/';
+    return current === href || current.startsWith(href + '/');
+  }
 </script>
 
 <div class="layout-wrap">
   <slot />
   <nav class="bottom-nav">
     {#each NAV as n}
-      <a href={n.href} class="nav-item" class:active={current === n.href || current.startsWith(n.href + '/')}>
+      <a href={n.href} class="nav-item" class:active={isActive(n.href)}>
         <span class="nav-icon">{n.icon}</span>
         <span class="nav-label">{n.label}</span>
       </a>
