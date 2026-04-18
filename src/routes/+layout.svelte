@@ -1,17 +1,46 @@
 <script lang="ts">
   import '../app.css';
+  import { onMount } from 'svelte';
   import { page } from '$app/stores';
+  import { getSupabase } from '$lib/supabase';
 
-  const NAV = [
-    { href: '/',            icon: '🏠',  label: 'Home'        },
-    { href: '/dashboard',   icon: '⬡',  label: 'Dashboard'   },
-    { href: '/assessment',  icon: '🎯',  label: 'Assess'      },
-    { href: '/timetable',   icon: '📅',  label: 'Timetable'   },
-    { href: '/sba',         icon: '✅',  label: 'SBA'         },
-    { href: '/pomodoro',    icon: '⏱',  label: 'Timer'       },
+  type NavState = 'public' | 'onboarding' | 'active';
+
+  let navState: NavState = 'public';
+
+  onMount(() => {
+    const sb = getSupabase();
+
+    async function updateNavState() {
+      const { data: { session } } = await sb.auth.getSession();
+      if (!session) { navState = 'public'; return; }
+      const hasAssessment = !!localStorage.getItem('mmm_assessment_v1');
+      const hasTimetable  = !!localStorage.getItem('mmm_timetable_v1');
+      navState = (hasAssessment && hasTimetable) ? 'active' : 'onboarding';
+    }
+
+    updateNavState();
+    sb.auth.onAuthStateChange(() => updateNavState());
+  });
+
+  const ONBOARDING_NAV = [
+    { href: '/assessment', icon: '🎯', label: 'Setup'     },
+    { href: '/dashboard',  icon: '👤', label: 'Profile'   },
+    { href: '/resources',  icon: '📚', label: 'Resources' },
+  ];
+
+  const ACTIVE_NAV = [
+    { href: '/dashboard',  icon: '◈',  label: 'My Plan'   },
+    { href: '/timetable',  icon: '📅', label: 'Timetable' },
+    { href: '/resources',  icon: '📚', label: 'Resources' },
+    { href: '/marks',      icon: '📊', label: 'Progress'  },
+    { href: '/assessment', icon: '👤', label: 'Profile'   },
   ];
 
   $: current = $page.url.pathname;
+  $: navItems = navState === 'active' ? ACTIVE_NAV
+              : navState === 'onboarding' ? ONBOARDING_NAV
+              : [];
 
   function isActive(href: string): boolean {
     if (href === '/') return current === '/';
@@ -21,20 +50,22 @@
 
 <div class="layout-wrap">
   <slot />
-  <nav class="bottom-nav">
-    {#each NAV as n}
-      <a href={n.href} class="nav-item" class:active={isActive(n.href)}>
-        <span class="nav-icon">{n.icon}</span>
-        <span class="nav-label">{n.label}</span>
-      </a>
-    {/each}
-  </nav>
+  {#if navItems.length > 0}
+    <nav class="bottom-nav">
+      {#each navItems as n}
+        <a href={n.href} class="nav-item" class:active={isActive(n.href)}>
+          <span class="nav-icon">{n.icon}</span>
+          <span class="nav-label">{n.label}</span>
+        </a>
+      {/each}
+    </nav>
+  {/if}
 </div>
 
 <style>
   .layout-wrap {
     min-height: 100vh;
-    padding-bottom: 72px; /* space for bottom nav */
+    padding-bottom: 72px;
   }
 
   .bottom-nav {
@@ -43,14 +74,14 @@
     left: 0;
     right: 0;
     height: 60px;
-    background: rgba(22, 27, 34, 0.96);
-    border-top: 1px solid #2d3748;
+    background: rgba(7, 7, 11, 0.92);
+    border-top: 1px solid rgba(255, 244, 232, 0.10);
     display: flex;
     align-items: stretch;
     z-index: 100;
     padding-bottom: env(safe-area-inset-bottom, 0px);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
   }
 
   .nav-item {
@@ -61,26 +92,26 @@
     justify-content: center;
     gap: 3px;
     text-decoration: none;
-    color: #8899a6;
+    color: rgba(255, 244, 232, 0.40);
     transition: color 0.15s;
     padding: 6px 0;
   }
 
-  .nav-item:hover { color: #f0f4f8; }
+  .nav-item:hover { color: rgba(255, 244, 232, 0.80); }
 
   .nav-item.active {
-    color: #f6c90e;
+    color: #FF2DA6;
   }
 
   .nav-icon {
-    font-size: 1.2rem;
+    font-size: 1.15rem;
     line-height: 1;
   }
 
   .nav-label {
-    font-size: 0.6rem;
+    font-size: 0.58rem;
     font-weight: 700;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
     font-family: 'Syne', sans-serif;
   }
