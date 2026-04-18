@@ -13,19 +13,18 @@
     <div class="badge">IEB · CAPS · NSC · Grade 10–12</div>
     <h1>Miyagi<span class="accent-text">My</span>Matric</h1>
     <p class="tagline">Your Matric Sensei</p>
-    <h2 class="hero-promise">From Where You Are<br>to Where You're Going</h2>
-    <p class="sub">
-      A complete matric planning tool for South African learners. <strong>Assess your position</strong>, build a real timetable, and get every free resource you need — all in one place.
+    <p class="positioning">
+      Miyagi My Matric guides SA Grade 10–12 learners from first visit to exam-ready. A smart assessment profiles your subjects, intensity, and readiness — then generates a fully personalised study plan.
     </p>
-    <div class="hero-actions">
-      <button class="btn btn-next" on:click={() => goto('/assessment')}>
-        Begin Assessment ↓
+    <div class="route-fork">
+      <button class="btn btn-next fork-primary" on:click={() => goto('/assessment')}>
+        New here? Start Assessment →
       </button>
-      <button class="btn btn-ghost" on:click={() => goto('/timetable')}>
-        Skip to Timetable
+      <button class="btn btn-ghost fork-secondary" on:click={() => goto('/dashboard')}>
+        Already registered? Go to My Plan
       </button>
     </div>
-    <p class="no-login">No login required to start · saves automatically</p>
+    <p class="no-login">It takes less than five minutes to get started · no login required</p>
   </header>
 
   <!-- 3-step journey -->
@@ -170,49 +169,39 @@
     margin-bottom: 1rem;
   }
 
-  .hero-promise {
-    font-family: var(--font-head);
-    font-size: clamp(1.5rem, 4vw, 2.4rem);
-    font-weight: 800;
-    line-height: 1.15;
-    color: var(--text);
-    margin-bottom: 1rem;
-  }
-
-  .sub {
+  .positioning {
     color: var(--muted);
     font-size: .95rem;
     font-weight: 300;
     max-width: 520px;
     margin: 0 auto 1.8rem;
-    line-height: 1.7;
+    line-height: 1.75;
   }
 
-  .sub strong { color: var(--text); font-weight: 500; }
-
-  .hero-actions {
+  .route-fork {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
     gap: .75rem;
-    flex-wrap: wrap;
-    margin-bottom: .6rem;
+    margin-bottom: .8rem;
   }
+
+  .fork-primary  { width: 100%; max-width: 340px; }
+  .fork-secondary { width: 100%; max-width: 340px; }
 
   .btn-ghost {
     background: transparent;
     border: 1px solid var(--border);
-    color: var(--text);
+    color: var(--muted);
     font-family: var(--font-head);
     font-weight: 600;
     font-size: .88rem;
     padding: .7rem 1.4rem;
     border-radius: 10px;
     cursor: pointer;
-    transition: border-color .2s;
+    transition: border-color .2s, color .2s;
   }
-  .btn-ghost:hover { border-color: rgba(255,45,166,.45); }
+  .btn-ghost:hover { border-color: rgba(255,244,232,.30); color: var(--text); }
 
   .no-login {
     font-size: .75rem;
