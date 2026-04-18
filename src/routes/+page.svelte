@@ -126,6 +126,11 @@
       SADAG mental health support: <strong>0800 456 789</strong> (free) ·
       DBE past papers: <strong>education.gov.za</strong>
     </p>
+    <p class="footer-links">
+      <a href="/how-it-works">How It Works</a> ·
+      <a href="/privacy">Privacy</a> ·
+      <a href="/terms">Terms</a>
+    </p>
   </footer>
 </div>
 
@@ -402,6 +407,13 @@
   }
 
   .footer-sub { font-size: .72rem !important; }
+
+  .footer-links a {
+    color: var(--muted);
+    text-decoration: none;
+    transition: color .15s;
+  }
+  .footer-links a:hover { color: var(--text); }
 
   /* Mobile */
   @media (max-width: 640px) {
