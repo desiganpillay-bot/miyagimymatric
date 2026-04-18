@@ -3,7 +3,7 @@
   import { onMount } from 'svelte';
   import { page } from '$app/stores';
   import { getSupabase } from '$lib/supabase';
-  import { Target, User, BookOpen, Compass, CalendarDays, TrendingUp, BarChart2 } from 'lucide-svelte';
+  import { User, Compass, CalendarDays, TrendingUp, BarChart2 } from 'lucide-svelte';
 
   type NavState = 'public' | 'onboarding' | 'active';
 
@@ -58,12 +58,6 @@
   ];
   $: allDone = strip.every(s => s.done);
 
-  const ONBOARDING_NAV = [
-    { href: '/assessment', icon: Target,      label: 'Continue Setup' },
-    { href: '/dashboard',  icon: User,        label: 'My Profile'     },
-    { href: '/resources',  icon: BookOpen,    label: 'Resources'      },
-  ];
-
   const ACTIVE_NAV = [
     { href: '/dashboard',  icon: Compass,     label: 'My Plan'  },
     { href: '/timetable',  icon: CalendarDays,label: 'Timetable'  },
@@ -72,10 +66,12 @@
     { href: '/assessment', icon: User,        label: 'Profile'    },
   ];
 
-  $: current  = $page.url.pathname;
-  $: navItems = navState === 'active'     ? ACTIVE_NAV
-              : navState === 'onboarding' ? ONBOARDING_NAV
-              : [];
+  // Routes that never show the bottom nav
+  const PUBLIC_ROUTES = ['/', '/how-it-works', '/privacy', '/terms', '/auth/callback'];
+
+  $: current   = $page.url.pathname;
+  $: showNav   = !PUBLIC_ROUTES.includes(current);
+  $: navItems  = ACTIVE_NAV;
   $: showStrip = navState !== 'public';
 
   function isActive(href: string): boolean {
@@ -102,7 +98,7 @@
 
   <slot />
 
-  {#if navItems.length > 0}
+  {#if showNav}
     <nav class="bottom-nav">
       {#each navItems as n}
         <a href={n.href} class="nav-item" class:active={isActive(n.href)}>
