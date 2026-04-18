@@ -70,13 +70,16 @@
   const PUBLIC_ROUTES = ['/', '/how-it-works', '/privacy', '/terms', '/auth/callback'];
 
   $: current   = $page.url.pathname;
-  $: showNav   = !PUBLIC_ROUTES.includes(current);
+  $: showNav   = !PUBLIC_ROUTES.includes($page.url.pathname);
   $: navItems  = ACTIVE_NAV;
   $: showStrip = navState !== 'public';
 
+  // Use $page.url.pathname directly so Svelte tracks the store subscription
+  // explicitly — reading through `current` can miss re-renders in Svelte 4.
   function isActive(href: string): boolean {
-    if (href === '/') return current === '/';
-    return current === href || current.startsWith(href + '/');
+    const path = $page.url.pathname;
+    if (href === '/') return path === '/';
+    return path === href || path.startsWith(href + '/');
   }
 </script>
 
