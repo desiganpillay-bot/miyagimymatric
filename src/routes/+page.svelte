@@ -38,6 +38,64 @@
     <p class="no-login">It takes less than five minutes to get started · no login required</p>
   </header>
 
+  <!-- Resources teaser -->
+  <section class="resources-teaser">
+    <p class="teaser-label">Complete your assessment to unlock</p>
+    <div class="teaser-grid">
+      <div class="teaser-item locked">
+        <span class="teaser-icon">📄</span>
+        <div>
+          <div class="teaser-name">Past Papers</div>
+          <div class="teaser-sub">IEB + NSC · matched to your subjects</div>
+        </div>
+        <span class="lock">🔒</span>
+      </div>
+      <div class="teaser-item locked">
+        <span class="teaser-icon">📐</span>
+        <div>
+          <div class="teaser-name">Siyavula</div>
+          <div class="teaser-sub">Adaptive Maths & Science · zero-rated</div>
+        </div>
+        <span class="lock">🔒</span>
+      </div>
+      <div class="teaser-item locked">
+        <span class="teaser-icon">▶️</span>
+        <div>
+          <div class="teaser-name">Video Lessons</div>
+          <div class="teaser-sub">Kevinmathscience · Mindset Learn</div>
+        </div>
+        <span class="lock">🔒</span>
+      </div>
+      <div class="teaser-item locked">
+        <span class="teaser-icon">🤖</span>
+        <div>
+          <div class="teaser-name">AI Tutors</div>
+          <div class="teaser-sub">Maski WhatsApp · 100k+ learners</div>
+        </div>
+        <span class="lock">🔒</span>
+      </div>
+      <div class="teaser-item locked">
+        <span class="teaser-icon">🧠</span>
+        <div>
+          <div class="teaser-name">Flashcard Tools</div>
+          <div class="teaser-sub">Anki · Quizlet · spaced repetition</div>
+        </div>
+        <span class="lock">🔒</span>
+      </div>
+      <div class="teaser-item locked">
+        <span class="teaser-icon">📅</span>
+        <div>
+          <div class="teaser-name">Study Timetable</div>
+          <div class="teaser-sub">Personalised · 3 intensity modes</div>
+        </div>
+        <span class="lock">🔒</span>
+      </div>
+    </div>
+    <button class="teaser-cta" on:click={() => goto('/assessment')}>
+      Start assessment to unlock all →
+    </button>
+  </section>
+
   <!-- Footer -->
   <footer class="footer">
     <p>Built for SA learners · IEB + CAPS · Free for now</p>
@@ -124,10 +182,11 @@
   .btn-ghost:hover { border-color: rgba(255,244,232,.55); color: var(--text); background: rgba(255,244,232,.10); }
 
   .no-login {
-    font-size: .75rem;
-    color: var(--muted);
-    font-weight: 300;
+    font-size: .82rem;
+    color: var(--accent3);
+    font-weight: 600;
     margin-bottom: 0;
+    letter-spacing: .02em;
   }
 
   /* 3-step journey */
@@ -323,6 +382,110 @@
     transition: color .15s;
   }
   .footer-links a:hover { color: var(--text); }
+
+  /* Resources teaser */
+  .resources-teaser {
+    margin: 0 0 2.5rem;
+    animation: fadeUp .5s ease .1s both;
+  }
+
+  .teaser-label {
+    font-family: var(--font-head);
+    font-size: .68rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+
+  .teaser-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: .5rem;
+    margin-bottom: 1.1rem;
+  }
+
+  .teaser-item {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: .75rem .9rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .teaser-item.locked {
+    opacity: .55;
+    filter: blur(0px);
+  }
+
+  .teaser-item.locked::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 6px,
+      rgba(255,244,232,.015) 6px,
+      rgba(255,244,232,.015) 12px
+    );
+    pointer-events: none;
+  }
+
+  .teaser-icon {
+    font-size: 1.3rem;
+    flex-shrink: 0;
+  }
+
+  .teaser-item > div { flex: 1; min-width: 0; }
+
+  .teaser-name {
+    font-family: var(--font-head);
+    font-size: .78rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.2;
+  }
+
+  .teaser-sub {
+    font-size: .65rem;
+    color: var(--muted);
+    line-height: 1.3;
+    margin-top: .1rem;
+  }
+
+  .lock {
+    font-size: .75rem;
+    flex-shrink: 0;
+    opacity: .5;
+  }
+
+  .teaser-cta {
+    display: block;
+    width: 100%;
+    background: transparent;
+    border: 1px solid rgba(255,82,82,.35);
+    color: var(--accent);
+    font-family: var(--font-head);
+    font-size: .82rem;
+    font-weight: 700;
+    padding: .7rem;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background .2s, border-color .2s;
+    letter-spacing: .02em;
+  }
+
+  .teaser-cta:hover {
+    background: rgba(255,82,82,.08);
+    border-color: rgba(255,82,82,.6);
+  }
 
   /* Mobile */
   @media (max-width: 640px) {
