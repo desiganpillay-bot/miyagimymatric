@@ -113,6 +113,6 @@
     font-weight: 700;
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    font-family: 'Syne', sans-serif;
+    font-family: 'Space Grotesk', sans-serif;
   }
 </style>

@@ -224,7 +224,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: 'Syne', sans-serif;
+    font-family: 'Space Grotesk', sans-serif;
     font-weight: 800;
     font-size: 1.1rem;
     color: #07070B;
@@ -232,7 +232,7 @@
   }
 
   .brand-name {
-    font-family: 'Syne', sans-serif;
+    font-family: 'Space Grotesk', sans-serif;
     font-weight: 600;
     font-size: .95rem;
     color: #FFF4E8;
@@ -247,7 +247,7 @@
   }
 
   .nav-link {
-    font-family: 'Syne', sans-serif;
+    font-family: 'Space Grotesk', sans-serif;
     font-size: .8rem;
     color: rgba(255, 244, 232, 0.70);
     text-decoration: none;
@@ -262,7 +262,7 @@
   .nav-link:hover { color: #FFF4E8; border-color: rgba(255,244,232,.25); }
 
   .nav-cta {
-    font-family: 'Syne', sans-serif;
+    font-family: 'Space Grotesk', sans-serif;
     font-weight: 700;
     font-size: .8rem;
     color: #07070B;
@@ -298,7 +298,7 @@
     border: 1px solid rgba(255, 45, 166, 0.30);
     background: linear-gradient(to right, rgba(255,45,166,.15), rgba(124,58,237,.15));
     color: rgba(255, 214, 239, 0.90);
-    font-family: 'Syne', sans-serif;
+    font-family: 'Space Grotesk', sans-serif;
     font-size: .68rem;
     font-weight: 700;
     letter-spacing: .26em;
@@ -309,7 +309,7 @@
   }
 
   h1 {
-    font-family: 'Syne', sans-serif;
+    font-family: 'Space Grotesk', sans-serif;
     font-size: clamp(2rem, 7vw, 3.6rem);
     font-weight: 700;
     line-height: 1.15;
@@ -341,7 +341,7 @@
   }
 
   .btn-primary {
-    font-family: 'Syne', sans-serif;
+    font-family: 'Space Grotesk', sans-serif;
     font-weight: 700;
     font-size: .9rem;
     color: #07070B;
@@ -360,7 +360,7 @@
   .btn-full { width: 100%; justify-content: center; }
 
   .btn-secondary {
-    font-family: 'Syne', sans-serif;
+    font-family: 'Space Grotesk', sans-serif;
     font-weight: 500;
     font-size: .9rem;
     color: rgba(255,244,232,.85);
@@ -396,7 +396,7 @@
     backdrop-filter: blur(8px);
   }
 
-  .pill-title { font-family: 'Syne', sans-serif; font-size: .85rem; font-weight: 600; color: #FFF4E8; margin-bottom: .35rem; }
+  .pill-title { font-family: 'Space Grotesk', sans-serif; font-size: .85rem; font-weight: 600; color: #FFF4E8; margin-bottom: .35rem; }
   .pill-body  { font-size: .78rem; line-height: 1.55; color: rgba(255,244,232,.60); }
 
   /* ── Profile card ─────────────────────────────────────── */
@@ -457,7 +457,7 @@
   }
 
   .profile-label {
-    font-family: 'Syne', sans-serif;
+    font-family: 'Space Grotesk', sans-serif;
     font-size: .62rem;
     font-weight: 700;
     letter-spacing: .20em;
@@ -467,14 +467,14 @@
   }
 
   .profile-title {
-    font-family: 'Syne', sans-serif;
+    font-family: 'Space Grotesk', sans-serif;
     font-weight: 600;
     font-size: 1rem;
     color: #FFF4E8;
   }
 
   .profile-ready {
-    font-family: 'Syne', sans-serif;
+    font-family: 'Space Grotesk', sans-serif;
     font-size: .72rem;
     color: rgba(255,244,232,.65);
     border: 1px solid rgba(255,244,232,.12);
@@ -499,7 +499,7 @@
   }
 
   .cell-label {
-    font-family: 'Syne', sans-serif;
+    font-family: 'Space Grotesk', sans-serif;
     font-size: .6rem;
     font-weight: 700;
     letter-spacing: .18em;
@@ -532,7 +532,7 @@
   }
 
   .journey-label {
-    font-family: 'Syne', sans-serif;
+    font-family: 'Space Grotesk', sans-serif;
     font-size: .6rem;
     font-weight: 700;
     letter-spacing: .18em;
@@ -548,7 +548,7 @@
   }
 
   .journey-badge {
-    font-family: 'Syne', sans-serif;
+    font-family: 'Space Grotesk', sans-serif;
     font-size: .65rem;
     font-weight: 700;
     color: #07070B;
@@ -574,7 +574,7 @@
   }
 
   .step-n {
-    font-family: 'Syne', sans-serif;
+    font-family: 'Space Grotesk', sans-serif;
     font-size: .52rem;
     font-weight: 700;
     letter-spacing: .14em;
@@ -619,7 +619,7 @@
     border: 1px solid rgba(255,244,232,.10);
     background: rgba(255,244,232,.05);
     color: rgba(255,244,232,.55);
-    font-family: 'Syne', sans-serif;
+    font-family: 'Space Grotesk', sans-serif;
     font-size: .65rem;
     font-weight: 700;
     letter-spacing: .22em;
@@ -630,7 +630,7 @@
   }
 
   .section-pill-sm {
-    font-family: 'Syne', sans-serif;
+    font-family: 'Space Grotesk', sans-serif;
     font-size: .62rem;
     font-weight: 700;
     letter-spacing: .22em;
@@ -661,13 +661,13 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: 'Syne', sans-serif;
+    font-family: 'Space Grotesk', sans-serif;
     font-size: .78rem;
     font-weight: 700;
     color: #07070B;
   }
 
-  .step-title { font-family: 'Syne', sans-serif; font-size: .9rem; font-weight: 600; color: #FFF4E8; margin-bottom: .25rem; }
+  .step-title { font-family: 'Space Grotesk', sans-serif; font-size: .9rem; font-weight: 600; color: #FFF4E8; margin-bottom: .25rem; }
   .step-body  { font-size: .8rem; line-height: 1.55; color: rgba(255,244,232,.60); }
 
   /* Why section */
@@ -680,14 +680,14 @@
   }
 
   .why-title {
-    font-family: 'Syne', sans-serif;
+    font-family: 'Space Grotesk', sans-serif;
     font-size: 1.3rem;
     font-weight: 700;
     color: #FFF4E8;
   }
 
   .chosen-badge {
-    font-family: 'Syne', sans-serif;
+    font-family: 'Space Grotesk', sans-serif;
     font-size: .65rem;
     font-weight: 700;
     letter-spacing: .18em;
@@ -717,7 +717,7 @@
 
   .why-cell.wide { grid-column: 1 / -1; }
 
-  .why-cell-title { font-family: 'Syne', sans-serif; font-size: .85rem; font-weight: 600; color: #FFF4E8; margin-bottom: .4rem; }
+  .why-cell-title { font-family: 'Space Grotesk', sans-serif; font-size: .85rem; font-weight: 600; color: #FFF4E8; margin-bottom: .4rem; }
   .why-cell-body  { font-size: .8rem; line-height: 1.6; color: rgba(255,244,232,.60); }
 
   /* CTA strip */
@@ -728,7 +728,7 @@
     padding: 1.2rem;
   }
 
-  .cta-strip-title { font-family: 'Syne', sans-serif; font-size: 1.05rem; font-weight: 700; color: #FFF4E8; margin-bottom: .35rem; }
+  .cta-strip-title { font-family: 'Space Grotesk', sans-serif; font-size: 1.05rem; font-weight: 700; color: #FFF4E8; margin-bottom: .35rem; }
   .cta-strip-body  { font-size: .82rem; color: rgba(255,244,232,.60); line-height: 1.5; margin-bottom: 1rem; }
 
   /* ── Footer ──────────────────────────────────────────── */
