@@ -1,16 +1,5 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
-  import { getSupabase } from '$lib/supabase';
-
-  async function goToMyPlan() {
-    try {
-      const sb = getSupabase();
-      const { data: { session } } = await sb.auth.getSession();
-      goto(session ? '/dashboard' : '/assessment?signin=1');
-    } catch {
-      goto('/assessment?signin=1');
-    }
-  }
 </script>
 
 <svelte:head>
@@ -28,8 +17,8 @@
       Miyagi My Matric guides SA Grade 10–12 learners from first visit to exam-ready. A smart assessment profiles your subjects, intensity, and readiness — then generates a fully personalised study plan.
     </p>
     <div class="route-fork">
-      <button class="btn btn-ghost fork-secondary" on:click={goToMyPlan}>
-        Take me to my Plan →
+      <button class="btn btn-next fork-secondary" on:click={() => goto('/dashboard')}>
+        Take me back to my Plan →
       </button>
     </div>
     <p class="no-login">It takes less than five minutes to get started · no login required</p>
