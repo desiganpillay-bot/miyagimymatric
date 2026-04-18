@@ -461,9 +461,9 @@
 
   .badge {
     display: inline-block;
-    background: rgba(246,201,14,.12);
+    background: rgba(255,82,82,.12);
     color: var(--accent);
-    border: 1px solid rgba(246,201,14,.25);
+    border: 1px solid rgba(255,82,82,.25);
     border-radius: 999px;
     padding: 0.3rem 1rem;
     font-family: var(--font-head);
@@ -766,7 +766,7 @@
   .btn:not(:disabled):hover { transform: translateY(-1px); }
 
   .btn-next {
-    background: linear-gradient(135deg, var(--accent), #e6b800);
+    background: var(--grad-cta);
     color: #0d1117;
   }
 
@@ -798,7 +798,7 @@
   .risk-cta:hover { text-decoration: underline; }
 
   /* ── Plan-ready card ─────────────────────────────── */
-  .plan-ready-card { background: var(--surface); border: 1px solid rgba(246,201,14,.25); border-radius: 16px; padding: 1.5rem; max-width: 480px; margin: 1.5rem auto 0; text-align: left; }
+  .plan-ready-card { background: var(--surface); border: 1px solid rgba(255,82,82,.25); border-radius: 16px; padding: 1.5rem; max-width: 480px; margin: 1.5rem auto 0; text-align: left; }
   .plan-aps-row { display: flex; gap: 1.5rem; margin-bottom: 1.25rem; align-items: flex-start; }
   .plan-aps-block { text-align: center; flex-shrink: 0; }
   .plan-aps-num { font-family: var(--font-head); font-size: 2.5rem; font-weight: 800; color: var(--accent); line-height: 1; }

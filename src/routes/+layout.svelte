@@ -132,7 +132,7 @@
   .setup-strip::-webkit-scrollbar { display: none; }
 
   .setup-strip.all-done {
-    border-bottom-color: rgba(255, 183, 3, 0.20);
+    border-bottom-color: rgba(122, 255, 122, 0.20);
   }
 
   .strip-step {
@@ -168,15 +168,15 @@
 
   /* Next step to complete */
   .strip-step.next .strip-icon {
-    background: rgba(255, 45, 166, 0.20);
-    color: #FF2DA6;
+    background: rgba(255, 82, 82, 0.20);
+    color: #FF5252;
   }
-  .strip-step.next .strip-label { color: #FF2DA6; }
+  .strip-step.next .strip-label { color: #FF5252; }
 
   /* Completed step */
   .strip-step.done .strip-icon {
-    background: rgba(255, 183, 3, 0.20);
-    color: #FFB703;
+    background: rgba(122, 255, 122, 0.20);
+    color: #7AFF7A;
   }
   .strip-step.done .strip-label { color: rgba(255, 244, 232, 0.65); }
 
@@ -217,7 +217,7 @@
   }
 
   .nav-item:hover { color: rgba(255, 244, 232, 0.80); }
-  .nav-item.active { color: #FF2DA6; }
+  .nav-item.active { color: #FF5252; }
 
   .nav-icon {
     display: flex;

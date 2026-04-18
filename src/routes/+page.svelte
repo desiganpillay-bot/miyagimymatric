@@ -140,7 +140,7 @@
   }
 
   .step-card:hover {
-    border-color: rgba(255,45,166,.30);
+    border-color: rgba(255,82,82,.30);
     transform: translateY(-2px);
   }
 
@@ -245,8 +245,8 @@
     text-align: center;
     padding: 2rem;
     margin: 1rem 0 2rem;
-    background: linear-gradient(135deg, rgba(255,45,166,.05), rgba(124,58,237,.04));
-    border: 1px solid rgba(255,45,166,.18);
+    background: linear-gradient(135deg, rgba(255,82,82,.05), rgba(105,180,255,.04));
+    border: 1px solid rgba(255,82,82,.18);
     border-radius: 16px;
     animation: fadeIn .5s ease both;
   }
