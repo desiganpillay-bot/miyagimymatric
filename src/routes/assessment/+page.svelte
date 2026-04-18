@@ -202,13 +202,21 @@
 
   // If the learner has already completed the assessment, show their profile
   // directly instead of starting from section 1.
+  // If ?signin=1 is in the URL (from "Already registered?" on landing), scroll to sign-in card.
   onMount(() => {
     const saved = localStorage.getItem('mmm_assessment_v1');
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        // Consider complete if exam_system has been answered
-        if (parsed.answers?.exam_system) showResults = true;
+        if (parsed.answers?.exam_system) {
+          showResults = true;
+          // Scroll to sign-in card if coming from "Already registered?"
+          if (typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('signin') === '1') {
+            setTimeout(() => {
+              document.querySelector('.save-card')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 300);
+          }
+        }
       } catch { /* malformed — start fresh */ }
     }
   });

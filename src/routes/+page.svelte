@@ -1,5 +1,12 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
+  import { getSupabase } from '$lib/supabase';
+
+  async function goToMyPlan() {
+    const sb = getSupabase();
+    const { data: { session } } = await sb.auth.getSession();
+    goto(session ? '/dashboard' : '/assessment?signin=1');
+  }
 </script>
 
 <svelte:head>
@@ -20,8 +27,8 @@
       <button class="btn btn-next fork-primary" on:click={() => goto('/assessment')}>
         New here? Start Assessment →
       </button>
-      <button class="btn btn-ghost fork-secondary" on:click={() => goto('/dashboard')}>
-        Already registered? Go to My Plan
+      <button class="btn btn-ghost fork-secondary" on:click={goToMyPlan}>
+        Already registered? Sign in →
       </button>
     </div>
     <p class="no-login">It takes less than five minutes to get started · no login required</p>
