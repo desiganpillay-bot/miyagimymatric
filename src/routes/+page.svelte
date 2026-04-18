@@ -3,9 +3,13 @@
   import { getSupabase } from '$lib/supabase';
 
   async function goToMyPlan() {
-    const sb = getSupabase();
-    const { data: { session } } = await sb.auth.getSession();
-    goto(session ? '/dashboard' : '/assessment?signin=1');
+    try {
+      const sb = getSupabase();
+      const { data: { session } } = await sb.auth.getSession();
+      goto(session ? '/dashboard' : '/assessment?signin=1');
+    } catch {
+      goto('/assessment?signin=1');
+    }
   }
 </script>
 
