@@ -3,6 +3,7 @@
   import { onMount } from 'svelte';
   import { page } from '$app/stores';
   import { getSupabase } from '$lib/supabase';
+  import { Target, User, BookOpen, Compass, CalendarDays, TrendingUp } from 'lucide-svelte';
 
   type NavState = 'public' | 'onboarding' | 'active';
 
@@ -48,17 +49,17 @@
   $: allDone = strip.every(s => s.done);
 
   const ONBOARDING_NAV = [
-    { href: '/assessment', icon: '🎯', label: 'Continue Setup' },
-    { href: '/dashboard',  icon: '👤', label: 'My Profile'     },
-    { href: '/resources',  icon: '📚', label: 'Resources'      },
+    { href: '/assessment', icon: Target,      label: 'Continue Setup' },
+    { href: '/dashboard',  icon: User,        label: 'My Profile'     },
+    { href: '/resources',  icon: BookOpen,    label: 'Resources'      },
   ];
 
   const ACTIVE_NAV = [
-    { href: '/dashboard',  icon: '◈',  label: 'My Plan'    },
-    { href: '/timetable',  icon: '📅', label: 'Timetable'  },
-    { href: '/resources',  icon: '📚', label: 'Resources'  },
-    { href: '/marks',      icon: '📊', label: 'Progress'   },
-    { href: '/assessment', icon: '👤', label: 'Profile'    },
+    { href: '/dashboard',  icon: Compass,     label: 'My Plan'    },
+    { href: '/timetable',  icon: CalendarDays,label: 'Timetable'  },
+    { href: '/resources',  icon: BookOpen,    label: 'Resources'  },
+    { href: '/marks',      icon: TrendingUp,  label: 'Progress'   },
+    { href: '/assessment', icon: User,        label: 'Profile'    },
   ];
 
   $: current  = $page.url.pathname;
@@ -95,7 +96,7 @@
     <nav class="bottom-nav">
       {#each navItems as n}
         <a href={n.href} class="nav-item" class:active={isActive(n.href)}>
-          <span class="nav-icon">{n.icon}</span>
+          <span class="nav-icon"><svelte:component this={n.icon} size={20} strokeWidth={1.6} /></span>
           <span class="nav-label">{n.label}</span>
         </a>
       {/each}
@@ -219,7 +220,9 @@
   .nav-item.active { color: #FF2DA6; }
 
   .nav-icon {
-    font-size: 1.15rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     line-height: 1;
   }
 
