@@ -28,11 +28,8 @@
       Miyagi My Matric guides SA Grade 10–12 learners from first visit to exam-ready. A smart assessment profiles your subjects, intensity, and readiness — then generates a fully personalised study plan.
     </p>
     <div class="route-fork">
-      <button class="btn btn-next fork-primary" on:click={() => goto('/assessment')}>
-        New here? Start Assessment →
-      </button>
       <button class="btn btn-ghost fork-secondary" on:click={goToMyPlan}>
-        Already registered? Sign in →
+        Take me to my Plan →
       </button>
     </div>
     <p class="no-login">It takes less than five minutes to get started · no login required</p>
@@ -91,8 +88,8 @@
         <span class="lock">🔒</span>
       </div>
     </div>
-    <button class="teaser-cta" on:click={() => goto('/assessment')}>
-      Start assessment to unlock all →
+    <button class="btn btn-next teaser-cta" on:click={() => goto('/assessment')}>
+      Start Assessment — it's free →
     </button>
   </section>
 
@@ -469,22 +466,8 @@
   .teaser-cta {
     display: block;
     width: 100%;
-    background: transparent;
-    border: 1px solid rgba(255,82,82,.35);
-    color: var(--accent);
-    font-family: var(--font-head);
-    font-size: .82rem;
-    font-weight: 700;
-    padding: .7rem;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: background .2s, border-color .2s;
-    letter-spacing: .02em;
-  }
-
-  .teaser-cta:hover {
-    background: rgba(255,82,82,.08);
-    border-color: rgba(255,82,82,.6);
+    max-width: 340px;
+    margin: 0 auto;
   }
 
   /* Mobile */
