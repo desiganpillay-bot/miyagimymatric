@@ -24,12 +24,7 @@
       <button class="btn btn-next fork-primary" on:click={() => goto('/assessment')}>
         Start Assessment →
       </button>
-      <div class="fork-row">
-        <button class="btn btn-ghost fork-secondary" on:click={goToMyPlan}>
-          Take me back to my Plan
-        </button>
-        <a href="/how-it-works" class="how-link">How it works →</a>
-      </div>
+      <a href="/how-it-works" class="btn btn-ghost fork-secondary">How it works</a>
     </div>
     <p class="no-login">It takes less than five minutes to get started · no login required</p>
   </header>
@@ -87,8 +82,8 @@
         <span class="lock">🔒</span>
       </div>
     </div>
-    <button class="btn btn-next teaser-cta" on:click={() => goto('/assessment')}>
-      Start Assessment — it's free →
+    <button class="btn btn-ghost teaser-cta" on:click={goToMyPlan}>
+      Take me back to my Plan →
     </button>
   </section>
 
@@ -160,30 +155,8 @@
     margin-bottom: .8rem;
   }
 
-  .fork-primary { width: 100%; max-width: 340px; }
-
-  .fork-row {
-    display: flex;
-    align-items: center;
-    gap: .75rem;
-    width: 100%;
-    max-width: 340px;
-    justify-content: center;
-  }
-
-  .fork-secondary { flex: 1; }
-
-  .how-link {
-    flex-shrink: 0;
-    font-family: var(--font-head);
-    font-size: .78rem;
-    font-weight: 600;
-    color: var(--accent2);
-    text-decoration: none;
-    white-space: nowrap;
-    transition: color .15s;
-  }
-  .how-link:hover { color: var(--text); }
+  .fork-primary  { width: 100%; max-width: 340px; }
+  .fork-secondary { width: 100%; max-width: 340px; font-size: .82rem; }
 
   .btn-ghost {
     background: rgba(255, 244, 232, 0.06);
