@@ -80,76 +80,82 @@
 
   // ── Mount ──────────────────────────────────────────────────
   onMount(async () => {
-    const sb = getSupabase();
-    const { data: { session } } = await sb.auth.getSession();
+    // Safety: never show spinner forever — clear after 8s regardless
+    const safetyTimer = setTimeout(() => { loading = false; }, 8000);
 
-    if (!session) {
-      // Check localStorage for assessment data — show useful state even without sign-in
-      try {
-        const raw = localStorage.getItem('mmm_assessment_v1');
-        if (raw) {
-          const state = JSON.parse(raw);
-          const marks: Record<string, string> = state.subjectMarks || {};
-          const subjects = Object.entries(marks)
-            .filter(([, v]) => v)
-            .map(([name, range]) => ({ name, mark: rangeMid(range) }))
-            .sort((a, b) => a.mark - b.mark);
-          if (subjects.length > 0) {
-            hasLocalAssessment = true;
-            localSubjects = subjects;
-            localAPS = $apsResult.total;
+    try {
+      const sb = getSupabase();
+      const { data: { session } } = await sb.auth.getSession();
+
+      if (!session) {
+        // Check localStorage for assessment data — show useful state even without sign-in
+        try {
+          const raw = localStorage.getItem('mmm_assessment_v1');
+          if (raw) {
+            const state = JSON.parse(raw);
+            const marks: Record<string, string> = state.subjectMarks || {};
+            const subjects = Object.entries(marks)
+              .filter(([, v]) => v)
+              .map(([name, range]) => ({ name, mark: rangeMid(range) }))
+              .sort((a, b) => a.mark - b.mark);
+            if (subjects.length > 0) {
+              hasLocalAssessment = true;
+              localSubjects = subjects;
+              localAPS = $apsResult.total;
+            }
           }
-        }
-      } catch {}
+        } catch {}
+        return;
+      }
+
+      authed = true;
+      const uid = session.user.id;
+
+      // Fetch all dashboard data in parallel
+      const [profileRes, goalRes, marksRes, taskRes] = await Promise.all([
+        sb.from('profiles')
+          .select('exam_system, streak_current, consented_at, terms_version')
+          .eq('id', uid)
+          .single(),
+        sb.from('goals')
+          .select('target_aps')
+          .eq('user_id', uid)
+          .eq('is_primary', true)
+          .single(),
+        sb.from('subject_marks')
+          .select('subject_name, percentage, mark_type')
+          .eq('user_id', uid)
+          .order('created_at', { ascending: false })
+          .limit(5),
+        sb.from('sba_tasks')
+          .select('task_name, subject_name, due_date')
+          .eq('user_id', uid)
+          .neq('status', 'submitted')
+          .gt('due_date', new Date().toISOString())
+          .order('due_date', { ascending: true })
+          .limit(1)
+      ]);
+
+      profile = profileRes.data ?? null;
+      targetAps = goalRes.data?.target_aps ?? null;
+      recentMarks = (marksRes.data ?? []) as Mark[];
+      nextTask = taskRes.data?.[0] ?? null;
+      streak = profile?.streak_current ?? 0;
+
+      // Current APS: use store value (from localStorage assessment marks)
+      currentAps = $apsResult.total ?? 0;
+
+      // Animate ring after data loads
+      const ratio = Math.min(currentAps / 42, 1);
+      setTimeout(() => {
+        ringOffset = CIRCUMFERENCE * (1 - ratio);
+      }, 100);
+    } catch (e) {
+      console.error('[dashboard] onMount error:', e);
+    } finally {
+      clearTimeout(safetyTimer);
       loading = false;
-      return;
     }
-
-    authed = true;
-    const uid = session.user.id;
-
-    // Fetch all dashboard data in parallel
-    const [profileRes, goalRes, marksRes, taskRes] = await Promise.all([
-      sb.from('profiles')
-        .select('exam_system, streak_current, consented_at, terms_version')
-        .eq('id', uid)
-        .single(),
-      sb.from('goals')
-        .select('target_aps')
-        .eq('user_id', uid)
-        .eq('is_primary', true)
-        .single(),
-      sb.from('subject_marks')
-        .select('subject_name, percentage, mark_type')
-        .eq('user_id', uid)
-        .order('created_at', { ascending: false })
-        .limit(5),
-      sb.from('sba_tasks')
-        .select('task_name, subject_name, due_date')
-        .eq('user_id', uid)
-        .neq('status', 'submitted')
-        .gt('due_date', new Date().toISOString())
-        .order('due_date', { ascending: true })
-        .limit(1)
-    ]);
-
-    profile = profileRes.data ?? null;
-    targetAps = goalRes.data?.target_aps ?? null;
-    recentMarks = (marksRes.data ?? []) as Mark[];
-    nextTask = taskRes.data?.[0] ?? null;
-    streak = profile?.streak_current ?? 0;
-
-    // Current APS: use store value (from localStorage assessment marks)
-    currentAps = $apsResult.total ?? 0;
-
-    // Animate ring after data loads
-    const target = targetAps ?? 42;
-    const ratio = Math.min(currentAps / 42, 1);
-    setTimeout(() => {
-      ringOffset = CIRCUMFERENCE * (1 - ratio);
-    }, 100);
-
-    loading = false;
   });
 </script>
 
