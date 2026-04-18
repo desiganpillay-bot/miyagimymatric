@@ -21,9 +21,15 @@
       Miyagi My Matric guides SA Grade 10–12 learners from first visit to exam-ready. A smart assessment profiles your subjects, intensity, and readiness — then generates a fully personalised study plan.
     </p>
     <div class="route-fork">
-      <button class="btn btn-next fork-secondary" on:click={goToMyPlan}>
-        Take me back to my Plan →
+      <button class="btn btn-next fork-primary" on:click={() => goto('/assessment')}>
+        Start Assessment →
       </button>
+      <div class="fork-row">
+        <button class="btn btn-ghost fork-secondary" on:click={goToMyPlan}>
+          Take me back to my Plan
+        </button>
+        <a href="/how-it-works" class="how-link">How it works →</a>
+      </div>
     </div>
     <p class="no-login">It takes less than five minutes to get started · no login required</p>
   </header>
@@ -154,8 +160,30 @@
     margin-bottom: .8rem;
   }
 
-  .fork-primary  { width: 100%; max-width: 340px; }
-  .fork-secondary { width: 100%; max-width: 340px; }
+  .fork-primary { width: 100%; max-width: 340px; }
+
+  .fork-row {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    width: 100%;
+    max-width: 340px;
+    justify-content: center;
+  }
+
+  .fork-secondary { flex: 1; }
+
+  .how-link {
+    flex-shrink: 0;
+    font-family: var(--font-head);
+    font-size: .78rem;
+    font-weight: 600;
+    color: var(--accent2);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color .15s;
+  }
+  .how-link:hover { color: var(--text); }
 
   .btn-ghost {
     background: rgba(255, 244, 232, 0.06);
