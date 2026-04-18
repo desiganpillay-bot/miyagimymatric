@@ -65,7 +65,7 @@
   ];
 
   const ACTIVE_NAV = [
-    { href: '/dashboard',  icon: Compass,     label: 'My Plan'    },
+    { href: '/dashboard',  icon: Compass,     label: 'My Plan'  },
     { href: '/timetable',  icon: CalendarDays,label: 'Timetable'  },
     { href: '/sba',        icon: TrendingUp,  label: 'SBA'        },
     { href: '/marks',      icon: BarChart2,   label: 'Marks'      },

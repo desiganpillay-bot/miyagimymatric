@@ -160,7 +160,7 @@
 </script>
 
 <svelte:head>
-  <title>Dashboard — Miyagi My Matric</title>
+  <title>My Plan — Miyagi My Matric</title>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 </svelte:head>
 
@@ -169,7 +169,7 @@
   {#if loading}
     <div class="loading-state">
       <div class="spinner"></div>
-      <p>Loading your dashboard…</p>
+      <p>Loading your plan…</p>
     </div>
 
   {:else if !authed}
@@ -178,7 +178,7 @@
       {#if hasLocalAssessment}
         <!-- Assessment done, not signed in -->
         <div class="badge">Your Plan is Ready</div>
-        <h1>Your Dashboard</h1>
+        <h1>My Plan</h1>
         <p class="subtitle">Your assessment is saved on this device. Sign in to sync across devices — or go straight to your tools.</p>
 
         <div class="plan-ready-card">
@@ -207,7 +207,7 @@
       {:else}
         <!-- No assessment at all -->
         <div class="badge">Your Sensei Awaits</div>
-        <h1>Your Dashboard</h1>
+        <h1>My Plan</h1>
         <p class="subtitle">Complete your self-assessment first to unlock your personalised dashboard.</p>
         <div class="unauth-card">
           <div class="unauth-icon">🎯</div>
@@ -226,7 +226,7 @@
       <div class="badge">
         {profile?.exam_system === 'ieb' ? 'IEB' : profile?.exam_system === 'caps' ? 'CAPS/NSC' : 'Matric'} · 2026
       </div>
-      <h1>Your Dashboard</h1>
+      <h1>My Plan</h1>
     </header>
 
     <!-- Row 1: APS Ring + Countdown cards -->

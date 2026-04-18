@@ -2,14 +2,7 @@
   import { goto } from '$app/navigation';
 
   function goToMyPlan() {
-    try {
-      const raw = localStorage.getItem('mmm_assessment_v1');
-      if (raw) {
-        const parsed = JSON.parse(raw);
-        if (parsed.answers?.exam_system) { goto('/dashboard'); return; }
-      }
-    } catch {}
-    goto('/assessment');
+    goto('/assessment?signin=1');
   }
 </script>
 
