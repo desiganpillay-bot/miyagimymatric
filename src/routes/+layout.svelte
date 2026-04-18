@@ -11,15 +11,26 @@
   let steps = {
     assessment: false,
     timetable:  false,
+    sba:        false,
   };
 
   onMount(() => {
     const sb = getSupabase();
 
     function readSteps() {
+      // SBA counts as done once at least one task has a date entered
+      let sbaDone = false;
+      try {
+        const raw = localStorage.getItem('mmm_sba_v1');
+        if (raw) {
+          const tasks = JSON.parse(raw);
+          sbaDone = Array.isArray(tasks) && tasks.some((t: { due_date?: string }) => t.due_date);
+        }
+      } catch {}
       steps = {
         assessment: !!localStorage.getItem('mmm_assessment_v1'),
         timetable:  !!localStorage.getItem('mmm_timetable_v1'),
+        sba:        sbaDone,
       };
     }
 
@@ -41,10 +52,9 @@
   // Resources  = always accessible; "matched" once assessment done
   $: strip = [
     { label: 'Assessment', done: steps.assessment },
-    { label: 'Profile',    done: steps.assessment },
     { label: 'Study Plan', done: steps.assessment },
     { label: 'Timetable',  done: steps.timetable  },
-    { label: 'Resources',  done: steps.assessment  },
+    { label: 'SBA Dates',  done: steps.sba        },
   ];
   $: allDone = strip.every(s => s.done);
 
@@ -58,7 +68,7 @@
     { href: '/dashboard',  icon: Compass,     label: 'My Plan'    },
     { href: '/timetable',  icon: CalendarDays,label: 'Timetable'  },
     { href: '/resources',  icon: BookOpen,    label: 'Resources'  },
-    { href: '/marks',      icon: TrendingUp,  label: 'Progress'   },
+    { href: '/sba',        icon: TrendingUp,  label: 'SBA'        },
     { href: '/assessment', icon: User,        label: 'Profile'    },
   ];
 
