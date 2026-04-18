@@ -9,11 +9,13 @@
   onMount(async () => {
     const sb = getSupabase();
     const code = $page.url.searchParams.get('code');
+    console.log('[auth/callback] code present:', !!code, 'full URL:', window.location.href);
 
     if (code) {
       const { data, error } = await sb.auth.exchangeCodeForSession(code);
       if (error) {
-        status = 'Sign-in failed. Please try again.';
+        console.error('[auth/callback] exchangeCodeForSession error:', error.message, error);
+        status = 'Sign-in failed: ' + error.message;
         setTimeout(() => goto('/assessment'), 3000);
         return;
       }
