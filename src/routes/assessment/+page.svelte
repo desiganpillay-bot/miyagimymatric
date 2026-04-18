@@ -199,18 +199,28 @@
     agreedPrivacy = false;
   }
 
+  function writeConsent() {
+    localStorage.setItem('mmm_consent_v1', JSON.stringify({
+      consented_at: new Date().toISOString(),
+      terms_version: 'v1-2026-04'
+    }));
+  }
+
   async function handleMagicLink() {
     if (!saveEmail.trim() || !agreedTerms || !agreedPrivacy) return;
     saveStatus = 'sending';
     const { error } = await signInWithMagicLink(saveEmail.trim());
     if (!error) {
       // Store consent intent — written to Supabase profiles on first auth callback
-      localStorage.setItem('mmm_consent_v1', JSON.stringify({
-        consented_at: new Date().toISOString(),
-        terms_version: 'v1-2026-04'
-      }));
+      writeConsent();
     }
     saveStatus = error ? 'error' : 'sent';
+  }
+
+  async function handleGoogleSignIn() {
+    if (!agreedTerms || !agreedPrivacy) return;
+    writeConsent();
+    await signInWithGoogle();
   }
 
   // ── Results content ───────────────────────────────────────
@@ -400,7 +410,7 @@
             {saveStatus === 'sending' ? 'Sending…' : 'Save with Email →'}
           </button>
         </div>
-        <button class="google-btn" on:click={() => signInWithGoogle()}>
+        <button class="google-btn" disabled={!agreedTerms || !agreedPrivacy} on:click={handleGoogleSignIn}>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
             <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
@@ -754,7 +764,8 @@
     margin-top: .5rem;
   }
 
-  .google-btn:hover { border-color: var(--text); }
+  .google-btn:hover:not(:disabled) { border-color: var(--text); }
+  .google-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
   .next-steps {
     text-align: center;
