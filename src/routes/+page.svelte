@@ -2,8 +2,14 @@
   import { goto } from '$app/navigation';
 
   function goToMyPlan() {
-    const hasAssessment = !!localStorage.getItem('mmm_assessment_v1');
-    goto(hasAssessment ? '/dashboard' : '/assessment');
+    try {
+      const raw = localStorage.getItem('mmm_assessment_v1');
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (parsed.answers?.exam_system) { goto('/dashboard'); return; }
+      }
+    } catch {}
+    goto('/assessment');
   }
 </script>
 
