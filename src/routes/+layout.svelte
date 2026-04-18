@@ -3,7 +3,7 @@
   import { onMount } from 'svelte';
   import { page } from '$app/stores';
   import { getSupabase } from '$lib/supabase';
-  import { Target, User, BookOpen, Compass, CalendarDays, TrendingUp } from 'lucide-svelte';
+  import { Target, User, BookOpen, Compass, CalendarDays, TrendingUp, BarChart2 } from 'lucide-svelte';
 
   type NavState = 'public' | 'onboarding' | 'active';
 
@@ -67,8 +67,8 @@
   const ACTIVE_NAV = [
     { href: '/dashboard',  icon: Compass,     label: 'My Plan'    },
     { href: '/timetable',  icon: CalendarDays,label: 'Timetable'  },
-    { href: '/resources',  icon: BookOpen,    label: 'Resources'  },
     { href: '/sba',        icon: TrendingUp,  label: 'SBA'        },
+    { href: '/marks',      icon: BarChart2,   label: 'Marks'      },
     { href: '/assessment', icon: User,        label: 'Profile'    },
   ];
 
