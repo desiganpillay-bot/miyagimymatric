@@ -1,5 +1,10 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
+
+  function goToMyPlan() {
+    const hasAssessment = !!localStorage.getItem('mmm_assessment_v1');
+    goto(hasAssessment ? '/dashboard' : '/assessment');
+  }
 </script>
 
 <svelte:head>
@@ -17,7 +22,7 @@
       Miyagi My Matric guides SA Grade 10–12 learners from first visit to exam-ready. A smart assessment profiles your subjects, intensity, and readiness — then generates a fully personalised study plan.
     </p>
     <div class="route-fork">
-      <button class="btn btn-next fork-secondary" on:click={() => goto('/dashboard')}>
+      <button class="btn btn-next fork-secondary" on:click={goToMyPlan}>
         Take me back to my Plan →
       </button>
     </div>
