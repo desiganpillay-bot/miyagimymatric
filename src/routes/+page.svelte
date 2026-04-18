@@ -190,18 +190,18 @@
   .fork-secondary { width: 100%; max-width: 340px; }
 
   .btn-ghost {
-    background: transparent;
-    border: 1px solid var(--border);
-    color: var(--muted);
+    background: rgba(255, 244, 232, 0.06);
+    border: 1px solid rgba(255, 244, 232, 0.28);
+    color: rgba(255, 244, 232, 0.85);
     font-family: var(--font-head);
     font-weight: 600;
     font-size: .88rem;
     padding: .7rem 1.4rem;
     border-radius: 10px;
     cursor: pointer;
-    transition: border-color .2s, color .2s;
+    transition: border-color .2s, color .2s, background .2s;
   }
-  .btn-ghost:hover { border-color: rgba(255,244,232,.30); color: var(--text); }
+  .btn-ghost:hover { border-color: rgba(255,244,232,.55); color: var(--text); background: rgba(255,244,232,.10); }
 
   .no-login {
     font-size: .75rem;
