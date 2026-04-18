@@ -227,12 +227,13 @@ Manual slot edit preserved. localStorage persist preserved.
 ## SESSION LOG
 _Session history written here by Claude at end of each session_
 
-### 2026-04-18 — Palette consistency + landing page CTA cleanup
+### 2026-04-18 — Palette consistency + nav active state fix
 
 - Committed pending landing page simplification: Start Assessment (primary) stacked above How it works (ghost pill)
 - Global palette swap across all 9 inner pages: replaced old rgba values (246,201,14 yellow, 74,222,128 lime, 56,189,248 sky) with new coral/lime/sky tokens
-- Files modified: `src/routes/+page.svelte`, `src/routes/assessment/+page.svelte`, `src/routes/dashboard/+page.svelte`, `src/routes/resources/+page.svelte`, `src/routes/subjects/+page.svelte`, `src/routes/techniques/+page.svelte`, `src/routes/timetable/+page.svelte`, `src/routes/pomodoro/+page.svelte`, `src/routes/privacy/+page.svelte`, `src/routes/terms/+page.svelte`
-- All changes pushed and deployed via Vercel auto-deploy
+- Nav active state fix: `isActive` now reads `$page.url.pathname` directly (not via intermediate `current` variable) — ensures Svelte 4 tracks the store subscription and re-evaluates on navigation
+- Files modified: `src/routes/+page.svelte`, all 9 inner page svelte files, `src/routes/+layout.svelte`
+- All pushed and deploying via Vercel
 - Next open: Google OAuth diagnosis (check Supabase + Google Cloud Console config before writing code)
 
 ### 2026-04-16/17 — Major UX overhaul (session 5b)
