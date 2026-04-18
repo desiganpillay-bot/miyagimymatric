@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import { currentSection, answers, subjectMarks, subjectRatings, apsResult, resetAssessment } from '$lib/stores/assessment';
   import { SUBJECTS, UNIVERSITIES, FIELDS, MARK_RANGES } from '$lib/constants';
   import { scoreClass, barColor, pClass, passLabel } from '$lib/aps';
@@ -198,6 +199,19 @@
     agreedTerms = false;
     agreedPrivacy = false;
   }
+
+  // If the learner has already completed the assessment, show their profile
+  // directly instead of starting from section 1.
+  onMount(() => {
+    const saved = localStorage.getItem('mmm_assessment_v1');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        // Consider complete if exam_system has been answered
+        if (parsed.answers?.exam_system) showResults = true;
+      } catch { /* malformed — start fresh */ }
+    }
+  });
 
   function writeConsent() {
     localStorage.setItem('mmm_consent_v1', JSON.stringify({
