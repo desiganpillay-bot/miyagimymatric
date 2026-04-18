@@ -230,7 +230,7 @@
   .page-header { text-align: center; margin-bottom: 1.5rem; animation: fadeDown 0.5s ease both; }
   .back-link { display: inline-block; color: var(--muted); text-decoration: none; font-size: 0.875rem; margin-bottom: 1rem; transition: color 0.2s; }
   .back-link:hover { color: var(--accent2); }
-  .badge { display: inline-block; background: rgba(246,201,14,.12); color: var(--accent); border: 1px solid rgba(246,201,14,.25); border-radius: 999px; padding: 0.3rem 1rem; font-family: var(--font-head); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 0.75rem; }
+  .badge { display: inline-block; background: rgba(255,82,82,.12); color: var(--accent); border: 1px solid rgba(255,82,82,.25); border-radius: 999px; padding: 0.3rem 1rem; font-family: var(--font-head); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 0.75rem; }
   h1 { font-family: var(--font-head); font-size: clamp(1.8rem, 5vw, 2.5rem); font-weight: 800; color: var(--text); margin: 0 0 0.5rem; }
   .subtitle { color: var(--muted); font-size: 0.875rem; max-width: 440px; margin: 0 auto; }
 

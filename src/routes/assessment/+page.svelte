@@ -719,8 +719,8 @@
   }
 
   .save-card {
-    background: linear-gradient(135deg, rgba(56,189,248,.06), rgba(246,201,14,.04));
-    border: 1px solid rgba(56,189,248,.2);
+    background: linear-gradient(135deg, rgba(105,180,255,.06), rgba(255,82,82,.04));
+    border: 1px solid rgba(105,180,255,.2);
     border-radius: 16px;
     padding: 1.5rem;
     margin-top: 1.5rem;
@@ -756,8 +756,8 @@
   .save-form .btn { white-space: nowrap; }
 
   .save-success {
-    background: rgba(74,222,128,.1);
-    border: 1px solid rgba(74,222,128,.3);
+    background: rgba(122,255,122,.1);
+    border: 1px solid rgba(122,255,122,.3);
     color: var(--accent3);
     border-radius: 8px;
     padding: .75rem 1rem;
@@ -814,12 +814,12 @@
   .btn-timetable:hover { opacity: 0.85; }
   .btn-ghost-cta { background: transparent; border: 1px solid var(--border); color: var(--muted); margin-top: 0.5rem; }
   .btn-ghost-cta:hover { border-color: var(--accent2); color: var(--accent2); opacity: 1; }
-  .challenge-tip { margin-top: 1rem; padding: .75rem 1rem; background: rgba(246,201,14,.06); border: 1px solid rgba(246,201,14,.18); border-radius: 10px; font-size: .8rem; color: var(--muted); line-height: 1.6; text-align: left; }
+  .challenge-tip { margin-top: 1rem; padding: .75rem 1rem; background: rgba(255,82,82,.06); border: 1px solid rgba(255,82,82,.18); border-radius: 10px; font-size: .8rem; color: var(--muted); line-height: 1.6; text-align: left; }
   .challenge-tip strong { color: var(--accent); }
 
   .consent-checkboxes {
-    background: rgba(246,201,14,.05);
-    border: 1px solid rgba(246,201,14,.15);
+    background: rgba(255,82,82,.05);
+    border: 1px solid rgba(255,82,82,.15);
     border-radius: 10px;
     padding: 1rem;
     margin-bottom: .8rem;

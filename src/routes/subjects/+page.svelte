@@ -528,7 +528,7 @@
   .page-header { text-align: center; margin-bottom: 1.5rem; animation: fadeDown 0.5s ease both; }
   .back-link { display: inline-block; color: var(--muted); text-decoration: none; font-size: 0.875rem; margin-bottom: 1rem; transition: color 0.2s; }
   .back-link:hover { color: var(--accent2); }
-  .badge { display: inline-block; background: rgba(246,201,14,.12); color: var(--accent); border: 1px solid rgba(246,201,14,.25); border-radius: 999px; padding: 0.3rem 1rem; font-family: var(--font-head); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 0.75rem; }
+  .badge { display: inline-block; background: rgba(255,82,82,.12); color: var(--accent); border: 1px solid rgba(255,82,82,.25); border-radius: 999px; padding: 0.3rem 1rem; font-family: var(--font-head); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 0.75rem; }
   h1 { font-family: var(--font-head); font-size: clamp(1.8rem, 5vw, 2.5rem); font-weight: 800; color: var(--text); margin: 0 0 0.5rem; }
   .subtitle { color: var(--muted); font-size: 0.875rem; max-width: 500px; margin: 0 auto; }
 
@@ -568,14 +568,14 @@
 
   /* Curriculum banners */
   .curriculum-banner { border-radius: 10px; padding: 0.65rem 1rem; font-size: 0.8rem; line-height: 1.5; margin-top: 0.75rem; }
-  .curriculum-banner.ieb { background: rgba(56,189,248,.08); border: 1px solid rgba(56,189,248,.25); color: var(--accent2); }
-  .curriculum-banner.caps { background: rgba(74,222,128,.08); border: 1px solid rgba(74,222,128,.25); color: var(--accent3); }
-  .curriculum-banner.unsure { background: rgba(246,201,14,.08); border: 1px solid rgba(246,201,14,.2); color: var(--accent); }
+  .curriculum-banner.ieb { background: rgba(105,180,255,.08); border: 1px solid rgba(105,180,255,.25); color: var(--accent2); }
+  .curriculum-banner.caps { background: rgba(122,255,122,.08); border: 1px solid rgba(122,255,122,.25); color: var(--accent3); }
+  .curriculum-banner.unsure { background: rgba(255,82,82,.08); border: 1px solid rgba(255,82,82,.2); color: var(--accent); }
   .curriculum-banner strong { color: inherit; }
   .banner-link { color: inherit; font-weight: 700; }
   .curr-callout { border-radius: 10px; padding: 0.75rem 1rem; font-size: 0.82rem; line-height: 1.6; margin-bottom: 1rem; }
-  .curr-callout.ieb { background: rgba(56,189,248,.07); border: 1px solid rgba(56,189,248,.25); color: var(--text); }
-  .curr-callout.caps { background: rgba(74,222,128,.07); border: 1px solid rgba(74,222,128,.25); color: var(--text); }
+  .curr-callout.ieb { background: rgba(105,180,255,.07); border: 1px solid rgba(105,180,255,.25); color: var(--text); }
+  .curr-callout.caps { background: rgba(122,255,122,.07); border: 1px solid rgba(122,255,122,.25); color: var(--text); }
   .curr-callout strong { color: inherit; }
 
   /* No content state */
@@ -584,8 +584,8 @@
   .no-content-title { font-family: var(--font-head); font-size: 1.2rem; font-weight: 700; color: var(--text); margin: 0 0 0.75rem; }
   .no-content-text { color: var(--muted); font-size: 0.9rem; line-height: 1.6; max-width: 400px; margin: 0 auto 1.5rem; }
   .no-content-links { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
-  .nc-link { color: var(--accent2); text-decoration: none; font-size: 0.875rem; font-weight: 600; padding: 0.5rem 1rem; border: 1px solid rgba(56,189,248,.3); border-radius: 999px; transition: all 0.15s; }
-  .nc-link:hover { background: rgba(56,189,248,.08); }
+  .nc-link { color: var(--accent2); text-decoration: none; font-size: 0.875rem; font-weight: 600; padding: 0.5rem 1rem; border: 1px solid rgba(105,180,255,.3); border-radius: 999px; transition: all 0.15s; }
+  .nc-link:hover { background: rgba(105,180,255,.08); }
 
   @keyframes fadeDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
   @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }

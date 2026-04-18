@@ -522,7 +522,7 @@
   .page-header { text-align: center; margin-bottom: 1.5rem; animation: fadeDown 0.5s ease both; }
   .back-link { display: inline-block; color: var(--muted); text-decoration: none; font-size: 0.875rem; margin-bottom: 1rem; transition: color 0.2s; }
   .back-link:hover { color: var(--accent2); }
-  .badge { display: inline-block; background: rgba(246,201,14,.12); color: var(--accent); border: 1px solid rgba(246,201,14,.25); border-radius: 999px; padding: 0.3rem 1rem; font-family: var(--font-head); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 0.75rem; }
+  .badge { display: inline-block; background: rgba(255,82,82,.12); color: var(--accent); border: 1px solid rgba(255,82,82,.25); border-radius: 999px; padding: 0.3rem 1rem; font-family: var(--font-head); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 0.75rem; }
   h1 { font-family: var(--font-head); font-size: clamp(1.8rem, 5vw, 2.5rem); font-weight: 800; color: var(--text); margin: 0 0 0.5rem; }
   .subtitle { color: var(--muted); font-size: 0.875rem; max-width: 500px; margin: 0 auto; }
 
@@ -531,7 +531,7 @@
   .tab-bar::-webkit-scrollbar { display: none; }
   .tab-btn { display: flex; align-items: center; gap: 0.4rem; padding: 0.5rem 0.9rem; background: var(--surface); border: 1px solid var(--border); border-radius: 999px; color: var(--muted); font-family: var(--font-head); font-size: 0.78rem; font-weight: 600; cursor: pointer; white-space: nowrap; transition: all 0.2s; flex-shrink: 0; }
   .tab-btn:hover { border-color: var(--accent); color: var(--text); }
-  .tab-btn.active { background: rgba(246,201,14,.12); border-color: rgba(246,201,14,.4); color: var(--accent); }
+  .tab-btn.active { background: rgba(255,82,82,.12); border-color: rgba(255,82,82,.4); color: var(--accent); }
   .tab-icon { font-size: 1rem; }
 
   /* Section */
@@ -544,7 +544,7 @@
 
   /* Resource card */
   .resource-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 1.25rem 1.5rem; }
-  .resource-card.featured { border-color: rgba(246,201,14,.2); }
+  .resource-card.featured { border-color: rgba(255,82,82,.2); }
 
   .resource-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; margin-bottom: 0.75rem; flex-wrap: wrap; }
   .resource-name { font-family: var(--font-head); font-size: 1rem; font-weight: 800; color: var(--text); }
@@ -552,10 +552,10 @@
 
   .badges-wrap { display: flex; gap: 0.4rem; flex-wrap: wrap; flex-shrink: 0; }
   .badge-chip { font-size: 0.65rem; font-family: var(--font-head); font-weight: 700; border-radius: 999px; padding: 0.2rem 0.55rem; white-space: nowrap; }
-  .badge-chip.zero { background: rgba(56,189,248,.1); color: var(--accent2); }
-  .badge-chip.free { background: rgba(74,222,128,.1); color: var(--accent3); }
-  .badge-chip.official { background: rgba(246,201,14,.1); color: var(--accent); }
-  .badge-chip.best { background: rgba(246,201,14,.1); color: var(--accent); }
+  .badge-chip.zero { background: rgba(105,180,255,.1); color: var(--accent2); }
+  .badge-chip.free { background: rgba(122,255,122,.1); color: var(--accent3); }
+  .badge-chip.official { background: rgba(255,82,82,.1); color: var(--accent); }
+  .badge-chip.best { background: rgba(255,82,82,.1); color: var(--accent); }
 
   .resource-desc { font-size: 0.875rem; color: var(--muted); line-height: 1.6; margin: 0 0 0.75rem; }
   .resource-tip { font-size: 0.8rem; color: var(--muted); line-height: 1.5; background: var(--surface2); border-radius: 8px; padding: 0.6rem 0.8rem; margin: 0; }
@@ -575,16 +575,16 @@
   .step-list li strong, .tip-list li strong { color: var(--text); }
 
   /* Built-in tools */
-  .info-card.built-in { border-color: rgba(246,201,14,.2); }
+  .info-card.built-in { border-color: rgba(255,82,82,.2); }
   .builtin-list { display: flex; flex-direction: column; gap: 0.5rem; }
   .builtin-item { display: flex; align-items: center; gap: 0.75rem; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 0.75rem 1rem; text-decoration: none; transition: border-color 0.2s; }
-  .builtin-item:hover { border-color: rgba(246,201,14,.3); }
+  .builtin-item:hover { border-color: rgba(255,82,82,.3); }
   .builtin-icon { font-size: 1.2rem; flex-shrink: 0; }
   .builtin-name { font-family: var(--font-head); font-size: 0.85rem; font-weight: 700; color: var(--text); }
   .builtin-desc { font-size: 0.75rem; color: var(--muted); margin-top: 0.1rem; }
 
   /* Hotline */
-  .hotline-card { background: rgba(74,222,128,.08); border: 1px solid rgba(74,222,128,.2); border-radius: 12px; padding: 1rem; text-align: center; margin: 0.75rem 0; }
+  .hotline-card { background: rgba(122,255,122,.08); border: 1px solid rgba(122,255,122,.2); border-radius: 12px; padding: 1rem; text-align: center; margin: 0.75rem 0; }
   .hotline-num { font-family: var(--font-head); font-size: 1.5rem; font-weight: 800; color: var(--accent3); }
   .hotline-label { font-size: 0.75rem; color: var(--muted); margin-top: 0.25rem; }
 
@@ -598,14 +598,14 @@
 
   /* Curriculum banner + alert */
   .curriculum-banner { border-radius: 10px; padding: 0.65rem 1rem; font-size: 0.8rem; line-height: 1.5; margin-top: 0.75rem; }
-  .curriculum-banner.ieb { background: rgba(56,189,248,.08); border: 1px solid rgba(56,189,248,.25); color: var(--accent2); }
-  .curriculum-banner.caps { background: rgba(74,222,128,.08); border: 1px solid rgba(74,222,128,.25); color: var(--accent3); }
-  .curriculum-banner.unsure { background: rgba(246,201,14,.08); border: 1px solid rgba(246,201,14,.2); color: var(--accent); }
+  .curriculum-banner.ieb { background: rgba(105,180,255,.08); border: 1px solid rgba(105,180,255,.25); color: var(--accent2); }
+  .curriculum-banner.caps { background: rgba(122,255,122,.08); border: 1px solid rgba(122,255,122,.25); color: var(--accent3); }
+  .curriculum-banner.unsure { background: rgba(255,82,82,.08); border: 1px solid rgba(255,82,82,.2); color: var(--accent); }
   .curriculum-banner strong { color: inherit; }
   .banner-link { color: inherit; font-weight: 700; }
   .curriculum-alert { border-radius: 12px; padding: 0.85rem 1rem; font-size: 0.85rem; line-height: 1.6; margin-bottom: 0.5rem; }
-  .curriculum-alert.ieb { background: rgba(56,189,248,.08); border: 1px solid rgba(56,189,248,.3); color: var(--text); }
-  .curriculum-alert.caps { background: rgba(74,222,128,.08); border: 1px solid rgba(74,222,128,.3); color: var(--text); }
+  .curriculum-alert.ieb { background: rgba(105,180,255,.08); border: 1px solid rgba(105,180,255,.3); color: var(--text); }
+  .curriculum-alert.caps { background: rgba(122,255,122,.08); border: 1px solid rgba(122,255,122,.3); color: var(--text); }
   .curriculum-alert strong { color: inherit; }
   .badge-chip.caution { background: rgba(248,113,113,.1); color: var(--danger); }
 

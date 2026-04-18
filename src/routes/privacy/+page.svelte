@@ -217,9 +217,9 @@
 
   .badge {
     display: inline-block;
-    background: rgba(246,201,14,.12);
+    background: rgba(255,82,82,.12);
     color: var(--accent);
-    border: 1px solid rgba(246,201,14,.25);
+    border: 1px solid rgba(255,82,82,.25);
     border-radius: 999px;
     padding: 0.3rem 1rem;
     font-family: var(--font-head);
@@ -288,7 +288,7 @@
 
   .acceptance-card {
     background: var(--surface2);
-    border-color: rgba(246,201,14,.2);
+    border-color: rgba(255,82,82,.2);
     text-align: center;
   }
 

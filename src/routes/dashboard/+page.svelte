@@ -566,7 +566,7 @@
   }
 
   .finals-card {
-    background: linear-gradient(135deg, rgba(248,113,113,.06), rgba(246,201,14,.04));
+    background: linear-gradient(135deg, rgba(248,113,113,.06), rgba(255,82,82,.04));
     border-color: rgba(248,113,113,.2);
   }
 
@@ -791,7 +791,7 @@
   .risk-topic { background: var(--surface2); border-radius: 8px; padding: 0.6rem 0.75rem; margin-bottom: 0.4rem; }
   .risk-topic-top { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.3rem; }
   .risk-topic-name { font-size: 0.85rem; font-weight: 600; color: var(--text); flex: 1; }
-  .risk-topic-paper { font-size: 0.68rem; background: rgba(56,189,248,.1); color: var(--accent2); border-radius: 999px; padding: 0.15rem 0.5rem; white-space: nowrap; }
+  .risk-topic-paper { font-size: 0.68rem; background: rgba(105,180,255,.1); color: var(--accent2); border-radius: 999px; padding: 0.15rem 0.5rem; white-space: nowrap; }
   .risk-topic-weight { font-size: 0.68rem; background: rgba(248,113,113,.1); color: var(--danger); border-radius: 999px; padding: 0.15rem 0.5rem; white-space: nowrap; font-family: var(--font-head); font-weight: 700; }
   .risk-topic-tip { font-size: 0.75rem; color: var(--muted); margin: 0; line-height: 1.5; }
   .risk-cta { display: inline-block; margin-top: 0.75rem; font-size: 0.8rem; color: var(--accent2); text-decoration: none; font-family: var(--font-head); font-weight: 600; }
