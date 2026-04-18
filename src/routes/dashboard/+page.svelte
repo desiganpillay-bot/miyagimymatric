@@ -37,9 +37,9 @@
 
   // ── Exam dates ─────────────────────────────────────────────
   const DATES = {
-    caps:  { prelims: new Date('2025-08-25'), finals: new Date('2025-10-21') },
-    ieb:   { prelims: new Date('2025-09-09'), finals: new Date('2025-09-09') },
-    unsure:{ prelims: new Date('2025-08-25'), finals: new Date('2025-10-21') }
+    caps:  { prelims: new Date('2026-08-25'), finals: new Date('2026-10-21') },
+    ieb:   { prelims: new Date('2026-09-08'), finals: new Date('2026-11-10') },
+    unsure:{ prelims: new Date('2026-08-25'), finals: new Date('2026-10-21') }
   } as const;
 
   function daysUntil(d: Date): number {
@@ -218,7 +218,7 @@
     <!-- ── Authenticated dashboard ──────────────────────── -->
     <header class="dash-header">
       <div class="badge">
-        {profile?.exam_system === 'ieb' ? 'IEB' : profile?.exam_system === 'caps' ? 'CAPS/NSC' : 'Matric'} · 2025
+        {profile?.exam_system === 'ieb' ? 'IEB' : profile?.exam_system === 'caps' ? 'CAPS/NSC' : 'Matric'} · 2026
       </div>
       <h1>Your Dashboard</h1>
     </header>
