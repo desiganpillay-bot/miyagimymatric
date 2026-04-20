@@ -1,0 +1,71 @@
+{
+	"version": 3,
+	"routes": [
+		{
+			"src": "/_app/immutable/.+",
+			"headers": {
+				"cache-control": "public, immutable, max-age=31536000"
+			}
+		},
+		{
+			"handle": "filesystem"
+		},
+		{
+			"src": "^/?(?:/__data.json)?$",
+			"dest": "/"
+		},
+		{
+			"src": "^/assessment/?(?:/__data.json)?$",
+			"dest": "/assessment"
+		},
+		{
+			"src": "^/auth/callback/?(?:/__data.json)?$",
+			"dest": "/auth/callback"
+		},
+		{
+			"src": "^/dashboard/?(?:/__data.json)?$",
+			"dest": "/dashboard"
+		},
+		{
+			"src": "^/marks/?(?:/__data.json)?$",
+			"dest": "/marks"
+		},
+		{
+			"src": "^/pomodoro/?(?:/__data.json)?$",
+			"dest": "/pomodoro"
+		},
+		{
+			"src": "^/privacy/?(?:/__data.json)?$",
+			"dest": "/privacy"
+		},
+		{
+			"src": "^/resources/?(?:/__data.json)?$",
+			"dest": "/resources"
+		},
+		{
+			"src": "^/sba/?(?:/__data.json)?$",
+			"dest": "/sba"
+		},
+		{
+			"src": "^/subjects/?(?:/__data.json)?$",
+			"dest": "/subjects"
+		},
+		{
+			"src": "^/techniques/?(?:/__data.json)?$",
+			"dest": "/techniques"
+		},
+		{
+			"src": "^/terms/?(?:/__data.json)?$",
+			"dest": "/terms"
+		},
+		{
+			"src": "^/timetable/?(?:/__data.json)?$",
+			"dest": "/timetable"
+		},
+		{
+			"src": "/.*",
+			"dest": "/![-]/catchall"
+		}
+	],
+	"overrides": {}
+}

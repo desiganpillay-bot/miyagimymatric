@@ -461,9 +461,9 @@
 
   .badge {
     display: inline-block;
-    background: rgba(255,82,82,.12);
+    background: rgba(124,77,255,.12);
     color: var(--accent);
-    border: 1px solid rgba(255,82,82,.25);
+    border: 1px solid rgba(124,77,255,.25);
     border-radius: 999px;
     padding: 0.3rem 1rem;
     font-family: var(--font-head);
@@ -566,8 +566,8 @@
   }
 
   .finals-card {
-    background: linear-gradient(135deg, rgba(248,113,113,.06), rgba(255,82,82,.04));
-    border-color: rgba(248,113,113,.2);
+    background: linear-gradient(135deg, rgba(255,92,138,.06), rgba(124,77,255,.04));
+    border-color: rgba(255,92,138,.2);
   }
 
   .countdown-num {
@@ -684,8 +684,8 @@
   }
 
   .sba-card.urgent {
-    border-color: rgba(248,113,113,.4);
-    background: linear-gradient(135deg, rgba(248,113,113,.06), var(--surface));
+    border-color: rgba(255,92,138,.4);
+    background: linear-gradient(135deg, rgba(255,92,138,.06), var(--surface));
   }
 
   .sba-inner {
@@ -781,7 +781,7 @@
   }
 
   /* ── High-value risk topics ──────────────────────── */
-  .risk-card { border-color: rgba(248,113,113,.2); }
+  .risk-card { border-color: rgba(255,92,138,.2); }
   .risk-intro { font-size: 0.8rem; color: var(--muted); margin: 0 0 1rem; line-height: 1.5; }
   .risk-subject { margin-bottom: 1.25rem; }
   .risk-subject:last-of-type { margin-bottom: 0.5rem; }
@@ -791,14 +791,14 @@
   .risk-topic { background: var(--surface2); border-radius: 8px; padding: 0.6rem 0.75rem; margin-bottom: 0.4rem; }
   .risk-topic-top { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.3rem; }
   .risk-topic-name { font-size: 0.85rem; font-weight: 600; color: var(--text); flex: 1; }
-  .risk-topic-paper { font-size: 0.68rem; background: rgba(105,180,255,.1); color: var(--accent2); border-radius: 999px; padding: 0.15rem 0.5rem; white-space: nowrap; }
-  .risk-topic-weight { font-size: 0.68rem; background: rgba(248,113,113,.1); color: var(--danger); border-radius: 999px; padding: 0.15rem 0.5rem; white-space: nowrap; font-family: var(--font-head); font-weight: 700; }
+  .risk-topic-paper { font-size: 0.68rem; background: rgba(124,77,255,.1); color: var(--accent); border-radius: 999px; padding: 0.15rem 0.5rem; white-space: nowrap; }
+  .risk-topic-weight { font-size: 0.68rem; background: rgba(255,92,138,.1); color: var(--danger); border-radius: 999px; padding: 0.15rem 0.5rem; white-space: nowrap; font-family: var(--font-head); font-weight: 700; }
   .risk-topic-tip { font-size: 0.75rem; color: var(--muted); margin: 0; line-height: 1.5; }
   .risk-cta { display: inline-block; margin-top: 0.75rem; font-size: 0.8rem; color: var(--accent2); text-decoration: none; font-family: var(--font-head); font-weight: 600; }
   .risk-cta:hover { text-decoration: underline; }
 
   /* ── Plan-ready card ─────────────────────────────── */
-  .plan-ready-card { background: var(--surface); border: 1px solid rgba(255,82,82,.25); border-radius: 16px; padding: 1.5rem; max-width: 480px; margin: 1.5rem auto 0; text-align: left; }
+  .plan-ready-card { background: var(--surface); border: 1px solid rgba(124,77,255,.25); border-radius: 16px; padding: 1.5rem; max-width: 480px; margin: 1.5rem auto 0; text-align: left; }
   .plan-aps-row { display: flex; gap: 1.5rem; margin-bottom: 1.25rem; align-items: flex-start; }
   .plan-aps-block { text-align: center; flex-shrink: 0; }
   .plan-aps-num { font-family: var(--font-head); font-size: 2.5rem; font-weight: 800; color: var(--accent); line-height: 1; }

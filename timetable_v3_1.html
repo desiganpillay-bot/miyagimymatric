@@ -1,0 +1,1466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Matric Weekly Timetable</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Figtree:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════
+   TOKENS
+══════════════════════════════════════ */
+:root {
+  --bg:        #f7f4ef;
+  --surface:   #ffffff;
+  --ink:       #1c1a17;
+  --ink2:      #4a4540;
+  --muted:     #9a9080;
+  --border:    #e4dfd5;
+  --border2:   #d0c9bc;
+  --school:    #dde4f0; --school-ink:#2a3d6b;
+  --lunch:     #fde8c8; --lunch-ink: #7a4200;
+  --dinner:    #fde8c8; --dinner-ink:#7a4200;
+  --leisure:   #dff3e5; --leisure-ink:#1a5c30;
+  --sleep:     #ece9f4; --sleep-ink: #4a3870;
+  --pp:        #1c1a17; --pp-ink:    #f7f4ef;
+  --sr:        #fff3c8; --sr-ink:    #6a5000;
+  --c0:#fce4e4; --c0i:#7a1c1c;
+  --c1:#fce8d4; --c1i:#7a3a0a;
+  --c2:#fffbd4; --c2i:#6a5a00;
+  --c3:#e4f5e4; --c3i:#1a5a20;
+  --c4:#d4eef5; --c4i:#0a4a60;
+  --c5:#e4d4f5; --c5i:#3a1a6a;
+  --c6:#f5d4ea; --c6i:#6a0a4a;
+  --c7:#d4f5ee; --c7i:#0a4a3a;
+  --c8:#f5ead4; --c8i:#6a3a0a;
+  --radius:6px; --cell-h:62px; --time-w:70px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:'Figtree',sans-serif;min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.025;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+/* ── LAYOUT ── */
+.page{position:relative;z-index:1;max-width:1320px;margin:0 auto;padding:0 clamp(1rem,4vw,3rem) 4rem}
+
+/* ── HEADER ── */
+header{display:flex;align-items:flex-end;justify-content:space-between;gap:2rem;
+  padding:2.5rem 0 1.8rem;border-bottom:1.5px solid var(--border2);margin-bottom:1.8rem;flex-wrap:wrap}
+.hdr-left{display:flex;flex-direction:column;gap:.3rem}
+.hdr-eyebrow{font-family:'JetBrains Mono',monospace;font-size:.58rem;font-weight:600;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+.hdr-title{font-family:'Instrument Serif',serif;font-size:clamp(1.7rem,4vw,2.6rem);
+  font-weight:400;line-height:1.05;letter-spacing:-.02em}
+.hdr-title em{font-style:italic;color:var(--muted)}
+.hdr-right{display:flex;flex-direction:column;align-items:flex-end;gap:.6rem}
+.controls{display:flex;align-items:flex-end;gap:.6rem;flex-wrap:wrap;justify-content:flex-end}
+.ctrl-group{display:flex;flex-direction:column;gap:.2rem;align-items:flex-end}
+.ctrl-label{font-family:'JetBrains Mono',monospace;font-size:.52rem;font-weight:600;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+select{background:var(--surface);border:1.5px solid var(--border2);color:var(--ink);
+  border-radius:var(--radius);padding:.42rem .75rem;font-family:'Figtree',sans-serif;
+  font-size:.78rem;font-weight:500;cursor:pointer;outline:none;transition:border-color .2s;
+  -webkit-appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6' fill='none' stroke='%239a9080' stroke-width='1.5'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right .55rem center;padding-right:1.8rem}
+select:focus{border-color:var(--ink)}
+.btn-print{display:inline-flex;align-items:center;gap:.4rem;background:var(--ink);color:var(--bg);
+  font-family:'Figtree',sans-serif;font-weight:600;font-size:.78rem;padding:.48rem 1.1rem;
+  border-radius:100px;border:none;cursor:pointer;transition:all .2s}
+.btn-print:hover{background:#3a3630;transform:translateY(-1px)}
+
+/* ── ASSESSMENT PANEL ── */
+.assess-panel{background:var(--surface);border:1.5px solid var(--border);border-radius:14px;
+  margin-bottom:1.5rem;overflow:hidden}
+.assess-header{display:flex;align-items:center;justify-content:space-between;
+  padding:1rem 1.4rem;border-bottom:1.5px solid var(--border);cursor:pointer;
+  user-select:none;transition:background .15s}
+.assess-header:hover{background:rgba(0,0,0,.02)}
+.assess-title{display:flex;align-items:center;gap:.7rem}
+.assess-badge{background:var(--ink);color:var(--bg);font-family:'JetBrains Mono',monospace;
+  font-size:.55rem;font-weight:700;letter-spacing:.12em;padding:.25rem .7rem;border-radius:100px}
+.assess-badge.done{background:#1a5c30;color:#fff}
+.assess-h3{font-family:'JetBrains Mono',monospace;font-size:.62rem;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--ink2)}
+.assess-hint{font-size:.75rem;color:var(--muted);font-weight:300}
+.assess-chevron{font-size:.85rem;color:var(--muted);transition:transform .25s}
+.assess-chevron.open{transform:rotate(180deg)}
+.assess-body{display:none;padding:1.4rem}
+.assess-body.open{display:block}
+
+/* ── PROFILE DISPLAY (post-assessment) ── */
+.profile-chips{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1rem}
+.prof-chip{display:inline-flex;align-items:center;gap:.35rem;
+  font-size:.73rem;font-weight:600;padding:.28rem .75rem;border-radius:100px;
+  border:1.5px solid var(--border)}
+.prof-chip .dot{width:7px;height:7px;border-radius:50%;background:currentColor;opacity:.5}
+
+/* form fields inside assess panel */
+.af-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.9rem;margin-bottom:1.2rem}
+.af-field{display:flex;flex-direction:column;gap:.3rem}
+.af-label{font-family:'JetBrains Mono',monospace;font-size:.55rem;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.af-select{width:100%;background:var(--bg);border:1.5px solid var(--border2);color:var(--ink);
+  border-radius:var(--radius);padding:.42rem .75rem;font-family:'Figtree',sans-serif;
+  font-size:.82rem;font-weight:500;cursor:pointer;outline:none;transition:border-color .2s;
+  -webkit-appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6' fill='none' stroke='%239a9080' stroke-width='1.5'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right .55rem center;padding-right:1.8rem}
+.af-select:focus{border-color:var(--ink)}
+
+/* subject confidence table */
+.sc-table{width:100%;border-collapse:collapse;margin-bottom:1rem}
+.sc-table th{font-family:'JetBrains Mono',monospace;font-size:.55rem;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
+  padding:.4rem .5rem;text-align:left;border-bottom:1.5px solid var(--border)}
+.sc-table td{padding:.38rem .5rem;border-bottom:1px solid var(--border);font-size:.8rem;vertical-align:middle}
+.sc-table tr:last-child td{border-bottom:none}
+.sc-table tr:hover td{background:rgba(0,0,0,.015)}
+.dot-row{display:flex;gap:4px;align-items:center}
+.conf-dot{width:11px;height:11px;border-radius:50%;border:1.5px solid var(--border2);
+  cursor:pointer;transition:all .15s;flex-shrink:0}
+.conf-dot.on{border-color:transparent}
+.conf-dot.on.l1{background:#f87171}.conf-dot.on.l2{background:#fb923c}
+.conf-dot.on.l3{background:#f6c90e}.conf-dot.on.l4{background:#38bdf8}
+.conf-dot.on.l5{background:#4ade80}
+.mark-sel{background:var(--bg);border:1.5px solid var(--border2);color:var(--ink);
+  border-radius:5px;padding:.28rem .45rem;font-family:'JetBrains Mono',monospace;
+  font-size:.7rem;cursor:pointer;outline:none;min-width:80px;text-align:center}
+.mark-sel:focus{border-color:var(--ink)}
+.btn-apply{display:inline-flex;align-items:center;gap:.4rem;background:var(--ink);color:var(--bg);
+  font-family:'Figtree',sans-serif;font-weight:700;font-size:.82rem;padding:.55rem 1.4rem;
+  border-radius:100px;border:none;cursor:pointer;transition:all .2s;margin-top:.4rem}
+.btn-apply:hover{background:#3a3630;transform:translateY(-1px)}
+
+/* multi-select challenges */
+.challenge-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:.4rem;margin-top:.3rem}
+.chall-opt{display:flex;align-items:center;gap:.5rem;background:var(--bg);border:1.5px solid transparent;
+  border-radius:var(--radius);padding:.42rem .7rem;cursor:pointer;transition:all .18s;font-size:.78rem;font-weight:500}
+.chall-opt:hover{border-color:var(--border2)}
+.chall-opt.on{border-color:var(--ink);background:rgba(28,26,23,.05)}
+.chall-check{width:14px;height:14px;border-radius:3px;border:1.5px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;font-size:.6rem;flex-shrink:0;transition:all .18s}
+.chall-opt.on .chall-check{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+
+/* ── SUBJECTS BAR ── */
+.subjects-bar{background:var(--surface);border:1.5px solid var(--border);border-radius:12px;
+  padding:1.1rem 1.4rem;margin-bottom:1.4rem}
+.sb-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.9rem}
+.sb-title{font-family:'JetBrains Mono',monospace;font-size:.6rem;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.sb-hint{font-size:.72rem;color:var(--muted);font-weight:300}
+.subjects-grid{display:flex;flex-wrap:wrap;gap:.45rem;align-items:center}
+.subj-chip{display:flex;align-items:center;gap:.38rem;border:1.5px solid transparent;
+  border-radius:100px;padding:.28rem .65rem .28rem .38rem;cursor:pointer;transition:all .18s;user-select:none}
+.subj-chip.active{border-color:rgba(0,0,0,.12);box-shadow:0 1px 4px rgba(0,0,0,.07)}
+.subj-chip:not(.active){opacity:.38;filter:grayscale(.6)}
+.chip-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;opacity:.65}
+.chip-name{font-size:.72rem;font-weight:600}
+.chip-tick{font-size:.6rem;color:rgba(0,0,0,.3);margin-left:.1rem}
+.add-subject-row{display:flex;gap:.45rem;align-items:center;margin-top:.75rem;
+  border-top:1px solid var(--border);padding-top:.75rem}
+.add-input{flex:1;background:var(--bg);border:1.5px solid var(--border2);border-radius:var(--radius);
+  padding:.38rem .65rem;font-family:'Figtree',sans-serif;font-size:.78rem;color:var(--ink);
+  outline:none;transition:border-color .2s}
+.add-input:focus{border-color:var(--ink)}
+.add-input::placeholder{color:var(--muted)}
+.btn-add{background:var(--ink);color:var(--bg);font-family:'Figtree',sans-serif;font-weight:600;
+  font-size:.76rem;padding:.4rem .9rem;border-radius:var(--radius);border:none;cursor:pointer;transition:all .18s;white-space:nowrap}
+.btn-add:hover{background:#3a3630}
+
+/* ── STATS ROW ── */
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(115px,1fr));gap:.65rem;margin-bottom:1.4rem}
+.stat-card{background:var(--surface);border:1.5px solid var(--border);border-radius:10px;padding:.85rem 1rem}
+.stat-val{font-family:'Instrument Serif',serif;font-size:1.75rem;line-height:1;
+  color:var(--ink);margin-bottom:.15rem}
+.stat-lbl{font-family:'JetBrains Mono',monospace;font-size:.52rem;font-weight:600;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.stat-sub{font-size:.67rem;color:var(--muted);font-weight:300;margin-top:.12rem}
+
+/* ── TIMETABLE ── */
+.tt-outer{background:var(--surface);border:1.5px solid var(--border);border-radius:14px;overflow:hidden}
+.tt-scroll{overflow-x:auto}
+table.tt{width:100%;border-collapse:collapse;min-width:780px}
+table.tt thead tr.day-row th{
+  background:var(--ink);color:rgba(247,244,239,.82);
+  font-family:'JetBrains Mono',monospace;font-size:.6rem;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;
+  padding:.72rem .45rem;text-align:center;white-space:nowrap}
+table.tt thead tr.day-row th:first-child{background:#111;position:sticky;left:0;z-index:10}
+table.tt thead tr.day-row th.weekend{background:#2a2725}
+table.tt tbody tr:hover td{background:rgba(0,0,0,.014)}
+table.tt td{border-right:1px solid var(--border);border-bottom:1px solid var(--border);
+  padding:2px 2px;vertical-align:top}
+table.tt td:last-child{border-right:none}
+table.tt tbody tr:last-child td{border-bottom:none}
+.time-cell{width:var(--time-w);min-width:var(--time-w);padding:0!important;
+  border-right:1.5px solid var(--border2)!important;background:#faf8f5!important;
+  vertical-align:middle;text-align:center;position:sticky;left:0;z-index:5}
+.time-inner{height:var(--cell-h);display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:.08rem;padding:0 .4rem}
+.time-hh{font-family:'JetBrains Mono',monospace;font-size:.72rem;font-weight:700;color:var(--ink2);line-height:1}
+.time-mm{font-family:'JetBrains Mono',monospace;font-size:.52rem;font-weight:400;color:var(--muted);line-height:1}
+table.tt tbody tr.hour-start td{border-top:1.5px solid var(--border2)}
+.block-cell{padding:2px 2px!important;vertical-align:top}
+
+/* ── BLOCK ── */
+.block{width:100%;min-height:var(--cell-h);border-radius:var(--radius);
+  display:flex;flex-direction:column;justify-content:center;align-items:flex-start;
+  padding:.28rem .45rem;position:relative;overflow:hidden;
+  transition:transform .14s,box-shadow .14s;cursor:default}
+.block:not(.b-sleep):not(.b-empty):hover{transform:scale(1.025);
+  box-shadow:0 3px 12px rgba(0,0,0,.12);z-index:20;position:relative}
+.block-label{font-size:.66rem;font-weight:700;line-height:1.2;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.block-task{font-size:.58rem;font-weight:500;line-height:1.3;
+  white-space:normal;overflow:hidden;display:-webkit-box;
+  -webkit-line-clamp:2;-webkit-box-orient:vertical;max-width:100%;
+  margin-top:.18rem;opacity:.8}
+.block-sub{font-size:.55rem;font-weight:400;opacity:.6;line-height:1.2;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;margin-top:.1rem}
+
+/* block type colours */
+.b-school {background:var(--school); color:var(--school-ink)}
+.b-lunch  {background:var(--lunch);  color:var(--lunch-ink)}
+.b-dinner {background:var(--dinner); color:var(--dinner-ink)}
+.b-leisure{background:var(--leisure);color:var(--leisure-ink)}
+.b-sleep  {background:var(--sleep);  color:var(--sleep-ink)}
+.b-pp     {background:var(--pp);     color:var(--pp-ink)}
+.b-sr     {background:var(--sr);     color:var(--sr-ink)}
+.b-empty  {background:transparent;   color:var(--muted);font-size:.58rem;opacity:.3}
+.b-s0{background:var(--c0);color:var(--c0i)} .b-s1{background:var(--c1);color:var(--c1i)}
+.b-s2{background:var(--c2);color:var(--c2i)} .b-s3{background:var(--c3);color:var(--c3i)}
+.b-s4{background:var(--c4);color:var(--c4i)} .b-s5{background:var(--c5);color:var(--c5i)}
+.b-s6{background:var(--c6);color:var(--c6i)} .b-s7{background:var(--c7);color:var(--c7i)}
+.b-s8{background:var(--c8);color:var(--c8i)}
+.b-pp::before,.b-sr::before{content:'';position:absolute;top:0;left:0;bottom:0;
+  width:3px;border-radius:var(--radius) 0 0 var(--radius)}
+.b-pp::before{background:#f6c90e}
+.b-sr::before{background:var(--sr-ink);opacity:.45}
+
+/* ── TASK TOOLTIP (hover detail) ── */
+.block[data-tip]:hover::after{
+  content:attr(data-tip);
+  position:absolute;bottom:calc(100% + 6px);left:0;
+  background:var(--ink);color:var(--bg);
+  font-size:.65rem;font-weight:400;line-height:1.45;
+  padding:.5rem .7rem;border-radius:8px;
+  white-space:pre-wrap;width:220px;z-index:100;
+  box-shadow:0 4px 16px rgba(0,0,0,.25);
+  pointer-events:none;
+}
+/* keep tooltip visible when near right edge */
+table.tt td:nth-last-child(-n+3) .block[data-tip]:hover::after{left:auto;right:0}
+
+/* ── LEGEND ── */
+.legend-bar{display:flex;flex-wrap:wrap;gap:.55rem;
+  padding:.9rem 1.4rem;border-top:1.5px solid var(--border);background:#faf8f5}
+.leg-item{display:flex;align-items:center;gap:.35rem}
+.leg-dot{width:16px;height:10px;border-radius:3px;flex-shrink:0}
+.leg-label{font-size:.68rem;font-weight:500;color:var(--ink2)}
+
+/* ── MODAL OVERLAY ── */
+.modal-overlay{
+  position:fixed;inset:0;z-index:500;
+  background:rgba(28,26,23,.55);backdrop-filter:blur(4px);
+  display:flex;align-items:center;justify-content:center;
+  padding:1.5rem;opacity:0;pointer-events:none;transition:opacity .22s;
+}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{
+  background:var(--surface);border-radius:16px;
+  width:100%;max-width:480px;max-height:88vh;overflow-y:auto;
+  box-shadow:0 20px 60px rgba(0,0,0,.25);
+  transform:translateY(16px);transition:transform .22s;
+}
+.modal-overlay.open .modal{transform:translateY(0)}
+.modal-head{
+  display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;
+  padding:1.3rem 1.4rem 1rem;border-bottom:1.5px solid var(--border);
+}
+.modal-subj{display:flex;flex-direction:column;gap:.3rem}
+.modal-badge{
+  font-family:'JetBrains Mono',monospace;font-size:.55rem;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;padding:.22rem .65rem;
+  border-radius:100px;display:inline-block;width:fit-content;
+}
+.modal-title{font-family:'Instrument Serif',serif;font-size:1.35rem;line-height:1.2}
+.modal-close{
+  background:transparent;border:1.5px solid var(--border);color:var(--muted);
+  border-radius:50%;width:30px;height:30px;font-size:.85rem;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;transition:all .18s;margin-top:.1rem;
+}
+.modal-close:hover{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.modal-body{padding:1.2rem 1.4rem;display:flex;flex-direction:column;gap:1.1rem}
+.modal-section-label{
+  font-family:'JetBrains Mono',monospace;font-size:.55rem;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
+  margin-bottom:.45rem;
+}
+.modal-task-text{
+  font-size:.88rem;font-weight:500;color:var(--ink);line-height:1.65;
+  background:var(--bg);border-radius:8px;padding:.75rem .9rem;
+  border-left:3px solid var(--border2);
+}
+.modal-resources{display:flex;flex-direction:column;gap:.45rem}
+.res-link{
+  display:flex;align-items:center;gap:.65rem;
+  background:var(--bg);border:1.5px solid var(--border);border-radius:8px;
+  padding:.6rem .85rem;text-decoration:none;transition:all .18s;
+  color:var(--ink);
+}
+.res-link:hover{border-color:var(--ink2);background:#f0ece4;transform:translateX(2px)}
+.res-link-icon{font-size:1rem;flex-shrink:0}
+.res-link-body{display:flex;flex-direction:column;gap:.1rem;flex:1;min-width:0}
+.res-link-name{font-size:.8rem;font-weight:600;color:var(--ink)}
+.res-link-desc{font-size:.68rem;color:var(--muted);font-weight:300}
+.res-link-arrow{font-size:.75rem;color:var(--muted);flex-shrink:0}
+.modal-meta{
+  font-size:.72rem;color:var(--muted);font-weight:300;line-height:1.6;
+  padding:.65rem .9rem;background:rgba(0,0,0,.025);border-radius:8px;
+}
+.modal-meta strong{color:var(--ink2);font-weight:500}
+/* clickable study blocks */
+.block.clickable{cursor:pointer}
+.block.clickable:hover{
+  transform:scale(1.03);box-shadow:0 4px 14px rgba(0,0,0,.14);
+  z-index:20;position:relative;
+}
+.block.clickable::after{
+  content:'↗';position:absolute;top:3px;right:4px;
+  font-size:.55rem;opacity:.4;line-height:1;
+}
+
+/* ── PRINT ── */
+@media print{
+  body{background:#fff}
+  body::before,.controls-area,.subjects-bar,.assess-panel,.btn-print{display:none}
+  .page{padding:0;max-width:100%}
+  header{padding:1rem 0 .7rem}
+  .tt-outer{border:1px solid #ccc;border-radius:0}
+  .block:not(.b-sleep):not(.b-empty):hover{transform:none;box-shadow:none}
+  .block[data-tip]:hover::after{display:none}
+}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.f0{animation:fadeUp .4s ease both}
+.f1{animation:fadeUp .4s .07s ease both}
+.f2{animation:fadeUp .4s .14s ease both}
+.f3{animation:fadeUp .4s .21s ease both}
+
+@media(max-width:640px){
+  :root{--cell-h:48px;--time-w:52px}
+  .hdr-title{font-size:1.4rem}
+  header{flex-direction:column;align-items:flex-start}
+  .hdr-right{align-items:flex-start}
+  .controls{justify-content:flex-start}
+  .block-task{display:none}
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- ══ HEADER ══ -->
+<header class="f0">
+  <div class="hdr-left">
+    <div class="hdr-eyebrow">Matric Master Plan · Grade 12 · SA</div>
+    <h1 class="hdr-title">Weekly Study <em>Timetable</em></h1>
+  </div>
+  <div class="hdr-right controls-area">
+    <div class="controls">
+      <div class="ctrl-group">
+        <span class="ctrl-label">School ends</span>
+        <select id="sel-school-end" onchange="rebuild()">
+          <option value="13">13:00</option>
+          <option value="14" selected>14:00</option>
+          <option value="15">15:00</option>
+        </select>
+      </div>
+      <div class="ctrl-group">
+        <span class="ctrl-label">Dinner</span>
+        <select id="sel-dinner" onchange="rebuild()">
+          <option value="17">17:00</option>
+          <option value="18" selected>18:00</option>
+          <option value="19">19:00</option>
+        </select>
+      </div>
+      <div class="ctrl-group">
+        <span class="ctrl-label">Bedtime</span>
+        <select id="sel-sleep" onchange="rebuild()">
+          <option value="21">21:00</option>
+          <option value="22" selected>22:00</option>
+          <option value="23">23:00</option>
+        </select>
+      </div>
+      <div class="ctrl-group">
+        <span class="ctrl-label">Goal</span>
+        <select id="sel-goal" onchange="rebuild()">
+          <option value="pass">Pass Matric</option>
+          <option value="diploma">Diploma Pass</option>
+          <option value="bachelor" selected>Bachelor's Pass</option>
+          <option value="top">Distinctions</option>
+        </select>
+      </div>
+      <div class="ctrl-group">
+        <span class="ctrl-label">Term</span>
+        <select id="sel-term" onchange="rebuild()">
+          <option value="1">Term 1</option>
+          <option value="2">Term 2</option>
+          <option value="3" selected>Term 3</option>
+          <option value="4">Term 4</option>
+        </select>
+      </div>
+      <button class="btn-print" onclick="window.print()">🖨 Print / PDF</button>
+    </div>
+  </div>
+</header>
+
+<!-- ══ ASSESSMENT PANEL ══ -->
+<div class="assess-panel f1" id="assess-panel">
+  <div class="assess-header" onclick="toggleAssess()">
+    <div class="assess-title">
+      <span class="assess-badge" id="assess-badge">PROFILE</span>
+      <span class="assess-h3">Tell us about yourself — get personalised tasks in every block</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:.8rem">
+      <span class="assess-hint" id="assess-hint">Click to open</span>
+      <span class="assess-chevron" id="assess-chevron">▾</span>
+    </div>
+  </div>
+  <div class="assess-body open" id="assess-body">
+
+    <div class="af-grid">
+      <div class="af-field">
+        <label class="af-label">Exam system</label>
+        <select class="af-select" id="a-system" onchange="profileChange()">
+          <option value="caps" selected>CAPS / NSC</option>
+          <option value="ieb">IEB</option>
+        </select>
+      </div>
+      <div class="af-field">
+        <label class="af-label">Grade</label>
+        <select class="af-select" id="a-grade" onchange="profileChange()">
+          <option value="10">Grade 10</option>
+          <option value="11">Grade 11</option>
+          <option value="12" selected>Grade 12</option>
+        </select>
+      </div>
+      <div class="af-field">
+        <label class="af-label">Academic goal</label>
+        <select class="af-select" id="a-goal" onchange="profileChange()">
+          <option value="pass">Pass matric</option>
+          <option value="diploma">Diploma Pass</option>
+          <option value="bachelor" selected>Bachelor's Pass</option>
+          <option value="top">Distinctions</option>
+        </select>
+      </div>
+      <div class="af-field">
+        <label class="af-label">Learning style</label>
+        <select class="af-select" id="a-style" onchange="profileChange()">
+          <option value="visual">👁 Visual — diagrams & maps</option>
+          <option value="reading" selected>📖 Reading / Writing</option>
+          <option value="listening">🎧 Auditory — videos & talk</option>
+          <option value="doing">✍️ Kinesthetic — practice</option>
+        </select>
+      </div>
+      <div class="af-field">
+        <label class="af-label">Focus span</label>
+        <select class="af-select" id="a-focus" onchange="profileChange()">
+          <option value="15">~15 min (very short)</option>
+          <option value="25" selected>~25 min (short)</option>
+          <option value="45">~45 min (standard)</option>
+          <option value="60">~60 min (deep work)</option>
+        </select>
+      </div>
+      <div class="af-field">
+        <label class="af-label">Past papers habit</label>
+        <select class="af-select" id="a-pp" onchange="profileChange()">
+          <option value="never" selected>Never started</option>
+          <option value="occasionally">Occasionally</option>
+          <option value="regularly">Regularly</option>
+          <option value="weekly">Every week</option>
+        </select>
+      </div>
+      <div class="af-field">
+        <label class="af-label">SBA approach</label>
+        <select class="af-select" id="a-sba" onchange="profileChange()">
+          <option value="strategic">🎯 Strategically</option>
+          <option value="complete" selected>✅ Get it done</option>
+          <option value="last_minute">⏰ Last minute</option>
+          <option value="miss">⚠️ Sometimes miss</option>
+        </select>
+      </div>
+      <div class="af-field">
+        <label class="af-label">Stress level</label>
+        <select class="af-select" id="a-stress" onchange="profileChange()">
+          <option value="low">😌 Low (1–3)</option>
+          <option value="med" selected>😐 Moderate (4–6)</option>
+          <option value="high">😰 High (7–10)</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Challenges -->
+    <div style="margin-bottom:1.1rem">
+      <div class="af-label" style="margin-bottom:.45rem">Study challenges (select all that apply)</div>
+      <div class="challenge-grid" id="challenge-grid">
+        <div class="chall-opt" data-val="procrastination" onclick="toggleChall(this)"><div class="chall-check"></div>😴 Procrastination</div>
+        <div class="chall-opt" data-val="distraction"    onclick="toggleChall(this)"><div class="chall-check"></div>📱 Phone distraction</div>
+        <div class="chall-opt" data-val="anxiety"        onclick="toggleChall(this)"><div class="chall-check"></div>😰 Exam anxiety</div>
+        <div class="chall-opt" data-val="understanding"  onclick="toggleChall(this)"><div class="chall-check"></div>🤔 Content gaps</div>
+        <div class="chall-opt" data-val="time"           onclick="toggleChall(this)"><div class="chall-check"></div>⏱ Not enough time</div>
+        <div class="chall-opt" data-val="data"           onclick="toggleChall(this)"><div class="chall-check"></div>📡 Data / load shedding</div>
+        <div class="chall-opt" data-val="space"          onclick="toggleChall(this)"><div class="chall-check"></div>🏠 No quiet space</div>
+        <div class="chall-opt" data-val="motivation"     onclick="toggleChall(this)"><div class="chall-check"></div>🔋 Low motivation</div>
+      </div>
+    </div>
+
+    <!-- Subject confidence table -->
+    <div class="af-label" style="margin-bottom:.5rem">Subject marks & confidence (1 = struggling → 5 = strong)</div>
+    <table class="sc-table">
+      <thead><tr>
+        <th>Subject</th>
+        <th>Current mark %</th>
+        <th>Confidence</th>
+      </tr></thead>
+      <tbody id="sc-tbody"></tbody>
+    </table>
+
+    <button class="btn-apply" onclick="applyProfile()">✦ Apply Profile — Personalise My Timetable</button>
+  </div>
+</div>
+
+<!-- ══ SUBJECTS BAR ══ -->
+<div class="subjects-bar f2">
+  <div class="sb-header">
+    <span class="sb-title">Active subjects — click to toggle</span>
+    <span class="sb-hint">Active subjects fill your study blocks</span>
+  </div>
+  <div class="subjects-grid" id="subjects-grid"></div>
+  <div class="add-subject-row">
+    <input class="add-input" id="add-subj-input" type="text" placeholder="Add a subject (e.g. Visual Arts)..." maxlength="32"
+      onkeydown="if(event.key==='Enter')addSubject()">
+    <button class="btn-add" onclick="addSubject()">+ Add</button>
+  </div>
+</div>
+
+<!-- ══ STATS ══ -->
+<div class="stats-row f3" id="stats-row"></div>
+
+<!-- ══ TIMETABLE ══ -->
+<div class="tt-outer f3">
+  <div class="tt-scroll">
+    <table class="tt" id="tt"></table>
+  </div>
+  <div class="legend-bar" id="legend-bar"></div>
+</div>
+
+</div><!-- /page -->
+
+<!-- ══ BLOCK MODAL ══ -->
+<div class="modal-overlay" id="block-modal" onclick="closeModal(event)">
+  <div class="modal" id="modal-inner">
+    <div class="modal-head">
+      <div class="modal-subj">
+        <span class="modal-badge" id="modal-badge">Study Block</span>
+        <span class="modal-title" id="modal-title">Subject</span>
+      </div>
+      <button class="modal-close" onclick="closeModalBtn()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div>
+        <div class="modal-section-label">Your task this session</div>
+        <div class="modal-task-text" id="modal-task">No task assigned — complete your profile and click Apply.</div>
+      </div>
+      <div id="modal-resources-wrap">
+        <div class="modal-section-label">Resources for this session</div>
+        <div class="modal-resources" id="modal-resources"></div>
+      </div>
+      <div class="modal-meta" id="modal-meta"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ══════════════════════════════════════
+   CONSTANTS & HELPERS
+══════════════════════════════════════ */
+const DAY_START=5, DAY_END=23;
+const DAYS=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+const SHORT_DAYS=['MON','TUE','WED','THU','FRI','SAT','SUN'];
+const GOAL_HRS={pass:15,diploma:20,bachelor:28,top:35};
+const TERM_WEEKS={1:11,2:10,3:10,4:6};
+const TERM_LABEL={1:'Term 1',2:'Term 2',3:'Term 3 — Prelims',4:'Term 4 — Finals'};
+const SUBJ_COLORS=[
+  {cls:'b-s0'},{cls:'b-s1'},{cls:'b-s2'},{cls:'b-s3'},{cls:'b-s4'},
+  {cls:'b-s5'},{cls:'b-s6'},{cls:'b-s7'},{cls:'b-s8'}
+];
+const BG_FOR_CLS={
+  'b-s0':'#fce4e4','b-s1':'#fce8d4','b-s2':'#fffbd4','b-s3':'#e4f5e4',
+  'b-s4':'#d4eef5','b-s5':'#e4d4f5','b-s6':'#f5d4ea','b-s7':'#d4f5ee','b-s8':'#f5ead4'
+};
+
+/* Default subjects */
+let subjects=[
+  {name:'Mathematics',      abbr:'Maths',    active:true,  mark:55, conf:2},
+  {name:'Physical Sciences',abbr:'Phys Sci', active:true,  mark:50, conf:2},
+  {name:'English HL',       abbr:'Eng HL',   active:true,  mark:65, conf:3},
+  {name:'Life Sciences',    abbr:'Life Sci', active:true,  mark:60, conf:3},
+  {name:'Accounting',       abbr:'Acc',      active:true,  mark:55, conf:2},
+  {name:'Business Studies', abbr:'Biz Stud', active:true,  mark:68, conf:4},
+  {name:'Life Orientation', abbr:'LO',       active:true,  mark:75, conf:5},
+  {name:'History',          abbr:'History',  active:false, mark:60, conf:3},
+  {name:'Geography',        abbr:'Geo',      active:false, mark:62, conf:3},
+].map((s,i)=>({...s,color:SUBJ_COLORS[i%SUBJ_COLORS.length]}));
+
+/* Profile state */
+let profile={
+  system:'caps', grade:'12', goal:'bachelor',
+  style:'reading', focus:25, ppHabit:'never',
+  sba:'complete', stress:'med',
+  challenges:[], applied:false
+};
+
+function slotIndex(h,m=0){return(h-DAY_START)*2+(m===30?1:0)}
+function totalSlots(){return(DAY_END-DAY_START+1)*2}
+function slotToLabel(idx){
+  const t=DAY_START*60+idx*30;
+  const h=Math.floor(t/60),m=t%60;
+  return{h,m,hh:String(h).padStart(2,'0'),mm:String(m).padStart(2,'0')};
+}
+
+/* ══════════════════════════════════════
+   TASK RECOMMENDATION ENGINE
+   Uses every profile dimension to return
+   a specific task string for a given
+   subject × session context.
+══════════════════════════════════════ */
+function getTask(subjName, sessionIdx, dayIdx, totalSessions, profile, conf, mark) {
+  const isWeekend = dayIdx >= 5;
+  const isEarly   = sessionIdx <= 2;   // first 2 sessions of the day
+  const isLast    = sessionIdx >= totalSessions - 1;
+  const style     = profile.style;
+  const system    = profile.system;
+  const challenges= profile.challenges || [];
+  const goal      = profile.goal;
+  const ppHabit   = profile.ppHabit;
+  const stress    = profile.stress;
+
+  // Confidence-based phase: 1-2 = foundation, 3 = consolidation, 4-5 = exam prep
+  const phase = conf <= 2 ? 'foundation' : conf <= 3 ? 'consolidation' : 'exam_prep';
+
+  // Subject-specific task libraries
+  const tasks = {
+    'Mathematics': {
+      foundation: {
+        visual:   ['Draw a mind map of all functions and their shapes','Sketch graphs of parabola, hyperbola, exponential from memory','Colour-code algebra steps — each operation a different colour'],
+        reading:  ['Blurt: close notes, write every formula you know, then check','Copy out all formula sheet entries and add your own worked examples','Summarise key theorem proofs in your own words with numbered steps'],
+        listening:['Watch Kevinmathscience on your weakest topic, pause & repeat key steps','Explain calculus rules aloud as if teaching a friend','Listen to your own recorded explanation and spot gaps'],
+        doing:    ['Do 10 mixed algebra questions without checking notes','Work through one full past paper section under timed conditions','Drill 5 Euclidean geometry riders — show all reasons'],
+      },
+      consolidation: {
+        visual:   ['Sketch 8 different function transformations from memory','Map all calculus rules with visual worked examples beside each'],
+        reading:  ['Write a one-page summary of all Paper 1 topics, close book first','Make flashcards for every theorem with statement on front, proof on back'],
+        listening:['Re-explain last night\'s weak topics out loud — record yourself','Swap methods with a study partner: each explain a topic differently'],
+        doing:    ['Attempt Paper 1 Section A without a calculator — 20 min','Pick your 3 weakest question types and drill 5 each'],
+      },
+      exam_prep: {
+        visual:   ['Time-trial: complete a full functions graph question in under 8 min'],
+        reading:  ['Analyse a past paper memo — circle every mark you would have lost and why'],
+        listening:['Narrate your solution out loud as you write it — catch reasoning gaps'],
+        doing:    ['Full timed past paper under exam conditions — no notes','Mark your own paper with the DBE memo and record each lost mark'],
+      },
+    },
+    'Physical Sciences': {
+      foundation: {
+        visual:   ['Draw circuit diagrams and label every component from memory','Mind-map Newton\'s Laws with diagrams showing each scenario','Sketch energy level diagrams for all reaction types'],
+        reading:  ['Blurt all Physics equations onto blank paper — then check','Write out all definitions from today\'s chapter in your own words','Summarise the electromagnetic spectrum with notes beside each type'],
+        listening:['Watch a 15-min Mindset Learn video on your weakest Physics chapter','Explain the photoelectric effect out loud until fluent'],
+        doing:    ['Complete 8 calculation questions on current topic — show all working','Draw a free-body diagram for 5 different force scenarios','Redo any test question you got wrong — find your specific error'],
+      },
+      consolidation: {
+        visual:   ['Create a visual summary comparing all wave properties side by side'],
+        reading:  ['Write definitions for all Grade 10–12 key terms — examinable across all grades'],
+        listening:['Explain organic chemistry naming rules aloud — record and replay'],
+        doing:    ['Timed drill: 10 electricity calculations in 20 min — check units every time','Balance 8 chemical equations without looking at examples'],
+      },
+      exam_prep: {
+        visual:   ['Map Paper 1 vs Paper 2 topic split — allocate remaining study time visually'],
+        reading:  ['Annotate a past paper memo: write WHY each mark is awarded'],
+        doing:    ['Full Paper 1 under strict 3-hour exam conditions','Drill all "explain the difference between…" type questions'],
+      },
+    },
+    'Life Sciences': {
+      foundation: {
+        visual:   ['Draw the full DNA replication diagram from memory, label every step','Sketch the nitrogen cycle without notes — check and redo gaps','Draw labelled diagrams of mitosis vs meiosis side by side'],
+        reading:  ['Blurt: write all you know about this chapter, then find every gap','Summarise each life process in 5 bullet points max — test yourself'],
+        listening:['Record yourself explaining photosynthesis and listen back','Watch a video on evolution and pause to predict what comes next'],
+        doing:    ['Complete all questions in your textbook for this chapter','Redo all incorrect answers from your last Life Sciences test'],
+      },
+      consolidation: {
+        visual:   ['Create a timeline of evolutionary milestones from memory','Draw full protein synthesis from DNA to amino acid — no notes'],
+        reading:  ['Write a one-page comparison: mitosis vs meiosis, all differences tabulated'],
+        doing:    ['Answer 10 source-based questions using only the source — no outside knowledge','Write a practice essay on evolution: introduce, argue, conclude in 25 min'],
+      },
+      exam_prep: {
+        visual:   ['Blank-page diagram drill: draw 3 key diagrams from memory, mark yourself'],
+        doing:    ['IEB learners: write a full 40-mark source essay timed at 45 min','DBE learners: answer a full Paper 2 section under exam conditions'],
+      },
+    },
+    'English HL': {
+      foundation: {
+        visual:   ['Create a character web for your prescribed novel — link motivations','Mind-map all themes in your play with textual evidence beside each'],
+        reading:  ['Blurt the entire plot of your prescribed novel from memory — check gaps','Write 5 key quotes per character and what they reveal about themes'],
+        listening:['Read a paragraph of your literary text aloud and explain its mood','Record a verbal summary of your set work — listen and improve'],
+        doing:    ['Write one timed paragraph using PEEL structure on a set-work theme','Practise one comprehension passage with inference questions — 20 min'],
+      },
+      consolidation: {
+        visual:   ['Map all essay question types and what each is really asking'],
+        reading:  ['Write a full introduction + conclusion for 3 different essay questions'],
+        doing:    ['Write one full timed essay: 40 min — no planning time, straight to writing','Complete an unseen poetry analysis — find tone, imagery, structure, message'],
+      },
+      exam_prep: {
+        reading:  ['Revise all punctuation and grammar rules from Paper 1 Section A','Read your strongest essay back and identify one thing to improve'],
+        doing:    ['Full Paper 2 literature essay under timed conditions — 45 min per essay'],
+      },
+    },
+    'Accounting': {
+      foundation: {
+        visual:   ['Draw the full accounting equation with labelled T-accounts','Map all financial statements and which accounts feed into each'],
+        reading:  ['Write out all definitions: debits vs credits, assets vs liabilities','Summarise the bookkeeping cycle in your own words — all 8 steps'],
+        doing:    ['Complete a full set of journals for a sample business transaction','Post all transactions to ledger accounts and balance them — check your totals'],
+      },
+      consolidation: {
+        visual:   ['Create a visual checklist of every line in an Income Statement'],
+        reading:  ['Write the formula for every financial ratio — memorise 5 by blurting'],
+        doing:    ['Complete a full Income Statement + Balance Sheet under 45 min timed','Analyse financial ratios: write one sentence explaining what each means for the business'],
+      },
+      exam_prep: {
+        doing:    ['Full Paper 1 Section A: Journals under strict time — 1.2 min per mark','Calculate and interpret all key ratios from a past paper question'],
+      },
+    },
+    'Business Studies': {
+      foundation: {
+        visual:   ['Draw a PESTLE analysis map for a South African business','Mind-map all business functions linking each to its exam topic'],
+        reading:  ['Blurt all consumer protection legislation — CPA, BBBEE, EEA — then check','Write a comparison table: all three forms of business ownership'],
+        doing:    ['Write one full essay using PEEL structure on a prescribed topic — 25 min','Answer 5 case study questions from a past paper'],
+      },
+      consolidation: {
+        visual:   ['Create a colour-coded comparison of all SA business legislation'],
+        reading:  ['Memorise all 8 forms of ownership — test yourself by writing them from memory'],
+        doing:    ['Write a full 40-mark essay: introduction, 5 body paragraphs, recommendation','Practice a data response question from a past paper'],
+      },
+      exam_prep: {
+        doing:    ['Full exam: complete one essay per topic you\'re weakest in — time strictly','Mark your essay against the memo — find the marks you missed'],
+      },
+    },
+    'History': {
+      foundation: {
+        visual:   ['Create a timeline of all key events in your first essay topic','Mind-map causes → events → consequences for the Cold War'],
+        reading:  ['Blurt the key facts of this chapter — check your textbook for gaps','Write a 5-sentence explanation of the main argument in this topic'],
+        listening:['Explain the causes of your essay topic aloud in your own words'],
+        doing:    ['Answer a full source analysis question using the SORC method','Write the introduction for 3 different essay questions on this topic'],
+      },
+      consolidation: {
+        visual:   ['Create a comparative timeline: two events from different topics side by side'],
+        reading:  ['Write a full essay plan with thesis, 4 argument points, and conclusion outline'],
+        doing:    ['Write a full timed essay — 45 min — on your weakest topic','Evaluate 4 historical sources for bias, reliability, and usefulness'],
+      },
+      exam_prep: {
+        doing:    ['Full Paper 1: source analysis under timed conditions — 2.5 hours','Write one essay from each of your 4 exam topics — 40 min each'],
+      },
+    },
+    'Geography': {
+      foundation: {
+        visual:   ['Draw a cross-section of a river valley from source to mouth','Sketch a synoptic weather chart and label all features'],
+        reading:  ['Blurt all mapwork skills: contour, gradient, bearing — then check','Summarise all GIS layer types and one real-world use for each'],
+        doing:    ['Complete a full mapwork exercise: gradient + cross-section + bearing','Answer 5 source-based questions on a topographic map extract'],
+      },
+      consolidation: {
+        visual:   ['Practise reading a 1:50 000 topographic map — draw a 5-grid cross-section'],
+        doing:    ['Timed mapwork drill — complete the entire mapwork section in 45 min','Write full paragraph answers on all settlement pattern types'],
+      },
+      exam_prep: {
+        doing:    ['Full Paper 1 under timed conditions: Physical + Mapwork','Practice all types of GIS question from past papers'],
+      },
+    },
+    'Life Orientation': {
+      foundation: {
+        reading:  ['Read your LO portfolio requirements and check what\'s outstanding','Summarise your community service hours and write your reflective report draft'],
+        doing:    ['Write one paragraph on your personal development topic — peer review ready','Complete any outstanding LO SBA task or CAT component'],
+      },
+      exam_prep: {
+        doing:    ['Finalise your LO portfolio — check all evidence is included','Complete your CAT (Common Assessment Task) practice questions'],
+      },
+    },
+  };
+
+  // Fallback generic tasks by phase + style
+  const genericTasks = {
+    foundation: {
+      visual:   `Draw a mind map of today's topic from memory, then check for gaps`,
+      reading:  `Blurt: close notes, write everything you know, identify and fill gaps`,
+      listening:`Record yourself explaining this topic — replay and improve`,
+      doing:    `Complete 10 practice questions on today's topic — no notes`,
+    },
+    consolidation: {
+      visual:   `Create a visual comparison of the two hardest sub-topics`,
+      reading:  `Write a one-page topic summary in your own words — test yourself`,
+      listening:`Teach this topic to a family member or explain it aloud for 5 min`,
+      doing:    `Timed practice: 20 questions in 25 minutes — work fast, check after`,
+    },
+    exam_prep: {
+      visual:   `Map every exam question type for this subject and what each requires`,
+      reading:  `Annotate past paper answers against the memo — note every lost mark`,
+      listening:`Narrate your reasoning out loud as you complete each question`,
+      doing:    `Timed past paper under strict exam conditions — no breaks, no notes`,
+    },
+  };
+
+  // Look up subject-specific tasks
+  const subKey = Object.keys(tasks).find(k => subjName.toLowerCase().includes(k.toLowerCase()));
+  let taskStr = '';
+
+  if (subKey && tasks[subKey][phase] && tasks[subKey][phase][style]) {
+    const arr = tasks[subKey][phase][style];
+    taskStr = arr[sessionIdx % arr.length];
+  } else if (subKey && tasks[subKey][phase]) {
+    // fallback to doing if style not found for this subject
+    const phaseObj = tasks[subKey][phase];
+    const styleArr = phaseObj[style] || phaseObj['doing'] || phaseObj['reading'] || Object.values(phaseObj)[0];
+    taskStr = Array.isArray(styleArr) ? styleArr[sessionIdx % styleArr.length] : styleArr;
+  } else {
+    taskStr = genericTasks[phase][style] || genericTasks[phase]['doing'];
+  }
+
+  // Augment task with challenge-specific prefix
+  if (challenges.includes('understanding') && phase === 'foundation') {
+    taskStr = '⚠ Gap focus — ' + taskStr;
+  }
+  if (challenges.includes('procrastination') && isEarly) {
+    taskStr = '▶ Start with easiest question first. ' + taskStr;
+  }
+  if (challenges.includes('anxiety') && phase === 'exam_prep') {
+    taskStr = '🌬 Breathe first (box breath ×4). ' + taskStr;
+  }
+  if (system === 'ieb' && phase === 'exam_prep') {
+    taskStr += ' [IEB: focus on application & source analysis, not recall]';
+  }
+  if (ppHabit === 'never' && phase !== 'foundation') {
+    taskStr += ' — also do 10 min of past paper after this session';
+  }
+
+  return taskStr;
+}
+
+/* ══════════════════════════════════════
+   SCHEDULE BUILDER
+══════════════════════════════════════ */
+function buildSchedule() {
+  const schoolEnd = +document.getElementById('sel-school-end').value;
+  const dinnerH   = +document.getElementById('sel-dinner').value;
+  const sleepH    = +document.getElementById('sel-sleep').value;
+  const goal      = document.getElementById('sel-goal').value;
+  const term      = +document.getElementById('sel-term').value;
+
+  const targetHrs = GOAL_HRS[goal] || 28;
+  const termWeeks = TERM_WEEKS[term] || 10;
+  const ppPerWeek = {1:1, 2:2, 3:3, 4:3}[term] || 2;
+  const nS        = totalSlots();
+  const activeSubjs = subjects.filter(s => s.active);
+
+  const schedule = DAYS.map((_, di) => {
+    const isWeekend = di >= 5;
+    return Array(nS).fill(null).map((_, si) => {
+      const {h, m} = slotToLabel(si);
+      const wakeH  = isWeekend ? 8 : 7;
+
+      if (h < wakeH)                              return {type:'sleep',   label:'😴 Sleep',         sub:''};
+      if (h >= sleepH)                             return {type:'sleep',   label:'😴 Sleep',         sub:''};
+      if (!isWeekend && h === 7 && m === 30)       return {type:'school',  label:'🏫 School',        sub:'Attend classes'};
+      if (!isWeekend && h > 7 && h < schoolEnd)   return {type:'school',  label:'🏫 School',        sub:'Attend classes'};
+      if (!isWeekend && h === schoolEnd && m === 0)return {type:'school',  label:'🏫 School',        sub:'Class ends'};
+
+      // Lunch
+      const lunchH = isWeekend ? 12 : 13;
+      const lunchM = isWeekend ? 30 :  0;
+      if (h === lunchH && m === lunchM)            return {type:'lunch',   label:'🍽 Lunch',         sub:'30 min — step away'};
+
+      // Transition / break after school
+      if (!isWeekend && h === schoolEnd && m === 30) return {type:'leisure',label:'🚌 Travel Home',  sub:'Decompress'};
+      if (!isWeekend && h === schoolEnd + 1 && m === 0) return {type:'leisure',label:'🎮 Break',     sub:'Rest before study'};
+
+      // Pre-dinner leisure
+      if (h === dinnerH - 1 && m === 30)           return {type:'leisure', label:'🎮 Leisure',       sub:'Walk / unwind'};
+
+      // Dinner block
+      if (h === dinnerH   && m === 0)              return {type:'dinner',  label:'🍜 Dinner',        sub:'Family time — no screens'};
+      if (h === dinnerH   && m === 30)             return {type:'leisure', label:'🌙 After dinner',  sub:'Unwind 30 min'};
+
+      // Wind-down before sleep
+      if (h === sleepH - 1 && m === 30)            return {type:'leisure', label:'📖 Wind Down',     sub:'Screen-free'};
+
+      // Weekend morning free time
+      if (isWeekend && h >= 8 && h < 10)           return {type:'leisure', label:'☀️ Morning Free',  sub:'Recharge'};
+      if (isWeekend && h >= 15 && h < 16)          return {type:'leisure', label:'⚽ Sport / Hobby', sub:'Active break'};
+
+      return {type:'study-open', label:'', sub:''};
+    });
+  });
+
+  // Collect open slots
+  const openByDay = DAYS.map((_,di) =>
+    schedule[di].reduce((a,s,si) => s?.type==='study-open'?[...a,si]:a, []));
+
+  const totalOpenSlots = openByDay.reduce((a,b) => a+b.length, 0);
+  const ppSlots  = ppPerWeek * 2;
+  const srSlots  = 2;
+  const targetSlots = Math.min(targetHrs * 2, totalOpenSlots);
+
+  // Build weighted pool — lower confidence = more slots
+  const pool = [];
+  if (activeSubjs.length > 0) {
+    const weights = activeSubjs.map(s => {
+      const confW = Math.max(1, 6 - (s.conf || 3)); // lower conf → more weight
+      const markW = s.mark < 50 ? 3 : s.mark < 60 ? 2 : 1;
+      return confW * markW;
+    });
+    const totalW = weights.reduce((a,b) => a+b, 0);
+    activeSubjs.forEach((s, i) => {
+      const count = Math.round((weights[i] / totalW) * targetSlots * 1.2);
+      for (let j = 0; j < count; j++) pool.push(i);
+    });
+    shuffleArr(pool);
+  }
+
+  // Track session index per subject per day for task rotation
+  const sessionCount = {};
+
+  let poolIdx = 0, ppPlaced = 0, srPlaced = 0;
+  const ppDayIndices = ppPerWeek === 0 ? [] : ppPerWeek === 1 ? [5] :
+    ppPerWeek === 2 ? [5, 2] : [5, 2, 4];
+
+  DAYS.forEach((_, di) => {
+    const isWeekend = di >= 5;
+    const open = openByDay[di];
+    open.forEach((si, oi) => {
+      if (isWeekend && oi < 2 && ppPlaced < ppSlots) {
+        schedule[di][si] = {type:'pp', label:'📝 Past Paper', sub:'Timed — full exam conditions',
+          task: ppTaskFor(di, oi, profile, activeSubjs)};
+        ppPlaced++;
+        return;
+      }
+      if (di === 6 && oi >= open.length - 2 && srPlaced < srSlots) {
+        schedule[di][si] = {type:'sr', label:'🔁 Spaced Review', sub:'Flashcards → blurt → check',
+          task: srTaskFor(profile)};
+        srPlaced++;
+        return;
+      }
+      if (poolIdx < pool.length && oi < Math.ceil(targetSlots / 7) * (isWeekend ? 2 : 1)) {
+        const sIdx = pool[poolIdx % pool.length];
+        const subj = activeSubjs[sIdx];
+        const key  = `${di}-${subj.name}`;
+        sessionCount[key] = (sessionCount[key] || 0) + 1;
+        const sessIdx = sessionCount[key] - 1;
+        const totalDaySessions = Math.ceil(open.length * (weights?.[sIdx] || 1) / (totalW || 1));
+        const task = profile.applied
+          ? getTask(subj.name, sessIdx, di, totalDaySessions, profile, subj.conf || 3, subj.mark || 55)
+          : null;
+        schedule[di][si] = {
+          type:'study', label:subj.abbr || subj.name,
+          sub: subj.name !== (subj.abbr||subj.name) ? subj.name : '',
+          colorCls: subj.color.cls, task,
+          subjName: subj.name, conf: subj.conf||3, mark: subj.mark||55,
+        };
+        poolIdx++;
+        return;
+      }
+      schedule[di][si] = {type:'free', label:'', sub:''};
+    });
+  });
+
+  // Stats
+  let studyC=0, ppC=0, srC=0, leisureC=0;
+  schedule.forEach(d => d.forEach(s => {
+    if (!s) return;
+    if (s.type==='study')   studyC++;
+    if (s.type==='pp')      ppC++;
+    if (s.type==='sr')      srC++;
+    if (s.type==='leisure') leisureC++;
+  }));
+
+  return {schedule, stats:{
+    studyHrs:(studyC*.5).toFixed(1), ppHrs:(ppC*.5).toFixed(1),
+    leisureHrs:(leisureC*.5).toFixed(1), targetHrs,
+    termWeeks, totalHrsWeek:((studyC+ppC+srC)*.5).toFixed(1)
+  }};
+
+  function weights() { return activeSubjs.map(s => Math.max(1,6-(s.conf||3)) * (s.mark<50?3:s.mark<60?2:1)); }
+  function totalW()   { return weights().reduce((a,b)=>a+b,0)||1; }
+}
+
+function ppTaskFor(di, oi, profile, activeSubjs) {
+  const isFirst = oi === 0;
+  const ppHabit = profile.ppHabit;
+  const sys = profile.system;
+  if (ppHabit === 'never') return `Start with Section A only (30 min). Check against memo. Write down every mark lost.`;
+  if (ppHabit === 'occasionally') return `Complete one full section under timed conditions. Self-mark strictly — circle every error.`;
+  const subj = activeSubjs[di % activeSubjs.length];
+  const subjNote = subj ? ` Focus: ${subj.name}.` : '';
+  if (sys === 'ieb') return `IEB full paper.${subjNote} After: identify which cognitive level each question tested.`;
+  return `Full past paper — DBE exam conditions.${subjNote} Afterwards: memo analysis — tally marks per topic.`;
+}
+
+function srTaskFor(profile) {
+  const style = profile.style;
+  if (style === 'visual')   return `Review all mind maps from this week. Cover and redraw from memory.`;
+  if (style === 'reading')  return `Blurt all topics studied this week — 10 min per subject. Check gaps.`;
+  if (style === 'listening') return `Record a 2-min summary of each topic studied this week. Replay all.`;
+  return `Flashcard drill: go through all cards studied this week. Fail → back to box 1.`;
+}
+
+function shuffleArr(arr) {
+  for (let i = arr.length-1; i > 0; i--) {
+    const j = Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]] = [arr[j],arr[i]];
+  }
+  for (let i=2; i<arr.length; i++) {
+    if (arr[i]===arr[i-1] && arr[i]===arr[i-2]) {
+      for (let j=i+1; j<arr.length; j++) {
+        if (arr[j]!==arr[i]){[arr[i],arr[j]]=[arr[j],arr[i]];break;}
+      }
+    }
+  }
+}
+
+/* ══════════════════════════════════════
+   RENDER
+══════════════════════════════════════ */
+function blockCls(s) {
+  if (!s || s.type==='free') return 'b-empty';
+  if (s.type==='sleep')   return 'b-sleep';
+  if (s.type==='school')  return 'b-school';
+  if (s.type==='lunch')   return 'b-lunch';
+  if (s.type==='dinner')  return 'b-dinner';
+  if (s.type==='leisure') return 'b-leisure';
+  if (s.type==='pp')      return 'b-pp';
+  if (s.type==='sr')      return 'b-sr';
+  if (s.type==='study')   return s.colorCls || 'b-s0';
+  return 'b-empty';
+}
+
+function renderTable({schedule}) {
+  const nS = totalSlots();
+  let html = '<thead><tr class="day-row">';
+  html += `<th style="position:sticky;left:0;z-index:10">TIME</th>`;
+  DAYS.forEach((d,di) => {
+    const wk = di>=5;
+    html += `<th class="${wk?'weekend':''}">${SHORT_DAYS[di]}<br>
+      <span style="font-size:.48rem;font-weight:400;opacity:.55;letter-spacing:0">${d}</span></th>`;
+  });
+  html += '</tr></thead><tbody>';
+
+  for (let si=0; si<nS; si++) {
+    const {hh, mm, h} = slotToLabel(si);
+    const isHStart = si%2===0;
+    html += `<tr class="${isHStart?'hour-start':''}">`;
+    html += `<td class="time-cell">`;
+    html += `<div class="time-inner">`;
+    if (isHStart) html += `<span class="time-hh">${hh}:00</span>`;
+    else          html += `<span class="time-mm">:30</span>`;
+    html += `</div></td>`;
+
+    DAYS.forEach((_,di) => {
+      const slot = schedule[di][si];
+      const cls  = blockCls(slot);
+      const isRepeat = ['sleep','school','leisure'].includes(slot?.type) && !isHStart;
+      const label = (slot && !isRepeat) ? slot.label : '';
+      const sub   = (slot && !isRepeat && slot.sub) ? slot.sub : '';
+      const task  = slot?.task || '';
+      const tipAttr = task ? ` data-tip="${task.replace(/"/g,'&quot;')}"` : '';
+
+      // Blocks that should open the modal on click
+      const isClickable = slot && ['study','pp','sr'].includes(slot.type) && !isRepeat;
+      const clickAttr = isClickable
+        ? ` onclick="openModal(${JSON.stringify({
+            type: slot.type,
+            label: (slot.label||'').replace(/'/g,"\\'"),
+            subjName: (slot.subjName||slot.label||'').replace(/'/g,"\\'"),
+            colorCls: slot.colorCls||'',
+            task: (slot.task||'').replace(/\\/g,'\\\\').replace(/"/g,'\\"'),
+            conf: slot.conf||3,
+            mark: slot.mark||55,
+          }).replace(/"/g,'&quot;')})"` : '';
+
+      html += `<td class="block-cell">`;
+      html += `<div class="block ${cls}${isClickable?' clickable':''}"${tipAttr}${clickAttr}>`;
+      if (label) html += `<span class="block-label">${label}</span>`;
+      if (task && !isRepeat)  html += `<span class="block-task">${task.replace(/\[IEB[^\]]*\]/,'').substring(0,80)}${task.length>80?'…':''}</span>`;
+      else if (sub && !isRepeat) html += `<span class="block-sub">${sub}</span>`;
+      html += `</div></td>`;
+    });
+    html += '</tr>';
+  }
+  html += '</tbody>';
+  document.getElementById('tt').innerHTML = html;
+}
+
+function renderStats({stats}) {
+  const term = +document.getElementById('sel-term').value;
+  document.getElementById('stats-row').innerHTML = `
+    <div class="stat-card">
+      <div class="stat-val">${stats.studyHrs}<span style="font-size:.9rem;color:var(--muted)">h</span></div>
+      <div class="stat-lbl">Study / Week</div>
+      <div class="stat-sub">Target: ${stats.targetHrs}h</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val">${stats.ppHrs}<span style="font-size:.9rem;color:var(--muted)">h</span></div>
+      <div class="stat-lbl">Past Papers</div>
+      <div class="stat-sub">Timed practice</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val">${stats.leisureHrs}<span style="font-size:.9rem;color:var(--muted)">h</span></div>
+      <div class="stat-lbl">Leisure / Week</div>
+      <div class="stat-sub">Protected free time</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val">${stats.totalHrsWeek}<span style="font-size:.9rem;color:var(--muted)">h</span></div>
+      <div class="stat-lbl">Total Study</div>
+      <div class="stat-sub">Incl. revision</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val">${stats.termWeeks}</div>
+      <div class="stat-lbl">Weeks This Term</div>
+      <div class="stat-sub">${TERM_LABEL[+document.getElementById('sel-term').value]}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val">${(stats.totalHrsWeek * stats.termWeeks).toFixed(0)}<span style="font-size:.75rem;color:var(--muted)">h</span></div>
+      <div class="stat-lbl">Term Total</div>
+      <div class="stat-sub">All subjects</div>
+    </div>`;
+}
+
+function renderLegend() {
+  const activeS = subjects.filter(s => s.active);
+  const fixed = [
+    {cls:'b-school',label:'School'},{cls:'b-lunch',label:'Lunch'},
+    {cls:'b-dinner',label:'Dinner'},{cls:'b-leisure',label:'Leisure / Break'},
+    {cls:'b-sleep',label:'Sleep'},{cls:'b-pp',label:'Past Papers'},
+    {cls:'b-sr',label:'Spaced Review'},
+  ];
+  let html = fixed.map(f =>
+    `<div class="leg-item"><div class="leg-dot ${f.cls}"></div><span class="leg-label">${f.label}</span></div>`
+  ).join('');
+  html += activeS.map(s =>
+    `<div class="leg-item"><div class="leg-dot ${s.color.cls}"></div><span class="leg-label">${s.name}</span></div>`
+  ).join('');
+  document.getElementById('legend-bar').innerHTML = html;
+}
+
+function renderSubjectChips() {
+  document.getElementById('subjects-grid').innerHTML = subjects.map((s,i) =>
+    `<div class="subj-chip ${s.active?'active':''} ${s.color.cls}" onclick="toggleSubject(${i})"
+      style="${s.active?'':'background:transparent'}">
+      <div class="chip-dot" style="background:${BG_FOR_CLS[s.color.cls]||'#ccc'};border:1.5px solid rgba(0,0,0,.15);width:9px;height:9px;border-radius:50%;flex-shrink:0"></div>
+      <span class="chip-name" style="${s.active?'':'color:var(--muted)'}">${s.name}</span>
+      <span class="chip-tick">${s.active?'✓':'○'}</span>
+    </div>`
+  ).join('');
+}
+
+function renderScTable() {
+  const tbody = document.getElementById('sc-tbody');
+  if (!tbody) return;
+  tbody.innerHTML = subjects.map((s,i) => `
+    <tr>
+      <td>${s.name}</td>
+      <td>
+        <select class="mark-sel" onchange="subjects[${i}].mark=+this.value;profileChange()">
+          ${['0-29','30-39','40-49','50-59','60-69','70-79','80-89','90-100'].map(r => {
+            const mid = {'0-29':15,'30-39':35,'40-49':45,'50-59':55,'60-69':65,'70-79':75,'80-89':85,'90-100':95}[r];
+            return `<option value="${mid}" ${Math.abs(s.mark-mid)<6?'selected':''}>${r}%</option>`;
+          }).join('')}
+        </select>
+      </td>
+      <td>
+        <div class="dot-row">
+          ${[1,2,3,4,5].map(d => `
+            <div class="conf-dot ${d<=s.conf?`on l${s.conf}`:''}"
+              onclick="subjects[${i}].conf=${d};renderScTable();profileChange()"></div>`
+          ).join('')}
+          <span style="font-size:.65rem;color:var(--muted);margin-left:.3rem">${
+            ['','Struggling','Shaky','Getting there','Confident','Strong'][s.conf||3]
+          }</span>
+        </div>
+      </td>
+    </tr>`).join('');
+}
+
+/* ══════════════════════════════════════
+   INTERACTIONS
+══════════════════════════════════════ */
+function toggleAssess() {
+  const body = document.getElementById('assess-body');
+  const chev = document.getElementById('assess-chevron');
+  const hint = document.getElementById('assess-hint');
+  const isOpen = body.classList.toggle('open');
+  body.style.display = isOpen ? 'block' : 'none';
+  chev.classList.toggle('open', isOpen);
+  hint.textContent = isOpen ? 'Click to collapse' : (profile.applied ? 'Profile applied ✓' : 'Click to open');
+}
+
+function toggleChall(el) {
+  el.classList.toggle('on');
+  el.querySelector('.chall-check').textContent = el.classList.contains('on') ? '✓' : '';
+  profileChange();
+}
+
+function profileChange() {
+  // Read all form values into profile (don't apply tasks yet)
+  profile.system  = document.getElementById('a-system').value;
+  profile.grade   = document.getElementById('a-grade').value;
+  profile.goal    = document.getElementById('a-goal').value;
+  profile.style   = document.getElementById('a-style').value;
+  profile.focus   = +document.getElementById('a-focus').value;
+  profile.ppHabit = document.getElementById('a-pp').value;
+  profile.sba     = document.getElementById('a-sba').value;
+  profile.stress  = document.getElementById('a-stress').value;
+  profile.challenges = [...document.querySelectorAll('.chall-opt.on')].map(el => el.dataset.val);
+  // Sync goal selector in header
+  document.getElementById('sel-goal').value = profile.goal;
+}
+
+function applyProfile() {
+  profileChange();
+  profile.applied = true;
+
+  // Sync subject list with sc-table
+  subjects.forEach((s, i) => {
+    const row = document.querySelector(`#sc-tbody tr:nth-child(${i+1})`);
+    if (!row) return;
+    const markSel = row.querySelector('.mark-sel');
+    if (markSel) s.mark = +markSel.value;
+  });
+
+  // Show applied badge
+  document.getElementById('assess-badge').textContent = 'APPLIED ✓';
+  document.getElementById('assess-badge').classList.add('done');
+  document.getElementById('assess-hint').textContent = 'Profile applied — tasks personalised';
+
+  // Collapse panel
+  const body = document.getElementById('assess-body');
+  body.style.display = 'none';
+  document.getElementById('assess-chevron').classList.remove('open');
+
+  rebuild();
+}
+
+function toggleSubject(i) {
+  subjects[i].active = !subjects[i].active;
+  rebuild();
+}
+
+function addSubject() {
+  const input = document.getElementById('add-subj-input');
+  const name  = input.value.trim();
+  if (!name) return;
+  const ci = subjects.length % SUBJ_COLORS.length;
+  subjects.push({name, abbr:name.slice(0,8), active:true, mark:55, conf:3, color:SUBJ_COLORS[ci]});
+  input.value = '';
+  renderScTable();
+  rebuild();
+}
+
+function rebuild() {
+  const result = buildSchedule();
+  renderSubjectChips();
+  renderStats(result);
+  renderTable(result);
+  renderLegend();
+}
+
+/* ══════════════════════════════════════
+   RESOURCE LINK DATABASE
+   Keyed by subject name fragment → array of {icon, name, desc, url}
+══════════════════════════════════════ */
+const RESOURCE_DB = {
+  'Mathematics': [
+    {icon:'🎥', name:'Kevinmathscience — Functions & Graphs', desc:'YouTube · CAPS-aligned, free', url:'https://www.youtube.com/@Kevinmathscience'},
+    {icon:'📘', name:'Siyavula Maths Gr 12', desc:'Free adaptive practice, zero-rated on MTN/Vodacom', url:'https://www.siyavula.com/read/maths/grade-12'},
+    {icon:'📄', name:'DBE Past Papers — Mathematics', desc:'All papers from 2016, free at education.gov.za', url:'https://www.education.gov.za/Curriculum/NationalSeniorCertificate(NSC)Examinations/NSCPastExaminationpapers.aspx'},
+    {icon:'📖', name:'DBE Mind the Gap — Maths', desc:'Free study guide with worked examples', url:'https://www.education.gov.za/Curriculum/CurriculumAssessmentPolicyStatements(CAPS)/MindtheGap.aspx'},
+  ],
+  'Mathematical Literacy': [
+    {icon:'🎥', name:'Kevinmathscience — Maths Literacy', desc:'YouTube · CAPS-aligned', url:'https://www.youtube.com/@Kevinmathscience'},
+    {icon:'📄', name:'DBE Past Papers — Maths Literacy', desc:'Free at education.gov.za', url:'https://www.education.gov.za/Curriculum/NationalSeniorCertificate(NSC)Examinations/NSCPastExaminationpapers.aspx'},
+    {icon:'📖', name:'DBE Mind the Gap — Maths Literacy', desc:'Free study guide', url:'https://www.education.gov.za/Curriculum/CurriculumAssessmentPolicyStatements(CAPS)/MindtheGap.aspx'},
+  ],
+  'Physical Sciences': [
+    {icon:'🎥', name:'Kevinmathscience — Physical Sciences', desc:'YouTube · Physics & Chemistry', url:'https://www.youtube.com/@Kevinmathscience'},
+    {icon:'📘', name:'Siyavula Physical Sciences Gr 12', desc:'Free practice, zero-rated', url:'https://www.siyavula.com/read/science/grade-12'},
+    {icon:'📄', name:'DBE Past Papers — Physical Sciences', desc:'Papers + memos from 2016', url:'https://www.education.gov.za/Curriculum/NationalSeniorCertificate(NSC)Examinations/NSCPastExaminationpapers.aspx'},
+    {icon:'📖', name:'DBE Mind the Gap — Physical Sciences', desc:'Official study guide, free', url:'https://www.education.gov.za/Curriculum/CurriculumAssessmentPolicyStatements(CAPS)/MindtheGap.aspx'},
+  ],
+  'Life Sciences': [
+    {icon:'🎥', name:'Mindset Learn — Life Sciences', desc:'Free video lessons by topic', url:'https://www.mindset.co.za/learn/sites/files/LXL2013_L_LifeSci_Grade12.html'},
+    {icon:'📄', name:'DBE Past Papers — Life Sciences', desc:'Papers + memos from 2016', url:'https://www.education.gov.za/Curriculum/NationalSeniorCertificate(NSC)Examinations/NSCPastExaminationpapers.aspx'},
+    {icon:'📖', name:'DBE Mind the Gap — Life Sciences', desc:'Diagrams, summaries & questions', url:'https://www.education.gov.za/Curriculum/CurriculumAssessmentPolicyStatements(CAPS)/MindtheGap.aspx'},
+    {icon:'🔍', name:'SA Exam Papers — Life Sciences', desc:'Papers back to 2008', url:'https://www.saexampapers.co.za/life-sciences/'},
+  ],
+  'English': [
+    {icon:'📄', name:'DBE Past Papers — English HL/FAL', desc:'All papers from 2016', url:'https://www.education.gov.za/Curriculum/NationalSeniorCertificate(NSC)Examinations/NSCPastExaminationpapers.aspx'},
+    {icon:'🔍', name:'SA Exam Papers — English', desc:'Papers from 2008 across all papers', url:'https://www.saexampapers.co.za/english-home-language/'},
+    {icon:'📖', name:'DBE Mind the Gap — English HL', desc:'Language, literature & writing guidance', url:'https://www.education.gov.za/Curriculum/CurriculumAssessmentPolicyStatements(CAPS)/MindtheGap.aspx'},
+  ],
+  'Accounting': [
+    {icon:'🎥', name:'Mindset Learn — Accounting', desc:'Free video lessons on financial statements', url:'https://www.mindset.co.za/learn/sites/files/LXL2013_L_Acc_Grade12.html'},
+    {icon:'📄', name:'DBE Past Papers — Accounting', desc:'Papers + memos from 2016', url:'https://www.education.gov.za/Curriculum/NationalSeniorCertificate(NSC)Examinations/NSCPastExaminationpapers.aspx'},
+    {icon:'📖', name:'DBE Mind the Gap — Accounting', desc:'Ratios, statements & worked examples', url:'https://www.education.gov.za/Curriculum/CurriculumAssessmentPolicyStatements(CAPS)/MindtheGap.aspx'},
+    {icon:'🔍', name:'SA Exam Papers — Accounting', desc:'Papers from 2008', url:'https://www.saexampapers.co.za/accounting/'},
+  ],
+  'Business Studies': [
+    {icon:'🎥', name:'Mindset Learn — Business Studies', desc:'Free video lessons by topic', url:'https://www.mindset.co.za/learn/sites/files/LXL2013_L_BS_Grade12.html'},
+    {icon:'📄', name:'DBE Past Papers — Business Studies', desc:'Papers + memos from 2016', url:'https://www.education.gov.za/Curriculum/NationalSeniorCertificate(NSC)Examinations/NSCPastExaminationpapers.aspx'},
+    {icon:'📖', name:'DBE Mind the Gap — Business Studies', desc:'Essay guides & legislation summaries', url:'https://www.education.gov.za/Curriculum/CurriculumAssessmentPolicyStatements(CAPS)/MindtheGap.aspx'},
+  ],
+  'History': [
+    {icon:'🎥', name:'Mindset Learn — History', desc:'Source analysis & essay video lessons', url:'https://www.mindset.co.za/learn/sites/files/LXL2013_L_Hist_Grade12.html'},
+    {icon:'📄', name:'DBE Past Papers — History', desc:'Papers + memos from 2016', url:'https://www.education.gov.za/Curriculum/NationalSeniorCertificate(NSC)Examinations/NSCPastExaminationpapers.aspx'},
+    {icon:'📖', name:'DBE Mind the Gap — History', desc:'Source skills & essay frameworks', url:'https://www.education.gov.za/Curriculum/CurriculumAssessmentPolicyStatements(CAPS)/MindtheGap.aspx'},
+  ],
+  'Geography': [
+    {icon:'🎥', name:'Mindset Learn — Geography', desc:'Mapwork & physical geography videos', url:'https://www.mindset.co.za/learn/sites/files/LXL2013_L_Geog_Grade12.html'},
+    {icon:'📄', name:'DBE Past Papers — Geography', desc:'Papers + memos from 2016', url:'https://www.education.gov.za/Curriculum/NationalSeniorCertificate(NSC)Examinations/NSCPastExaminationpapers.aspx'},
+    {icon:'📖', name:'DBE Mind the Gap — Geography', desc:'Mapwork & human geography guides', url:'https://www.education.gov.za/Curriculum/CurriculumAssessmentPolicyStatements(CAPS)/MindtheGap.aspx'},
+  ],
+  'Life Orientation': [
+    {icon:'📖', name:'AVBOB Step 12 — LO Guide', desc:'Free in all 11 SA languages', url:'https://step12.avbob.co.za'},
+    {icon:'📄', name:'DBE Past Papers — Life Orientation', desc:'CAT papers + memos', url:'https://www.education.gov.za/Curriculum/NationalSeniorCertificate(NSC)Examinations/NSCPastExaminationpapers.aspx'},
+  ],
+  'Information Technology': [
+    {icon:'📄', name:'DBE Past Papers — IT', desc:'Papers + memos from 2016', url:'https://www.education.gov.za/Curriculum/NationalSeniorCertificate(NSC)Examinations/NSCPastExaminationpapers.aspx'},
+    {icon:'🔍', name:'SA Exam Papers — IT', desc:'Papers from 2008', url:'https://www.saexampapers.co.za/information-technology/'},
+  ],
+  'Economics': [
+    {icon:'🎥', name:'Mindset Learn — Economics', desc:'Free video lessons', url:'https://www.mindset.co.za'},
+    {icon:'📄', name:'DBE Past Papers — Economics', desc:'Papers + memos from 2016', url:'https://www.education.gov.za/Curriculum/NationalSeniorCertificate(NSC)Examinations/NSCPastExaminationpapers.aspx'},
+    {icon:'📖', name:'DBE Mind the Gap — Economics', desc:'Macro & micro economics guide', url:'https://www.education.gov.za/Curriculum/CurriculumAssessmentPolicyStatements(CAPS)/MindtheGap.aspx'},
+  ],
+  '_pp': [
+    {icon:'📄', name:'DBE NSC Past Papers (all subjects)', desc:'2016–2024, free, zero-rated', url:'https://www.education.gov.za/Curriculum/NationalSeniorCertificate(NSC)Examinations/NSCPastExaminationpapers.aspx'},
+    {icon:'🔍', name:'SA Exam Papers (2008–present)', desc:'Largest SA collection, all subjects', url:'https://www.saexampapers.co.za'},
+    {icon:'📱', name:'Matric Exam Papers App', desc:'DBE + IEB + provincial, offline-capable', url:'https://play.google.com/store/search?q=matric+exam+papers'},
+  ],
+  '_sr': [
+    {icon:'🃏', name:'Anki — Spaced Repetition App', desc:'Free on Android, SM-2 algorithm', url:'https://apps.ankiweb.net'},
+    {icon:'💬', name:'Maski — WhatsApp AI Tutor', desc:'SA-built, 100k+ users, works on any phone', url:'https://wa.me/27600123456'},
+    {icon:'⚡', name:'Matric Live — Quiz Battles', desc:'Gamified revision, offline capable', url:'https://www.matriclive.com'},
+  ],
+  '_default': [
+    {icon:'📄', name:'DBE Past Papers', desc:'All NSC papers 2016+, free', url:'https://www.education.gov.za/Curriculum/NationalSeniorCertificate(NSC)Examinations/NSCPastExaminationpapers.aspx'},
+    {icon:'⚡', name:'Matric Live', desc:'Interactive lessons + AI support', url:'https://www.matriclive.com'},
+    {icon:'📖', name:'AVBOB Step 12', desc:'Free in all 11 SA languages', url:'https://step12.avbob.co.za'},
+  ],
+};
+
+function getResources(subjName, type) {
+  if (type === 'pp') return RESOURCE_DB['_pp'];
+  if (type === 'sr') return RESOURCE_DB['_sr'];
+  const key = Object.keys(RESOURCE_DB).find(k =>
+    k !== '_pp' && k !== '_sr' && k !== '_default' &&
+    subjName.toLowerCase().includes(k.toLowerCase())
+  );
+  return RESOURCE_DB[key] || RESOURCE_DB['_default'];
+}
+
+/* ══════════════════════════════════════
+   MODAL OPEN / CLOSE
+══════════════════════════════════════ */
+let currentSlot = null;
+
+function openModal(slotData) {
+  currentSlot = slotData;
+  const overlay = document.getElementById('block-modal');
+  const badge   = document.getElementById('modal-badge');
+  const title   = document.getElementById('modal-title');
+  const taskEl  = document.getElementById('modal-task');
+  const resEl   = document.getElementById('modal-resources');
+  const metaEl  = document.getElementById('modal-meta');
+
+  // Badge colour matches block
+  badge.textContent = slotData.label || slotData.type.toUpperCase();
+  badge.style.cssText = '';
+  if (slotData.colorCls) {
+    const bgMap = {
+      'b-s0':'#fce4e4','b-s1':'#fce8d4','b-s2':'#fffbd4','b-s3':'#e4f5e4',
+      'b-s4':'#d4eef5','b-s5':'#e4d4f5','b-s6':'#f5d4ea','b-s7':'#d4f5ee','b-s8':'#f5ead4'
+    };
+    const fgMap = {
+      'b-s0':'#7a1c1c','b-s1':'#7a3a0a','b-s2':'#6a5a00','b-s3':'#1a5a20',
+      'b-s4':'#0a4a60','b-s5':'#3a1a6a','b-s6':'#6a0a4a','b-s7':'#0a4a3a','b-s8':'#6a3a0a'
+    };
+    badge.style.background = bgMap[slotData.colorCls] || '#eee';
+    badge.style.color = fgMap[slotData.colorCls] || '#333';
+  } else if (slotData.type === 'pp') {
+    badge.style.background = '#1c1a17'; badge.style.color = '#f7f4ef';
+  } else if (slotData.type === 'sr') {
+    badge.style.background = '#fff3c8'; badge.style.color = '#6a5000';
+  }
+
+  title.textContent = slotData.subjName || slotData.label || 'Study Session';
+
+  // Task
+  const task = slotData.task || (profile.applied
+    ? 'Apply your profile above to get a personalised task for this session.'
+    : '⬆ Complete your profile and click "Apply Profile" to get personalised tasks in every block.');
+  taskEl.textContent = task;
+
+  // Resources
+  const resources = getResources(slotData.subjName || '', slotData.type);
+  resEl.innerHTML = resources.map(r => `
+    <a class="res-link" href="${r.url}" target="_blank" rel="noopener">
+      <span class="res-link-icon">${r.icon}</span>
+      <div class="res-link-body">
+        <span class="res-link-name">${r.name}</span>
+        <span class="res-link-desc">${r.desc}</span>
+      </div>
+      <span class="res-link-arrow">↗</span>
+    </a>`).join('');
+
+  // Meta
+  const confLabel = ['','Struggling','Shaky','Getting there','Confident','Strong'][slotData.conf||3];
+  const phase = (slotData.conf||3) <= 2 ? 'Foundation — build from zero'
+              : (slotData.conf||3) <= 3 ? 'Consolidation — connect and deepen'
+              : 'Exam prep — timed and high-stakes';
+  metaEl.innerHTML = slotData.mark
+    ? `<strong>Current mark:</strong> ~${slotData.mark}% &nbsp;·&nbsp;
+       <strong>Confidence:</strong> ${confLabel} &nbsp;·&nbsp;
+       <strong>Study phase:</strong> ${phase}`
+    : `Hover over any study block to preview the task. Click to open resources and full details.`;
+
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal(e) {
+  if (e.target === document.getElementById('block-modal')) closeModalBtn();
+}
+function closeModalBtn() {
+  document.getElementById('block-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModalBtn(); });
+
+/* ══════════════════════════════════════
+   INIT
+══════════════════════════════════════ */
+renderScTable();
+document.getElementById('assess-body').style.display = 'block';
+document.getElementById('assess-chevron').classList.add('open');
+rebuild();
+</script>
+</body>
+</html>

@@ -1,0 +1,1699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Matric Master Plan · SA Study Journey</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════════
+   GLOBAL RESET & TOKENS
+══════════════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  /* dark palette – assessment */
+  --bg:#0d1117; --surface:#161b22; --surface2:#1f2937; --border:#2d3748;
+  --accent:#f6c90e; --accent2:#38bdf8; --accent3:#4ade80;
+  --text:#f0f4f8; --muted:#8899a6; --danger:#f87171;
+  --radius:12px; --font-head:'Syne',sans-serif; --font-body:'DM Sans',sans-serif;
+  /* light palette – timetable & resources */
+  --lt-bg:#f4f1eb; --lt-surface:#faf7f2; --lt-border:#e2ddd4;
+  --lt-ink:#1a1814; --lt-muted:#7a7060; --lt-gold:#c9a030;
+  --lt-teal:#1d6b60; --lt-rust:#b84830;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);overflow-x:hidden}
+/* noise overlay */
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.018;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:200px}
+
+/* ══════════════════════════════════════════════
+   HERO
+══════════════════════════════════════════════ */
+.hero{
+  position:relative;overflow:hidden;
+  padding:0 clamp(1.5rem,6vw,6rem);
+  background:radial-gradient(ellipse 90% 60% at 15% -10%,rgba(246,201,14,.07) 0,transparent 65%),
+             radial-gradient(ellipse 60% 50% at 85% 110%,rgba(56,189,248,.05) 0,transparent 65%),
+             var(--bg);
+}
+.hero-nav{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1.8rem 0;border-bottom:1px solid var(--border);
+}
+.logo{font-family:var(--font-head);font-size:1.2rem;font-weight:800;letter-spacing:-.01em}
+.logo span{color:var(--accent)}
+.nav-pill{
+  font-family:'Space Mono',monospace;font-size:.62rem;font-weight:700;
+  letter-spacing:.16em;text-transform:uppercase;
+  background:var(--surface2);border:1px solid var(--border);color:var(--muted);
+  padding:.3rem .9rem;border-radius:100px;
+}
+.hero-body{
+  max-width:760px;padding:5rem 0 4rem;
+  display:flex;flex-direction:column;gap:1.2rem;
+}
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:.7rem;
+  font-family:'Space Mono',monospace;font-size:.6rem;font-weight:700;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--accent);
+}
+.hero-eyebrow::before{content:'';display:block;width:24px;height:1px;background:var(--accent)}
+h1.hero-title{
+  font-family:var(--font-head);font-size:clamp(2.6rem,6.5vw,5rem);
+  font-weight:800;line-height:1.0;letter-spacing:-.03em;
+}
+h1.hero-title em{
+  font-style:italic;font-weight:400;
+  background:linear-gradient(135deg,var(--accent2),var(--accent3));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.hero-sub{font-size:1rem;font-weight:300;color:var(--muted);max-width:500px;line-height:1.75}
+.hero-sub strong{color:var(--text);font-weight:600}
+.hero-cta{display:flex;gap:1rem;flex-wrap:wrap;margin-top:.5rem}
+.btn-hero{
+  display:inline-flex;align-items:center;gap:.5rem;
+  font-family:var(--font-head);font-weight:700;font-size:.85rem;letter-spacing:.04em;
+  padding:.85rem 2rem;border-radius:100px;border:none;cursor:pointer;text-decoration:none;
+  transition:all .22s;
+}
+.btn-hero.primary{background:var(--accent);color:#000;box-shadow:0 4px 20px rgba(246,201,14,.3)}
+.btn-hero.primary:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(246,201,14,.4)}
+.btn-hero.ghost{background:transparent;border:2px solid var(--border);color:var(--muted)}
+.btn-hero.ghost:hover{border-color:var(--text);color:var(--text)}
+
+/* ── step cards row ── */
+.hero-steps{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:1px;
+  background:var(--border);border:1px solid var(--border);border-radius:16px;overflow:hidden;
+  margin-bottom:4rem;
+}
+.step-card{
+  background:var(--surface);padding:1.6rem 1.4rem;
+  display:flex;flex-direction:column;gap:.55rem;
+  cursor:pointer;text-decoration:none;transition:background .18s;
+}
+.step-card:hover{background:rgba(246,201,14,.05)}
+.step-card.done{background:rgba(74,222,128,.04)}
+.sc-num{font-family:'Space Mono',monospace;font-size:.58rem;font-weight:700;letter-spacing:.18em;color:var(--accent)}
+.sc-num.done{color:var(--accent3)}
+.sc-title{font-family:var(--font-head);font-size:.95rem;font-weight:700;color:var(--text);line-height:1.3}
+.sc-desc{font-size:.75rem;color:var(--muted);font-weight:300;line-height:1.5}
+.sc-arrow{font-size:.75rem;color:var(--accent);margin-top:auto;padding-top:.4rem}
+
+/* ══════════════════════════════════════════════
+   STICKY PROGRESS BAR
+══════════════════════════════════════════════ */
+#sticky-progress{
+  position:sticky;top:0;z-index:200;
+  background:rgba(13,17,23,.88);backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border);
+  padding:.75rem clamp(1.5rem,6vw,6rem);
+  display:flex;align-items:center;gap:2rem;
+}
+.prog-steps{display:flex;align-items:center;gap:.35rem;flex:1}
+.ps{display:flex;align-items:center;gap:.4rem;font-size:.75rem;font-weight:600;color:var(--muted);transition:color .3s}
+.ps.active{color:var(--text)}
+.ps.done{color:var(--accent3)}
+.ps-n{
+  width:22px;height:22px;border-radius:50%;border:1.5px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Space Mono',monospace;font-size:.58rem;font-weight:700;
+  transition:all .3s;
+}
+.ps.active .ps-n{background:var(--accent);border-color:var(--accent);color:#000}
+.ps.done .ps-n{background:var(--accent3);border-color:var(--accent3);color:#000}
+.ps-label{display:none}
+@media(min-width:550px){.ps-label{display:inline}}
+.ps-div{width:28px;height:1px;background:var(--border)}
+.prog-pct{font-family:'Space Mono',monospace;font-size:.6rem;color:var(--muted)}
+
+/* ══════════════════════════════════════════════
+   SECTION WRAPPERS
+══════════════════════════════════════════════ */
+.journey{padding:0 clamp(1.5rem,6vw,6rem) 6rem}
+.section-divider{
+  display:flex;align-items:flex-end;justify-content:space-between;
+  gap:2rem;padding:3.5rem 0 2rem;border-bottom:1px solid var(--border);margin-bottom:2rem;
+}
+.sd-left{display:flex;align-items:center;gap:.8rem}
+.step-badge{
+  font-family:'Space Mono',monospace;font-size:.6rem;font-weight:700;letter-spacing:.14em;
+  padding:.35rem .9rem;border-radius:100px;white-space:nowrap;
+}
+.step-badge.s1{background:rgba(246,201,14,.15);color:var(--accent);border:1px solid rgba(246,201,14,.3)}
+.step-badge.s2{background:rgba(56,189,248,.12);color:var(--accent2);border:1px solid rgba(56,189,248,.25)}
+.step-badge.s3{background:rgba(74,222,128,.1);color:var(--accent3);border:1px solid rgba(74,222,128,.2)}
+.section-title{font-family:var(--font-head);font-size:clamp(1.6rem,3.5vw,2.3rem);font-weight:800;letter-spacing:-.02em;line-height:1.1}
+.section-hint{font-size:.82rem;color:var(--muted);font-weight:300;max-width:320px;line-height:1.6;text-align:right}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:20px;overflow:hidden}
+.panel-inner{padding:clamp(1.5rem,4vw,2.5rem)}
+
+/* connector */
+.connector{display:flex;flex-direction:column;align-items:center;gap:.3rem;padding:.8rem 0;color:var(--border)}
+.connector::before,.connector::after{content:'';display:block;width:1px;height:28px;background:var(--border)}
+.conn-label{font-family:'Space Mono',monospace;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+
+/* gate */
+.gate{
+  background:var(--surface2);border:2px dashed var(--border);border-radius:14px;
+  padding:3rem 2rem;text-align:center;
+}
+.gate-icon{font-size:2rem;margin-bottom:.8rem;opacity:.35}
+.gate h3{font-family:var(--font-head);font-size:1.1rem;font-weight:700;margin-bottom:.4rem;color:var(--text)}
+.gate p{font-size:.83rem;color:var(--muted);font-weight:300;max-width:380px;margin:0 auto;line-height:1.6}
+
+/* ══════════════════════════════════════════════
+   ASSESSMENT (Section 1) — dark styles imported
+══════════════════════════════════════════════ */
+#assessment-wrap .badge{display:inline-block;background:rgba(246,201,14,.12);border:1px solid rgba(246,201,14,.3);color:var(--accent);font-family:var(--font-head);font-size:.7rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;padding:.35rem 1rem;border-radius:100px;margin-bottom:1.2rem}
+#assessment-wrap .header{text-align:center;margin-bottom:2.5rem}
+#assessment-wrap .header h1{font-family:var(--font-head);font-size:clamp(1.8rem,4vw,2.5rem);font-weight:800;line-height:1.1;margin-bottom:.7rem;background:linear-gradient(135deg,#fff 0%,#c0d0e0 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+#assessment-wrap .header p{color:var(--muted);font-size:.95rem;font-weight:300;max-width:500px;margin:0 auto;line-height:1.6}
+#assessment-wrap .progress-wrap{margin-bottom:2rem}
+#assessment-wrap .progress-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem}
+#assessment-wrap .progress-label{font-family:var(--font-head);font-size:.75rem;font-weight:600;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+#assessment-wrap .progress-count{font-family:var(--font-head);font-size:.8rem;font-weight:700;color:var(--accent)}
+#assessment-wrap .progress-bar{height:4px;background:var(--surface2);border-radius:100px;overflow:hidden}
+#assessment-wrap .progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:100px;transition:width .5s cubic-bezier(.4,0,.2,1)}
+#assessment-wrap .card{background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:1.8rem;margin-bottom:1.2rem;animation:fadeUp .4s ease both}
+#assessment-wrap .section-label{display:flex;align-items:center;gap:.6rem;font-family:var(--font-head);font-size:.65rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--accent2);margin-bottom:1.2rem}
+#assessment-wrap .section-label::after{content:'';flex:1;height:1px;background:var(--border)}
+#assessment-wrap .q-title{font-family:var(--font-head);font-size:1rem;font-weight:700;color:var(--text);margin-bottom:.35rem;line-height:1.3}
+#assessment-wrap .q-sub{font-size:.82rem;color:var(--muted);font-weight:300;margin-bottom:1.1rem;line-height:1.5}
+#assessment-wrap .options{display:grid;gap:.55rem}
+#assessment-wrap .options.grid-2{grid-template-columns:1fr 1fr}
+#assessment-wrap .options.grid-3{grid-template-columns:repeat(3,1fr)}
+#assessment-wrap .opt{background:var(--bg);border:2px solid transparent;border-radius:var(--radius);padding:.8rem .95rem;cursor:pointer;transition:all .2s;text-align:left;display:flex;align-items:flex-start;gap:.65rem;width:100%}
+#assessment-wrap .opt:hover{border-color:var(--border);background:#1a2032}
+#assessment-wrap .opt.selected{border-color:var(--accent);background:rgba(246,201,14,.08)}
+#assessment-wrap .opt.selected .opt-dot{background:var(--accent);border-color:var(--accent)}
+#assessment-wrap .opt-dot{width:15px;height:15px;border-radius:50%;border:2px solid var(--border);flex-shrink:0;margin-top:2px;transition:all .2s}
+#assessment-wrap .opt-text{flex:1}
+#assessment-wrap .opt-label{font-weight:500;font-size:.88rem;color:var(--text);line-height:1.3}
+#assessment-wrap .opt-sub{font-size:.73rem;color:var(--muted);margin-top:.15rem;font-weight:300}
+#assessment-wrap .check-opt{background:var(--bg);border:2px solid transparent;border-radius:var(--radius);padding:.7rem .95rem;cursor:pointer;display:flex;align-items:center;gap:.65rem;transition:all .2s;width:100%;text-align:left}
+#assessment-wrap .check-opt:hover{border-color:var(--border)}
+#assessment-wrap .check-opt.selected{border-color:var(--accent2);background:rgba(56,189,248,.07)}
+#assessment-wrap .check-box{width:17px;height:17px;border:2px solid var(--border);border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .2s;font-size:.68rem}
+#assessment-wrap .check-opt.selected .check-box{background:var(--accent2);border-color:var(--accent2);color:#000}
+#assessment-wrap .slider-wrap{margin-top:.4rem}
+#assessment-wrap .slider-labels{display:flex;justify-content:space-between;font-size:.7rem;color:var(--muted);margin-bottom:.4rem}
+#assessment-wrap input[type=range]{-webkit-appearance:none;width:100%;height:6px;background:var(--surface);border-radius:100px;outline:none;cursor:pointer}
+#assessment-wrap input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--accent);cursor:pointer;box-shadow:0 0 0 4px rgba(246,201,14,.15)}
+#assessment-wrap .slider-val{text-align:center;font-family:var(--font-head);font-size:1.4rem;font-weight:800;color:var(--accent);margin-top:.4rem}
+#assessment-wrap .subject-grid{display:grid;gap:.45rem}
+#assessment-wrap .subj-row{display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:.75rem;background:var(--bg);border-radius:var(--radius);padding:.65rem .95rem}
+#assessment-wrap .subj-name{font-weight:500;font-size:.83rem;color:var(--text)}
+#assessment-wrap .rating-dots{display:flex;gap:4px}
+#assessment-wrap .dot{width:10px;height:10px;border-radius:50%;border:1.5px solid var(--border);cursor:pointer;transition:all .15s}
+#assessment-wrap .dot.filled{border-color:transparent}
+#assessment-wrap .dot.filled.lvl-1{background:var(--danger)}
+#assessment-wrap .dot.filled.lvl-2{background:#fb923c}
+#assessment-wrap .dot.filled.lvl-3{background:var(--accent)}
+#assessment-wrap .dot.filled.lvl-4{background:var(--accent2)}
+#assessment-wrap .dot.filled.lvl-5{background:var(--accent3)}
+#assessment-wrap select{background:var(--bg);border:2px solid var(--border);color:var(--text);border-radius:8px;padding:.38rem .55rem;font-family:var(--font-body);font-size:.76rem;cursor:pointer;outline:none;-webkit-appearance:none;min-width:82px;text-align:center}
+#assessment-wrap select:focus{border-color:var(--accent)}
+#assessment-wrap .field-select-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.45rem;margin-bottom:.9rem}
+#assessment-wrap .field-btn{background:var(--bg);border:2px solid transparent;border-radius:var(--radius);padding:.7rem .55rem;cursor:pointer;text-align:center;transition:all .2s;width:100%}
+#assessment-wrap .field-btn:hover{border-color:var(--border)}
+#assessment-wrap .field-btn.selected{border-color:var(--accent);background:rgba(246,201,14,.08)}
+#assessment-wrap .field-icon{font-size:1.3rem;margin-bottom:.25rem}
+#assessment-wrap .field-label{font-size:.72rem;font-weight:500;color:var(--text);line-height:1.2}
+#assessment-wrap .uni-grid{display:grid;grid-template-columns:1fr 1fr;gap:.45rem}
+#assessment-wrap .uni-btn{background:var(--bg);border:2px solid transparent;border-radius:var(--radius);padding:.65rem .75rem;cursor:pointer;text-align:left;transition:all .2s;width:100%;display:flex;align-items:center;gap:.55rem}
+#assessment-wrap .uni-btn:hover{border-color:var(--border)}
+#assessment-wrap .uni-btn.selected{border-color:var(--accent2);background:rgba(56,189,248,.07)}
+#assessment-wrap .uni-abbr{font-family:var(--font-head);font-size:.78rem;font-weight:800;color:var(--accent2);flex-shrink:0;width:40px}
+#assessment-wrap .uni-name{font-size:.74rem;color:var(--muted);font-weight:300;line-height:1.2}
+#assessment-wrap .aps-panel{background:linear-gradient(135deg,rgba(246,201,14,.06),rgba(56,189,248,.04));border:1px solid rgba(246,201,14,.2);border-radius:14px;padding:1.4rem;margin-bottom:1.3rem}
+#assessment-wrap .aps-panel h3{font-family:var(--font-head);font-size:.68rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:.9rem}
+#assessment-wrap .aps-display{display:flex;align-items:flex-end;gap:.5rem;margin-bottom:.9rem}
+#assessment-wrap .aps-score{font-family:var(--font-head);font-size:3rem;font-weight:800;line-height:1}
+#assessment-wrap .aps-score.score-low{color:var(--danger)}
+#assessment-wrap .aps-score.score-mid{color:var(--accent)}
+#assessment-wrap .aps-score.score-high{color:var(--accent3)}
+#assessment-wrap .aps-denom{font-family:var(--font-head);font-size:1.1rem;color:var(--muted);padding-bottom:.55rem}
+#assessment-wrap .aps-label{font-size:.8rem;color:var(--muted);font-weight:300;margin-left:auto;text-align:right;line-height:1.4;padding-bottom:.25rem}
+#assessment-wrap .aps-bar-wrap{margin-bottom:.9rem}
+#assessment-wrap .aps-bar-track{height:8px;background:var(--surface2);border-radius:100px;overflow:hidden}
+#assessment-wrap .aps-bar-fill{height:100%;border-radius:100px;transition:width .6s cubic-bezier(.4,0,.2,1),background .4s}
+#assessment-wrap .aps-breakdown{display:grid;gap:.3rem}
+#assessment-wrap .aps-row{display:flex;justify-content:space-between;align-items:center;padding:.38rem .55rem;background:var(--surface2);border-radius:7px}
+#assessment-wrap .aps-subj{font-size:.78rem;color:var(--muted);font-weight:300}
+#assessment-wrap .aps-pts{font-family:var(--font-head);font-size:.83rem;font-weight:700}
+#assessment-wrap .aps-pts.p7{color:var(--accent3)}#assessment-wrap .aps-pts.p6{color:var(--accent2)}#assessment-wrap .aps-pts.p5{color:var(--accent)}#assessment-wrap .aps-pts.p4{color:#fbbf24}#assessment-wrap .aps-pts.p3{color:#fb923c}#assessment-wrap .aps-pts.low{color:var(--danger)}
+#assessment-wrap .target-row{display:flex;align-items:center;gap:.75rem;padding:.55rem .75rem;border-radius:9px;margin-bottom:.35rem;flex-wrap:wrap}
+#assessment-wrap .target-row.met{background:rgba(74,222,128,.07);border-left:3px solid var(--accent3)}
+#assessment-wrap .target-row.close{background:rgba(246,201,14,.07);border-left:3px solid var(--accent)}
+#assessment-wrap .target-row.gap{background:rgba(248,113,113,.07);border-left:3px solid var(--danger)}
+#assessment-wrap .target-uni{font-family:var(--font-head);font-size:.73rem;font-weight:700;flex:1;min-width:70px}
+#assessment-wrap .target-req{font-size:.73rem;color:var(--muted);flex:2}
+#assessment-wrap .target-badge{font-family:var(--font-head);font-size:.62rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.18rem .48rem;border-radius:4px;white-space:nowrap}
+#assessment-wrap .target-badge.met{background:rgba(74,222,128,.2);color:var(--accent3)}
+#assessment-wrap .target-badge.close{background:rgba(246,201,14,.2);color:var(--accent)}
+#assessment-wrap .target-badge.gap{background:rgba(248,113,113,.2);color:var(--danger)}
+#assessment-wrap .nav-btns{display:flex;justify-content:space-between;align-items:center;margin-top:1.8rem;gap:1rem}
+#assessment-wrap .btn{font-family:var(--font-head);font-weight:700;font-size:.83rem;letter-spacing:.05em;padding:.8rem 1.8rem;border-radius:100px;border:none;cursor:pointer;transition:all .2s}
+#assessment-wrap .btn-back{background:transparent;border:2px solid var(--border);color:var(--muted)}
+#assessment-wrap .btn-back:hover{border-color:var(--text);color:var(--text)}
+#assessment-wrap .btn-next{background:var(--accent);color:#000;box-shadow:0 4px 20px rgba(246,201,14,.25)}
+#assessment-wrap .btn-next:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(246,201,14,.35)}
+#assessment-wrap .btn-finish{background:linear-gradient(135deg,var(--accent),#f59e0b);color:#000;box-shadow:0 4px 24px rgba(246,201,14,.3);padding:.95rem 2.2rem;font-size:.9rem}
+/* result cards */
+#assessment-wrap .results-header{text-align:center;margin-bottom:1.8rem}
+#assessment-wrap .results-header h2{font-family:var(--font-head);font-size:1.9rem;font-weight:800;margin-bottom:.4rem}
+#assessment-wrap .results-header p{color:var(--muted);font-weight:300}
+#assessment-wrap .result-card{background:var(--surface2);border:1px solid var(--border);border-radius:14px;padding:1.4rem;margin-bottom:.9rem}
+#assessment-wrap .result-card h3{font-family:var(--font-head);font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:.9rem}
+#assessment-wrap .result-card h3.yellow{color:var(--accent)}
+#assessment-wrap .result-card h3.blue{color:var(--accent2)}
+#assessment-wrap .result-card h3.green{color:var(--accent3)}
+#assessment-wrap .result-card h3.red{color:var(--danger)}
+#assessment-wrap .profile-pill{display:inline-block;background:rgba(246,201,14,.12);border:1px solid rgba(246,201,14,.3);color:var(--accent);font-family:var(--font-head);font-weight:700;font-size:1rem;padding:.45rem 1.3rem;border-radius:100px;margin-bottom:.7rem}
+#assessment-wrap .insight{font-size:.86rem;color:var(--muted);line-height:1.7;font-weight:300}
+#assessment-wrap .insight strong{color:var(--text);font-weight:500}
+#assessment-wrap .priority-list,#assessment-wrap .tip-list{list-style:none;display:grid;gap:.45rem}
+#assessment-wrap .priority-item{display:flex;align-items:center;gap:.75rem;padding:.6rem .95rem;border-radius:8px;font-size:.85rem}
+#assessment-wrap .priority-item.high{background:rgba(248,113,113,.08);border-left:3px solid var(--danger)}
+#assessment-wrap .priority-item.med{background:rgba(246,201,14,.06);border-left:3px solid var(--accent)}
+#assessment-wrap .priority-item.low{background:rgba(74,222,128,.06);border-left:3px solid var(--accent3)}
+#assessment-wrap .priority-badge{font-family:var(--font-head);font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:.18rem .48rem;border-radius:4px;flex-shrink:0}
+#assessment-wrap .priority-badge.high{background:rgba(248,113,113,.2);color:var(--danger)}
+#assessment-wrap .priority-badge.med{background:rgba(246,201,14,.2);color:var(--accent)}
+#assessment-wrap .priority-badge.low{background:rgba(74,222,128,.2);color:var(--accent3)}
+#assessment-wrap .tip-item{display:flex;gap:.55rem;font-size:.84rem;color:var(--muted);font-weight:300;line-height:1.5}
+#assessment-wrap .tip-item::before{content:'→';color:var(--accent2);flex-shrink:0}
+#assessment-wrap .gap-callout{background:rgba(56,189,248,.05);border:1px solid rgba(56,189,248,.15);border-radius:11px;padding:.95rem 1.1rem;margin-top:.9rem;font-size:.83rem;color:var(--muted);line-height:1.6}
+#assessment-wrap .gap-callout strong{color:var(--text)}
+#assessment-wrap .text-input{width:100%;background:var(--bg);border:2px solid var(--border);color:var(--text);border-radius:8px;padding:.7rem .95rem;font-family:var(--font-body);font-size:.88rem;outline:none;transition:border-color .2s}
+#assessment-wrap .text-input:focus{border-color:var(--accent)}
+#assessment-wrap .text-input::placeholder{color:var(--muted)}
+#assessment-wrap .restart-btn{display:block;width:100%;margin-top:1.3rem;background:transparent;border:2px solid var(--border);color:var(--muted);font-family:var(--font-head);font-size:.78rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.75rem;border-radius:100px;cursor:pointer;transition:all .2s}
+#assessment-wrap .restart-btn:hover{border-color:var(--text);color:var(--text)}
+
+/* proceed button after assessment complete */
+#proceed-btn-wrap{text-align:center;padding:2rem 0 .5rem;display:none}
+#proceed-btn-wrap p{font-size:.82rem;color:var(--muted);font-weight:300;margin-bottom:1rem}
+.btn-proceed{
+  display:inline-flex;align-items:center;gap:.55rem;
+  background:var(--accent2);color:#000;
+  font-family:var(--font-head);font-weight:700;font-size:.88rem;letter-spacing:.04em;
+  padding:.9rem 2.2rem;border-radius:100px;border:none;cursor:pointer;
+  box-shadow:0 4px 20px rgba(56,189,248,.3);transition:all .22s;
+}
+.btn-proceed:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(56,189,248,.4)}
+
+/* ══════════════════════════════════════════════
+   STEP 2 — TIMETABLE GENERATOR (light theme)
+══════════════════════════════════════════════ */
+#step2-panel{background:var(--lt-bg) !important;border-color:rgba(0,0,0,.08) !important}
+#step2-panel .panel-inner{color:var(--lt-ink)}
+
+.tt-grid-controls{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:.9rem;
+  margin-bottom:2rem;
+}
+.tt-field label{
+  display:block;
+  font-family:'Space Mono',monospace;font-size:.58rem;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--lt-muted);margin-bottom:.4rem;
+}
+.tt-select{
+  width:100%;background:var(--lt-surface);border:1.5px solid var(--lt-border);
+  color:var(--lt-ink);border-radius:8px;padding:.6rem .85rem;
+  font-family:var(--font-body);font-size:.84rem;font-weight:500;
+  outline:none;cursor:pointer;transition:border-color .2s;
+}
+.tt-select:focus{border-color:var(--lt-teal)}
+
+/* subject table */
+.subj-table{width:100%;border-collapse:collapse;margin-bottom:1.8rem}
+.subj-table thead tr{border-bottom:2px solid var(--lt-border)}
+.subj-table thead th{
+  font-family:'Space Mono',monospace;font-size:.58rem;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--lt-muted);
+  padding:.5rem .6rem;text-align:left;
+}
+.subj-table thead th:last-child{text-align:center}
+.subj-table tbody tr{border-bottom:1px solid var(--lt-border);transition:background .15s}
+.subj-table tbody tr:hover{background:rgba(0,0,0,.025)}
+.subj-table td{padding:.55rem .6rem;font-size:.84rem;color:var(--lt-ink);vertical-align:middle}
+.subj-table input[type=number]{
+  width:68px;background:var(--lt-surface);border:1.5px solid var(--lt-border);
+  color:var(--lt-ink);border-radius:6px;padding:.35rem .5rem;
+  font-family:'Space Mono',monospace;font-size:.82rem;font-weight:700;
+  text-align:center;outline:none;transition:border-color .2s;
+}
+.subj-table input[type=number]:focus{border-color:var(--lt-teal)}
+.subj-table input::-webkit-inner-spin-button{-webkit-appearance:none}
+.pct-gap{
+  font-family:'Space Mono',monospace;font-size:.75rem;font-weight:700;
+  padding:.22rem .55rem;border-radius:6px;text-align:center;min-width:48px;display:inline-block;
+}
+.pct-gap.high{background:rgba(184,72,48,.1);color:var(--lt-rust)}
+.pct-gap.med{background:rgba(201,160,48,.12);color:#7a5a10}
+.pct-gap.low{background:rgba(29,107,96,.1);color:var(--lt-teal)}
+.priority-sel{
+  background:transparent;border:1.5px solid var(--lt-border);
+  border-radius:6px;padding:.3rem .45rem;
+  font-family:var(--font-body);font-size:.78rem;cursor:pointer;
+  color:var(--lt-ink);outline:none;
+}
+.priority-sel:focus{border-color:var(--lt-teal)}
+.hours-badge{
+  font-family:'Space Mono',monospace;font-size:.78rem;font-weight:700;
+  color:var(--lt-teal);min-width:52px;text-align:right;
+}
+/* generate btn */
+.btn-generate{
+  display:inline-flex;align-items:center;gap:.55rem;
+  background:var(--lt-teal);color:#fff;
+  font-family:var(--font-head);font-weight:700;font-size:.88rem;letter-spacing:.04em;
+  padding:.9rem 2.2rem;border-radius:100px;border:none;cursor:pointer;
+  box-shadow:0 4px 20px rgba(29,107,96,.28);transition:all .22s;
+  margin-top:.5rem;
+}
+.btn-generate:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(29,107,96,.38)}
+
+/* timetable output */
+#tt-output{display:none;margin-top:2.5rem}
+.aps-callout{
+  background:linear-gradient(135deg,rgba(29,107,96,.06),rgba(201,160,48,.05));
+  border:1.5px solid rgba(29,107,96,.2);border-radius:14px;
+  padding:1.3rem 1.5rem;margin-bottom:1.8rem;
+  font-size:.85rem;color:var(--lt-muted);line-height:1.75;
+}
+.aps-callout strong{color:var(--lt-ink)}
+.aps-callout .aps-nums{display:flex;gap:1.5rem;flex-wrap:wrap;margin-top:.8rem}
+.aps-num-block{display:flex;flex-direction:column;gap:.2rem}
+.aps-num-val{font-family:var(--font-head);font-size:1.8rem;font-weight:800;line-height:1}
+.aps-num-val.current{color:var(--lt-rust)}
+.aps-num-val.target{color:var(--lt-teal)}
+.aps-num-lbl{font-family:'Space Mono',monospace;font-size:.55rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--lt-muted)}
+.aps-arrow{font-size:1.4rem;align-self:flex-end;padding-bottom:.25rem;color:var(--lt-muted)}
+
+/* hours per subject bars */
+.alloc-section{margin-bottom:2rem}
+.alloc-head{font-family:'Space Mono',monospace;font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--lt-muted);margin-bottom:.9rem}
+.alloc-row{display:grid;grid-template-columns:140px 1fr 56px 60px;align-items:center;gap:.8rem;padding:.45rem 0;border-bottom:1px solid var(--lt-border)}
+.alloc-name{font-weight:500;font-size:.83rem;color:var(--lt-ink);overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.alloc-bar-wrap{background:rgba(0,0,0,.06);border-radius:100px;height:7px;overflow:hidden}
+.alloc-bar{height:100%;border-radius:100px;transition:width .6s cubic-bezier(.4,0,.2,1)}
+.alloc-hrs{font-family:'Space Mono',monospace;font-size:.78rem;font-weight:700;color:var(--lt-teal);text-align:right}
+.alloc-gap-label{font-family:'Space Mono',monospace;font-size:.65rem;font-weight:700}
+
+/* ── FULL-DAY TIMETABLE (v3) ── */
+.tt-outer-wrap{border-radius:12px;border:1.5px solid var(--lt-border);overflow:hidden;margin-top:.5rem}
+.tt-scroll{overflow-x:auto}
+table.tt{width:100%;border-collapse:collapse;min-width:740px}
+table.tt thead tr.day-row th{
+  background:var(--lt-ink);color:rgba(255,255,255,.8);
+  font-family:'Space Mono',monospace;font-size:.58rem;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;
+  padding:.72rem .45rem;text-align:center;white-space:nowrap;
+}
+table.tt thead tr.day-row th:first-child{background:#111;position:sticky;left:0;z-index:10;width:70px}
+table.tt thead tr.day-row th.wknd{background:#2a2725}
+table.tt tbody tr:hover td{background:rgba(0,0,0,.012)}
+table.tt td{border-right:1px solid var(--lt-border);border-bottom:1px solid var(--lt-border);padding:2px 2px;vertical-align:top}
+table.tt td:last-child{border-right:none}
+table.tt tbody tr:last-child td{border-bottom:none}
+table.tt tbody tr.hr-start td{border-top:1.5px solid var(--lt-border)}
+.tt-time-cell{width:70px;min-width:70px;padding:0!important;border-right:1.5px solid var(--lt-border)!important;
+  background:#faf8f5!important;vertical-align:middle;text-align:center;position:sticky;left:0;z-index:5}
+.tt-time-inner{height:58px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.05rem;padding:0 .35rem}
+.tt-hh{font-family:'Space Mono',monospace;font-size:.68rem;font-weight:700;color:var(--lt-muted);line-height:1}
+.tt-mm{font-family:'Space Mono',monospace;font-size:.5rem;font-weight:400;color:var(--lt-border);line-height:1}
+.tt-block-cell{padding:2px 2px!important;vertical-align:top}
+/* blocks */
+.tt-blk{width:100%;min-height:58px;border-radius:5px;display:flex;flex-direction:column;
+  justify-content:center;align-items:flex-start;padding:.25rem .4rem;
+  position:relative;overflow:hidden;transition:transform .13s,box-shadow .13s}
+.tt-blk.clickable{cursor:pointer}
+.tt-blk.clickable:hover{transform:scale(1.025);box-shadow:0 3px 12px rgba(0,0,0,.13);z-index:20;position:relative}
+.tt-blk.clickable::after{content:'↗';position:absolute;top:3px;right:4px;font-size:.5rem;opacity:.35;line-height:1}
+.tt-blk-label{font-size:.63rem;font-weight:700;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.tt-blk-task{font-size:.54rem;font-weight:500;line-height:1.3;display:-webkit-box;
+  -webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;max-width:100%;margin-top:.15rem;opacity:.78}
+.tt-blk-sub{font-size:.52rem;font-weight:400;opacity:.6;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;margin-top:.08rem}
+/* block type colours */
+.b-sleep  {background:#ece9f4;color:#4a3870}
+.b-school {background:#dde4f0;color:#2a3d6b}
+.b-lunch  {background:#fde8c8;color:#7a4200}
+.b-dinner {background:#fde8c8;color:#7a4200}
+.b-leisure{background:#dff3e5;color:#1a5c30}
+.b-pp     {background:#1a1814;color:#f4f1eb}
+.b-pp::before{content:'';position:absolute;top:0;left:0;bottom:0;width:3px;background:#f6c90e;border-radius:5px 0 0 5px}
+.b-sr     {background:#fff3c8;color:#6a5000}
+.b-sr::before{content:'';position:absolute;top:0;left:0;bottom:0;width:3px;background:#c9a030;opacity:.5;border-radius:5px 0 0 5px}
+.b-empty  {background:transparent;color:transparent}
+/* subject palette */
+.sc-A{background:#dff3e4;color:#155a28} .sc-B{background:#dde8f7;color:#153480}
+.sc-C{background:#fef3d8;color:#7a4a08} .sc-D{background:#f7ddf0;color:#7a1060}
+.sc-E{background:#ddf7f4;color:#0a5550} .sc-F{background:#f7ede0;color:#7a3808}
+.sc-G{background:#ede0f7;color:#4a0a78} .sc-H{background:#f0f7dd;color:#3a5808}
+.sc-I{background:#f7dddd;color:#7a1818}
+.sc-SR{background:#fff3cd;color:#7a5a00}
+/* legend */
+.tt-legend{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1rem}
+.legend-chip{display:flex;align-items:center;gap:.35rem;font-size:.7rem;color:var(--lt-muted);font-weight:500}
+.legend-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0}
+
+/* ── BLOCK MODAL ── */
+.blk-modal-overlay{
+  position:fixed;inset:0;z-index:600;background:rgba(10,10,15,.55);
+  backdrop-filter:blur(5px);display:flex;align-items:center;justify-content:center;
+  padding:1.5rem;opacity:0;pointer-events:none;transition:opacity .22s;
+}
+.blk-modal-overlay.open{opacity:1;pointer-events:all}
+.blk-modal{
+  background:#fff;border-radius:16px;width:100%;max-width:480px;max-height:88vh;
+  overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.3);
+  transform:translateY(16px);transition:transform .22s;
+}
+.blk-modal-overlay.open .blk-modal{transform:translateY(0)}
+.bm-head{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;
+  padding:1.2rem 1.4rem 1rem;border-bottom:1.5px solid #e8e4dc}
+.bm-badge{font-family:'Space Mono',monospace;font-size:.55rem;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;padding:.22rem .65rem;
+  border-radius:100px;display:inline-block;width:fit-content;margin-bottom:.3rem}
+.bm-title{font-size:1.2rem;font-weight:700;color:#1a1814;line-height:1.2}
+.bm-close{background:transparent;border:1.5px solid #e8e4dc;color:#9a9080;
+  border-radius:50%;width:30px;height:30px;font-size:.85rem;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  transition:all .18s;margin-top:.1rem}
+.bm-close:hover{background:#1a1814;color:#fff;border-color:#1a1814}
+.bm-body{padding:1.2rem 1.4rem;display:flex;flex-direction:column;gap:1rem}
+.bm-section-lbl{font-family:'Space Mono',monospace;font-size:.55rem;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;color:#9a9080;margin-bottom:.4rem}
+.bm-task{font-size:.87rem;font-weight:500;color:#1a1814;line-height:1.65;
+  background:#f7f4ef;border-radius:8px;padding:.7rem .9rem;border-left:3px solid #d0c9bc}
+.bm-resources{display:flex;flex-direction:column;gap:.4rem}
+.bm-res-link{display:flex;align-items:center;gap:.6rem;background:#f7f4ef;
+  border:1.5px solid #e4dfd5;border-radius:8px;padding:.55rem .8rem;
+  text-decoration:none;transition:all .18s;color:#1a1814}
+.bm-res-link:hover{border-color:#1a1814;background:#ede7d9;transform:translateX(2px)}
+.bm-rl-icon{font-size:.95rem;flex-shrink:0}
+.bm-rl-body{display:flex;flex-direction:column;gap:.08rem;flex:1;min-width:0}
+.bm-rl-name{font-size:.78rem;font-weight:600;color:#1a1814}
+.bm-rl-desc{font-size:.65rem;color:#9a9080;font-weight:300}
+.bm-rl-arr{font-size:.72rem;color:#9a9080;flex-shrink:0}
+.bm-meta{font-size:.7rem;color:#9a9080;font-weight:300;line-height:1.6;
+  padding:.6rem .85rem;background:rgba(0,0,0,.025);border-radius:8px}
+.bm-meta strong{color:#4a4540;font-weight:500}
+
+/* stat summary */
+.tt-stats{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:.9rem;
+  margin-top:1.5rem;padding:1.3rem;
+  background:var(--lt-surface);border-radius:12px;border:1.5px solid var(--lt-border);
+}
+.stat-block{display:flex;flex-direction:column;gap:.2rem}
+.stat-val{font-family:var(--font-head);font-size:1.9rem;font-weight:800;line-height:1;color:var(--lt-ink)}
+.stat-lbl{font-family:'Space Mono',monospace;font-size:.55rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--lt-muted)}
+.stat-sub{font-size:.72rem;color:var(--lt-muted);font-weight:300;margin-top:.1rem}
+
+.print-hint{font-size:.73rem;color:var(--lt-muted);text-align:center;margin-top:1rem;font-style:italic}
+
+/* proceed to resources btn */
+#proceed-resources{display:none;text-align:center;padding:1.5rem 0 .5rem}
+.btn-proceed-res{
+  display:inline-flex;align-items:center;gap:.55rem;
+  background:var(--accent3);color:#000;
+  font-family:var(--font-head);font-weight:700;font-size:.88rem;letter-spacing:.04em;
+  padding:.9rem 2.2rem;border-radius:100px;border:none;cursor:pointer;
+  box-shadow:0 4px 20px rgba(74,222,128,.3);transition:all .22s;
+}
+.btn-proceed-res:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(74,222,128,.4)}
+
+/* ══════════════════════════════════════════════
+   STEP 3 — RESOURCES (light theme)
+══════════════════════════════════════════════ */
+#step3-panel{background:var(--lt-bg) !important;border-color:rgba(0,0,0,.08) !important}
+#step3-panel .panel-inner{color:var(--lt-ink)}
+.res-tabs{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:1.8rem}
+.res-tab{
+  font-family:var(--font-body);font-size:.79rem;font-weight:600;
+  padding:.5rem 1.15rem;border-radius:100px;border:1.5px solid var(--lt-border);
+  cursor:pointer;background:var(--lt-surface);color:var(--lt-muted);transition:all .18s;
+}
+.res-tab.active,.res-tab:hover{background:var(--lt-ink);color:#fff;border-color:var(--lt-ink)}
+.res-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:.9rem}
+.res-card{
+  background:var(--lt-surface);border:1.5px solid var(--lt-border);border-radius:14px;
+  padding:1.3rem;display:flex;flex-direction:column;gap:.65rem;
+  text-decoration:none;transition:all .2s;position:relative;overflow:hidden;
+}
+.res-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--card-accent,var(--lt-gold))}
+.res-card:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(0,0,0,.09);border-color:var(--lt-muted)}
+.rc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:.7rem}
+.rc-icon{font-size:1.5rem;line-height:1}
+.rc-tag{
+  font-family:'Space Mono',monospace;font-size:.56rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  padding:.22rem .55rem;border-radius:100px;white-space:nowrap;
+  background:rgba(0,0,0,.06);color:var(--lt-muted);border:1px solid var(--lt-border);
+}
+.rc-tag.free{background:rgba(29,107,96,.1);color:var(--lt-teal);border-color:rgba(29,107,96,.2)}
+.rc-tag.zero{background:rgba(201,160,48,.12);color:#7a5010;border-color:rgba(201,160,48,.25)}
+.rc-name{font-family:var(--font-head);font-size:.98rem;font-weight:700;color:var(--lt-ink);line-height:1.2}
+.rc-desc{font-size:.78rem;color:var(--lt-muted);font-weight:300;line-height:1.5}
+.rc-link{display:inline-flex;align-items:center;gap:.35rem;font-size:.73rem;font-weight:600;color:var(--lt-teal);text-decoration:none;margin-top:auto}
+.rc-link:hover{text-decoration:underline}
+
+/* ══════════════════════════════════════════════
+   COMPLETE BANNER
+══════════════════════════════════════════════ */
+#completion-banner{display:none;margin-top:2.5rem}
+.complete-wrap{
+  background:linear-gradient(135deg,var(--lt-teal) 0%,#2a9080 100%);
+  border-radius:20px;padding:3rem 2rem;text-align:center;color:#fff;
+}
+.complete-wrap h2{font-family:var(--font-head);font-size:2rem;font-weight:800;margin-bottom:.7rem}
+.complete-wrap p{font-size:.92rem;opacity:.8;font-weight:300;max-width:480px;margin:0 auto 2rem;line-height:1.7}
+.complete-actions{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+.btn-white{background:#fff;color:var(--lt-teal);font-family:var(--font-head);font-weight:700;font-size:.85rem;padding:.8rem 1.8rem;border-radius:100px;border:none;cursor:pointer;transition:all .2s}
+.btn-white:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.15)}
+.btn-outline-white{background:transparent;color:#fff;font-family:var(--font-head);font-weight:700;font-size:.85rem;padding:.8rem 1.8rem;border-radius:100px;border:2px solid rgba(255,255,255,.35);cursor:pointer;transition:all .2s}
+.btn-outline-white:hover{border-color:#fff}
+
+/* ══════════════════════════════════════════════
+   UTILITIES & ANIMATIONS
+══════════════════════════════════════════════ */
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.fade-u0{animation:fadeUp .5s ease both}
+.fade-u1{animation:fadeUp .5s .08s ease both}
+.fade-u2{animation:fadeUp .5s .16s ease both}
+.fade-u3{animation:fadeUp .5s .24s ease both}
+.fade-u4{animation:fadeUp .5s .32s ease both}
+
+@media(max-width:600px){
+  .hero-steps{grid-template-columns:1fr}
+  #assessment-wrap .options.grid-2,#assessment-wrap .options.grid-3,
+  #assessment-wrap .field-select-grid,#assessment-wrap .uni-grid{grid-template-columns:1fr}
+  #assessment-wrap .subj-row{grid-template-columns:1fr;gap:.35rem}
+  .section-divider{flex-direction:column;align-items:flex-start;gap:1rem}
+  .section-hint{text-align:left;max-width:100%}
+  .tt-grid-controls{grid-template-columns:1fr 1fr}
+  .alloc-row{grid-template-columns:120px 1fr 48px}
+  .alloc-gap-label{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════ HERO ═══════════ -->
+<section class="hero">
+  <nav class="hero-nav">
+    <div class="logo">Matric <span>Master</span> Plan</div>
+    <div class="nav-pill">IEB · CAPS · NSC · 2025</div>
+  </nav>
+  <div class="hero-body">
+    <div class="hero-eyebrow fade-u0">Your Three-Step Study Journey</div>
+    <h1 class="hero-title fade-u1">From Where You Are<br>to <em>Where You're Going</em></h1>
+    <p class="hero-sub fade-u2">A complete matric planning tool for South African learners. <strong>Assess your position</strong>, build a real timetable, and get every free resource you need — all in one place.</p>
+    <div class="hero-cta fade-u3">
+      <a href="#step1" class="btn-hero primary">Begin Assessment ↓</a>
+      <a href="#step2" class="btn-hero ghost">Skip to Timetable</a>
+    </div>
+  </div>
+  <div class="hero-steps fade-u4">
+    <a href="#step1" class="step-card" id="sc1">
+      <div class="sc-num" id="sc1-num">STEP 01</div>
+      <div class="sc-title">Self-Assessment & APS Analysis</div>
+      <div class="sc-desc">Rate your subjects, set university goals, and get a personalised study hours recommendation.</div>
+      <div class="sc-arrow">Start here →</div>
+    </a>
+    <a href="#step2" class="step-card" id="sc2">
+      <div class="sc-num" id="sc2-num">STEP 02</div>
+      <div class="sc-title">Personalised Timetable Generator</div>
+      <div class="sc-desc">Generate a subject-balanced weekly schedule with hours matched to your APS gap and goals.</div>
+      <div class="sc-arrow">Build timetable →</div>
+    </a>
+    <a href="#step3" class="step-card" id="sc3">
+      <div class="sc-num" id="sc3-num">STEP 03</div>
+      <div class="sc-title">Free Online Resources</div>
+      <div class="sc-desc">Curated SA-specific tools, zero-rated platforms, past papers, and mental health support.</div>
+      <div class="sc-arrow">Explore resources →</div>
+    </a>
+  </div>
+</section>
+
+<!-- ═══════════ STICKY PROGRESS ═══════════ -->
+<div id="sticky-progress">
+  <div class="prog-steps">
+    <div class="ps active" id="ps1"><div class="ps-n">1</div><span class="ps-label">Assessment</span></div>
+    <div class="ps-div"></div>
+    <div class="ps" id="ps2"><div class="ps-n">2</div><span class="ps-label">Timetable</span></div>
+    <div class="ps-div"></div>
+    <div class="ps" id="ps3"><div class="ps-n">3</div><span class="ps-label">Resources</span></div>
+  </div>
+  <div class="prog-pct" id="prog-pct">Step 1 of 3</div>
+</div>
+
+<!-- ═══════════ JOURNEY ═══════════ -->
+<main class="journey">
+
+  <!-- ── STEP 1 ── -->
+  <div class="section-divider" id="step1">
+    <div class="sd-left">
+      <span class="step-badge s1">STEP 01</span>
+      <h2 class="section-title">Self-Assessment</h2>
+    </div>
+    <p class="section-hint">Complete all six sections. Your marks, goals, and learning style feed directly into your timetable.</p>
+  </div>
+
+  <div class="panel">
+    <div class="panel-inner" id="assessment-wrap">
+      <div class="header">
+        <div class="badge">Matric · SA Learner Self-Assessment</div>
+        <h1>Know Your Study Profile</h1>
+        <p>Answer honestly — this tool calculates your live APS, compares it to SA university requirements, and hands that data straight to your timetable generator.</p>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-meta">
+          <span class="progress-label">Progress</span>
+          <span class="progress-count" id="progress-count">Section 1 of 6</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:16.6%"></div></div>
+      </div>
+      <div id="sections-container"></div>
+    </div>
+  </div>
+
+  <div id="proceed-btn-wrap">
+    <p>Assessment complete — your data has been loaded into the timetable generator below.</p>
+    <button class="btn-proceed" onclick="scrollToStep2()">Build My Timetable ↓</button>
+  </div>
+
+  <div class="connector"><div class="conn-label">Step 1 → Step 2</div></div>
+
+  <!-- ── STEP 2 ── -->
+  <div class="section-divider" id="step2">
+    <div class="sd-left">
+      <span class="step-badge s2">STEP 02</span>
+      <h2 class="section-title">Timetable Generator</h2>
+    </div>
+    <p class="section-hint">Your assessment data pre-fills your subjects. Adjust targets and click Generate.</p>
+  </div>
+
+  <div class="panel" id="step2-panel">
+    <div class="panel-inner">
+      <div id="step2-gate" class="gate">
+        <div class="gate-icon">🔒</div>
+        <h3>Complete Your Assessment First</h3>
+        <p>Finish all six sections of the assessment above. Your subject marks and goals will pre-populate the timetable builder automatically.</p>
+      </div>
+      <div id="step2-content" style="display:none">
+
+        <!-- Controls -->
+        <div class="tt-grid-controls">
+          <div class="tt-field">
+            <label>Term / Phase</label>
+            <select class="tt-select" id="tt-term">
+              <option value="1">Term 1 — Foundation (Jan–Mar)</option>
+              <option value="2">Term 2 — Consolidation (Apr–Jun)</option>
+              <option value="3" selected>Term 3 — Critical / Prelims (Jul–Sep)</option>
+              <option value="4">Term 4 — Final Exams (Oct–Nov)</option>
+            </select>
+          </div>
+          <div class="tt-field">
+            <label>Peak Study Time</label>
+            <select class="tt-select" id="tt-peak">
+              <option value="morning">Morning (06:00–12:00)</option>
+              <option value="afternoon" selected>Afternoon (12:00–17:00)</option>
+              <option value="evening">Evening (17:00–22:00)</option>
+            </select>
+          </div>
+          <div class="tt-field">
+            <label>Weekly Study Target</label>
+            <select class="tt-select" id="tt-target-hrs">
+              <option value="15">15 hrs — Pass / Diploma</option>
+              <option value="22">22 hrs — Bachelor's Pass</option>
+              <option value="28" selected>28 hrs — Strong Pass</option>
+              <option value="35">35 hrs — Distinctions</option>
+            </select>
+          </div>
+          <div class="tt-field">
+            <label>Focus Block Length</label>
+            <select class="tt-select" id="tt-focus">
+              <option value="25">25 min (short focus)</option>
+              <option value="45" selected>45 min (standard)</option>
+              <option value="60">60 min (deep work)</option>
+            </select>
+          </div>
+          <div class="tt-field">
+            <label>Exam System</label>
+            <select class="tt-select" id="tt-system">
+              <option value="caps">CAPS / NSC</option>
+              <option value="ieb">IEB</option>
+            </select>
+          </div>
+          <div class="tt-field">
+            <label>Past Paper Days / Week</label>
+            <select class="tt-select" id="tt-pp-days">
+              <option value="0">None yet</option>
+              <option value="1">1 day/week</option>
+              <option value="2" selected>2 days/week</option>
+              <option value="3">3 days/week</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Subject table -->
+        <p style="font-family:'Space Mono',monospace;font-size:.58rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--lt-muted);margin-bottom:.75rem">YOUR SUBJECTS — Edit marks and targets, then generate</p>
+        <table class="subj-table">
+          <thead><tr>
+            <th>Subject</th>
+            <th>Current %</th>
+            <th>Target %</th>
+            <th>Gap</th>
+            <th>Priority</th>
+            <th style="text-align:right">Hrs/Wk</th>
+          </tr></thead>
+          <tbody id="subj-tbody"></tbody>
+        </table>
+
+        <button class="btn-generate" onclick="generateTimetable()">⚡ Generate My Weekly Timetable</button>
+
+        <!-- OUTPUT -->
+        <div id="tt-output">
+          <div class="aps-callout" id="aps-callout"></div>
+
+          <div class="alloc-section">
+            <div class="alloc-head">Weekly hours per subject</div>
+            <div id="alloc-rows"></div>
+          </div>
+
+          <div class="alloc-head" style="margin-bottom:.75rem">Weekly timetable — <span id="tt-term-label"></span></div>
+          <div class="tt-outer-wrap">
+            <div class="tt-scroll">
+              <table class="tt" id="tt-table"></table>
+            </div>
+          </div>
+          <div class="tt-legend" id="tt-legend"></div>
+          <div class="tt-stats" id="tt-stats"></div>
+          <p class="print-hint">Tip: Press Ctrl+P (or ⌘+P) to print or save this page as a PDF for your wall.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="proceed-resources">
+    <p style="font-size:.82rem;color:var(--muted);font-weight:300;margin-bottom:1rem">Timetable generated! Scroll down to explore free resources matched to your subjects.</p>
+    <button class="btn-proceed-res" onclick="scrollToStep3()">Explore Free Resources ↓</button>
+  </div>
+
+  <div class="connector"><div class="conn-label">Step 2 → Step 3</div></div>
+
+  <!-- ── STEP 3 ── -->
+  <div class="section-divider" id="step3">
+    <div class="sd-left">
+      <span class="step-badge s3">STEP 03</span>
+      <h2 class="section-title">Online Resources</h2>
+    </div>
+    <p class="section-hint">Free, zero-rated, and offline-capable. All selected for South African matric learners.</p>
+  </div>
+
+  <div class="panel" id="step3-panel">
+    <div class="panel-inner">
+      <div id="step3-gate" class="gate">
+        <div class="gate-icon">🔒</div>
+        <h3>Generate Your Timetable First</h3>
+        <p>Complete Step 2 to unlock resources personalised to your subject selection and learning challenges.</p>
+      </div>
+      <div id="step3-content" style="display:none">
+        <div class="res-tabs" id="res-tabs">
+          <button class="res-tab active" onclick="filterRes('all',this)">All Resources</button>
+          <button class="res-tab" onclick="filterRes('practice',this)">📝 Past Papers</button>
+          <button class="res-tab" onclick="filterRes('video',this)">📹 Video Lessons</button>
+          <button class="res-tab" onclick="filterRes('adaptive',this)">🤖 Adaptive &amp; AI</button>
+          <button class="res-tab" onclick="filterRes('tools',this)">📅 Planning Tools</button>
+          <button class="res-tab" onclick="filterRes('wellbeing',this)">💚 Wellbeing</button>
+        </div>
+        <div class="res-grid" id="res-grid"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPLETION -->
+  <div id="completion-banner">
+    <div class="complete-wrap">
+      <div style="font-size:2.4rem;margin-bottom:.9rem">🎓</div>
+      <h2>Your Matric Master Plan is Complete</h2>
+      <p>You have your assessment profile, a personalised weekly timetable, and your full resource toolkit. Now it's time to execute — one block at a time.</p>
+      <div class="complete-actions">
+        <button class="btn-white" onclick="window.print()">🖨 Print Timetable</button>
+        <button class="btn-outline-white" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Start Over</button>
+      </div>
+    </div>
+  </div>
+
+<!-- ══ BLOCK MODAL ══ -->
+<div class="blk-modal-overlay" id="blk-modal" onclick="closeBlkModal(event)">
+  <div class="blk-modal">
+    <div class="bm-head">
+      <div>
+        <div class="bm-badge" id="bm-badge">Study</div>
+        <div class="bm-title" id="bm-title">Subject</div>
+      </div>
+      <button class="bm-close" onclick="closeBlkModalBtn()">✕</button>
+    </div>
+    <div class="bm-body">
+      <div>
+        <div class="bm-section-lbl">Your task this session</div>
+        <div class="bm-task" id="bm-task"></div>
+      </div>
+      <div>
+        <div class="bm-section-lbl">Resources for this session</div>
+        <div class="bm-resources" id="bm-resources"></div>
+      </div>
+      <div class="bm-meta" id="bm-meta"></div>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<!-- ══════════════════════════════════════════════
+     JAVASCRIPT — ASSESSMENT ENGINE
+══════════════════════════════════════════════ -->
+<script>
+// ─────────────────────────────────────────────
+// SHARED DATA
+// ─────────────────────────────────────────────
+const SUBJECTS=['Mathematics','Mathematical Literacy','Physical Sciences','Life Sciences','English HL','English FAL','Accounting','Business Studies','History','Geography','Afrikaans','isiZulu / isiXhosa / Other Lang','Information Technology','Economics','Other Subject'];
+function pctToAPS(p){p=Number(p);if(p>=80)return 7;if(p>=70)return 6;if(p>=60)return 5;if(p>=50)return 4;if(p>=40)return 3;if(p>=30)return 2;return 1}
+function rangeMid(r){return{'0-29':15,'30-39':35,'40-49':45,'50-59':55,'60-69':65,'70-79':75,'80-89':85,'90-100':95}[r]||0}
+const UNIVERSITIES=[
+  {id:'uct',abbr:'UCT',name:'Univ. of Cape Town',city:'Cape Town'},
+  {id:'wits',abbr:'Wits',name:'Univ. of the Witwatersrand',city:'Johannesburg'},
+  {id:'up',abbr:'UP',name:'Univ. of Pretoria',city:'Pretoria'},
+  {id:'su',abbr:'SU',name:'Stellenbosch University',city:'Stellenbosch'},
+  {id:'uj',abbr:'UJ',name:'Univ. of Johannesburg',city:'Johannesburg'},
+  {id:'ukzn',abbr:'UKZN',name:'Univ. of KwaZulu-Natal',city:'Durban'},
+  {id:'nwu',abbr:'NWU',name:'North-West University',city:'Potchefstroom'},
+  {id:'ufs',abbr:'UFS',name:'Univ. of the Free State',city:'Bloemfontein'},
+  {id:'ru',abbr:'RU',name:'Rhodes University',city:'Makhanda'},
+  {id:'uwc',abbr:'UWC',name:'Univ. of Western Cape',city:'Cape Town'},
+  {id:'unisa',abbr:'UNISA',name:'UNISA (Distance)',city:'Nationwide'},
+  {id:'nmu',abbr:'NMU',name:'Nelson Mandela Univ.',city:'Gqeberha'},
+  {id:'ul',abbr:'UL',name:'Univ. of Limpopo',city:'Polokwane'},
+  {id:'univen',abbr:'Univen',name:'Univ. of Venda',city:'Limpopo'},
+  {id:'wsu',abbr:'WSU',name:'Walter Sisulu Univ.',city:'Eastern Cape'},
+  {id:'cput',abbr:'CPUT',name:'Cape Peninsula UT',city:'Cape Town'},
+  {id:'tut',abbr:'TUT',name:'Tshwane Univ. of Tech.',city:'Pretoria'},
+  {id:'dut',abbr:'DUT',name:'Durban Univ. of Tech.',city:'Durban'},
+  {id:'vut',abbr:'VUT',name:'Vaal Univ. of Tech.',city:'Vanderbijlpark'},
+  {id:'mut',abbr:'MUT',name:'Mangosuthu UT',city:'Durban'}
+];
+const FIELDS=[
+  {id:'medicine',label:'Medicine / Health Sciences',icon:'🩺',apsReqs:{uct:480,wits:42,up:36,su:40,ukzn:36,uj:32,ufs:30,nmu:30},notes:'Pure Maths + Physical Sciences compulsory. NBT required at most universities.'},
+  {id:'engineering',label:'Engineering',icon:'⚙️',apsReqs:{uct:420,wits:38,up:35,su:38,uj:32,ukzn:30,nwu:28,ufs:30,tut:24,cput:24,dut:22,vut:22,nmu:28},notes:'Mathematics + Physical Sciences compulsory.'},
+  {id:'bcom',label:'BCom / Commerce',icon:'📊',apsReqs:{uct:380,wits:39,up:32,su:36,uj:28,ukzn:28,nwu:24,ufs:28,ru:34,uwc:28,unisa:20,nmu:26},notes:'Mathematics (not Maths Literacy) preferred.'},
+  {id:'law',label:'Law (LLB)',icon:'⚖️',apsReqs:{uct:430,wits:46,up:35,su:38,uj:30,ukzn:30,nwu:28,ufs:28,ru:34,uwc:28,unisa:20,ul:26,nmu:28},notes:'Strong English required (min 60%).'},
+  {id:'education',label:'Education / Teaching',icon:'🏫',apsReqs:{up:30,wits:30,uj:26,ukzn:26,nwu:24,ufs:26,ul:24,unisa:20,wsu:20,nmu:24,uwc:24},notes:'Choose subjects matching your teaching area.'},
+  {id:'it',label:'IT / Computer Science',icon:'💻',apsReqs:{uct:380,wits:35,up:30,su:36,uj:28,ukzn:28,nwu:24,ufs:26,tut:22,cput:22,unisa:20,nmu:24},notes:'Mathematics (not Maths Literacy) required.'},
+  {id:'humanities',label:'Humanities / Social Sciences',icon:'📚',apsReqs:{uct:360,wits:34,up:30,su:34,uj:26,ukzn:26,nwu:24,ufs:26,ru:30,uwc:24,unisa:20,ul:22,nmu:24},notes:'Strong English and History results are advantageous.'},
+  {id:'sciences',label:'BSc / Natural Sciences',icon:'🔬',apsReqs:{uct:400,wits:36,up:32,su:38,uj:28,ukzn:28,nwu:24,ufs:28,ru:32,uwc:26,nmu:26},notes:'Maths + Physical or Life Sciences typically required.'},
+  {id:'architecture',label:'Architecture / Built Env.',icon:'🏛️',apsReqs:{uct:420,wits:36,up:32,su:40,uj:28,ukzn:28,tut:24,cput:24,dut:22,nmu:28},notes:'Mathematics required. Portfolio often required.'},
+  {id:'nursing',label:'Nursing / Midwifery',icon:'💊',apsReqs:{up:28,uct:28,ukzn:27,uj:26,wits:28,nwu:24,ufs:26,ul:22,wsu:20,nmu:22,uwc:24},notes:'Life Sciences highly recommended.'},
+  {id:'arts',label:'Fine Arts / Design / Media',icon:'🎨',apsReqs:{uct:340,wits:30,up:28,su:32,uj:24,ukzn:24,nwu:22,tut:20,cput:20,uwc:20,nmu:22},notes:'Portfolio submissions required at most institutions.'},
+  {id:'agriculture',label:'Agriculture / Agri-Science',icon:'🌱',apsReqs:{up:28,su:30,ukzn:24,ufs:24,ul:22,nwu:22,unisa:20,nmu:22},notes:'Life Sciences and Geography recommended.'},
+  {id:'accounting',label:'Chartered Accounting (CTA)',icon:'🧾',apsReqs:{uct:400,wits:39,up:34,su:38,uj:30,ukzn:30,nwu:26,ufs:30,uwc:28},notes:'Mathematics compulsory. Accounting subject highly recommended.'},
+  {id:'psychology',label:'Psychology / Counselling',icon:'🧠',apsReqs:{uct:360,wits:34,up:30,su:36,uj:26,ukzn:26,nwu:24,ufs:26,ru:30,uwc:24,unisa:20},notes:'Strong English and Human Sciences recommended.'},
+  {id:'sport',label:'Sport Science / Biokinetics',icon:'🏃',apsReqs:{up:28,wits:28,uj:24,ukzn:24,uwc:22,nwu:22,ufs:24,nmu:22},notes:'Life Sciences and Physical Sciences recommended.'}
+];
+
+// ─────────────────────────────────────────────
+// ASSESSMENT STATE
+// ─────────────────────────────────────────────
+const aState={currentSection:0,answers:{},done:false};
+const subjectRatings={};
+const subjectMarks={};
+SUBJECTS.forEach(s=>{subjectRatings[s]=0;subjectMarks[s]='';});
+
+const sections=[
+  {id:'system',label:'Your Setup',questions:[
+    {id:'exam_system',type:'single',title:'Which exam system are you writing?',cols:'grid-3',options:[{val:'ieb',label:'IEB',sub:'Independent Examinations Board'},{val:'caps',label:'CAPS / NSC',sub:'National Senior Certificate'},{val:'unsure',label:'Not sure',sub:''}]},
+    {id:'grade',type:'single',title:'What grade are you in?',cols:'grid-3',options:[{val:'10',label:'Grade 10'},{val:'11',label:'Grade 11'},{val:'12',label:'Grade 12 (Matric)'}]},
+    {id:'goal',type:'single',title:'What is your main academic goal?',cols:'grid-2',options:[{val:'bachelor',label:"Bachelor's Pass",sub:'University (APS 23+)'},{val:'diploma',label:'Diploma Pass',sub:'College / diploma route'},{val:'pass',label:'Just pass matric',sub:'Complete Grade 12'},{val:'top',label:'Distinctions',sub:'80%+ average'}]}
+  ]},
+  {id:'career',label:'Career & University Goals',questions:[
+    {id:'field',type:'field_select',title:'What would you like to study?',sub:'Select the field that interests you most — this sets your APS target.'},
+    {id:'career_note',type:'text_input',title:'What specific career do you have in mind? (optional)',sub:'e.g. "Chartered Accountant", "Game developer", "Doctor"',placeholder:'Type your dream career here...'},
+    {id:'universities',type:'uni_select',title:'Which SA universities are you considering?',sub:'Select up to 4 — we compare your APS to their entry requirements.'}
+  ]},
+  {id:'subjects',label:'Your Marks & APS',questions:[
+    {id:'subject_ratings',type:'subject_table',title:'Enter your marks and confidence rating',sub:'Use your most recent test or exam marks. APS calculates live. Rate confidence 1–5.'}
+  ]},
+  {id:'learning',label:'Learning Style',questions:[
+    {id:'learning_style',type:'single',title:'How do you absorb new information best?',cols:'grid-2',options:[{val:'visual',label:'👁 Visual',sub:'Diagrams, mind maps, colour-coding'},{val:'reading',label:'📖 Reading/Writing',sub:'Notes, summaries, blurting'},{val:'listening',label:'🎧 Auditory',sub:'YouTube, talking it out'},{val:'doing',label:'✍️ Doing',sub:'Practice problems, past papers'}]},
+    {id:'peak_time',type:'single',title:'When is your brain sharpest?',cols:'grid-2',options:[{val:'early_morning',label:'🌅 Before 7am'},{val:'morning',label:'☀️ 7am–12pm'},{val:'afternoon',label:'🌤 12pm–5pm'},{val:'evening',label:'🌙 5pm–10pm'}]},
+    {id:'focus_duration',type:'slider',title:'How long can you genuinely focus before your mind wanders?',sub:'Be honest — what actually happens, not what you wish.',min:10,max:90,step:5,unit:' mins',def:30}
+  ]},
+  {id:'habits',label:'Study Habits',questions:[
+    {id:'weekly_hours',type:'slider',title:'How many hours per week do you currently study outside school?',min:0,max:40,step:1,unit:' hrs/week',def:10},
+    {id:'past_papers',type:'single',title:'How often do you practise past exam papers?',cols:'grid-2',options:[{val:'never',label:'Never',sub:"Haven't started"},{val:'occasionally',label:'Occasionally',sub:'A few times a term'},{val:'regularly',label:'Regularly',sub:'Every few weeks'},{val:'weekly',label:'Weekly',sub:'Core routine'}]},
+    {id:'sba_attitude',type:'single',title:'How do you approach SBA tasks?',sub:'Assignments, practicals, projects — worth 25% of your final mark.',cols:'grid-2',options:[{val:'strategic',label:'🎯 Strategically',sub:'Treat as exam prep AND marks'},{val:'complete',label:'✅ Just get it done'},{val:'last_minute',label:'⏰ Last minute'},{val:'miss',label:'⚠️ Sometimes miss them'}]},
+    {id:'challenges',type:'multi',title:'What are your biggest study challenges?',sub:'Select all that apply.',cols:'grid-2',options:[{val:'procrastination',label:'😴 Procrastination'},{val:'distraction',label:'📱 Phone/social media'},{val:'anxiety',label:'😰 Exam anxiety'},{val:'understanding',label:'🤔 Content gaps'},{val:'time',label:'⏱ Not enough time'},{val:'data',label:'📡 Data/load shedding'},{val:'space',label:'🏠 No quiet study space'},{val:'motivation',label:'🔋 Low motivation'}]}
+  ]},
+  {id:'wellbeing',label:'Wellbeing',questions:[
+    {id:'sleep',type:'single',title:'How many hours of sleep do you get on school nights?',sub:'The DBE recommends 8 hours for optimal memory consolidation.',cols:'grid-2',options:[{val:'under5',label:'Under 5 hrs',sub:'Severely sleep deprived'},{val:'5to6',label:'5–6 hrs',sub:'Below recommended'},{val:'6to7',label:'6–7 hrs',sub:'Slightly short'},{val:'7to8',label:'7–8 hrs',sub:'Good range'},{val:'over8',label:'8+ hrs',sub:'Optimal'}]},
+    {id:'stress',type:'slider',title:'How stressed do you feel about matric right now?',sub:'1 = calm and confident, 10 = overwhelming anxiety',min:1,max:10,step:1,unit:'/10',def:5}
+  ]}
+];
+
+function getA(id){return aState.answers[id]}
+function setA(id,val){aState.answers[id]=val;renderSection()}
+function toggleMulti(id,val){if(!aState.answers[id])aState.answers[id]=[];const a=aState.answers[id],i=a.indexOf(val);if(i===-1)a.push(val);else a.splice(i,1);renderSection()}
+function toggleField(val){aState.answers['field']=aState.answers['field']===val?null:val;renderSection()}
+function toggleUni(id){if(!aState.answers['universities'])aState.answers['universities']=[];const a=aState.answers['universities'],i=a.indexOf(id);if(i===-1){if(a.length<4)a.push(id)}else a.splice(i,1);renderSection()}
+function findQ(id){for(const s of sections)for(const q of s.questions)if(q.id===id)return q;return null}
+function computeAPS(){
+  const rows=SUBJECTS.filter(s=>subjectMarks[s]).map(s=>({name:s,pct:rangeMid(subjectMarks[s]),aps:pctToAPS(rangeMid(subjectMarks[s]))})).sort((a,b)=>b.aps-a.aps);
+  const best6=rows.slice(0,6);
+  return{total:best6.reduce((s,r)=>s+r.aps,0),best6,allRows:rows};
+}
+function getField(){return FIELDS.find(f=>f.id===aState.answers['field'])||null}
+function scoreClass(t){return t>=30?'score-high':t>=22?'score-mid':'score-low'}
+function barColor(t){return t>=30?'linear-gradient(90deg,#4ade80,#38bdf8)':t>=22?'linear-gradient(90deg,#f6c90e,#fb923c)':'linear-gradient(90deg,#f87171,#fb923c)'}
+function pClass(p){if(p===7)return'p7';if(p===6)return'p6';if(p===5)return'p5';if(p===4)return'p4';if(p===3)return'p3';return'low'}
+
+function renderSection(){
+  const sec=sections[aState.currentSection];
+  const tot=sections.length;
+  document.getElementById('progress-count').textContent=`Section ${aState.currentSection+1} of ${tot}`;
+  document.getElementById('progress-fill').style.width=`${((aState.currentSection+1)/tot)*100}%`;
+  let html='';
+  if(aState.currentSection>=2){
+    const{total:aps,best6}=computeAPS();
+    const field=getField();
+    const pct=Math.min(100,Math.round((aps/42)*100));
+    const passLabel=aps>=30?"Bachelor's range ✓":aps>=23?"Minimum Bachelor's":aps>=19?'Diploma range':'Below degree entry';
+    html+=`<div class="aps-panel"><h3>◈ Your Live APS Score</h3>
+      <div class="aps-display">
+        <div class="aps-score ${scoreClass(aps)}">${aps}</div>
+        <div class="aps-denom">/ 42</div>
+        <div class="aps-label">${passLabel}<br><span style="font-size:.7rem;color:var(--border)">Best 6 subjects</span></div>
+      </div>
+      <div class="aps-bar-wrap"><div class="aps-bar-track"><div class="aps-bar-fill" style="width:${pct}%;background:${barColor(aps)}"></div></div></div>`;
+    if(best6.length>0){
+      html+=`<div class="aps-breakdown">`;
+      best6.forEach(r=>{html+=`<div class="aps-row"><span class="aps-subj">${r.name}</span><span class="aps-pts ${pClass(r.aps)}">${r.aps} pts (${subjectMarks[r.name]}%)</span></div>`});
+      html+=`</div>`;
+    }
+    const unis=aState.answers['universities']||[];
+    if(field&&unis.length>0){
+      html+=`<div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border)"><div style="font-family:var(--font-head);font-size:.63rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent2);margin-bottom:.65rem">APS vs Your Target Universities — ${field.label}</div>`;
+      unis.forEach(uid=>{
+        const uni=UNIVERSITIES.find(u=>u.id===uid);if(!uni)return;
+        const req=field.apsReqs[uid];
+        if(!req){html+=`<div class="target-row close"><span class="target-uni">${uni.abbr}</span><span class="target-req">Requirements vary — check university website</span><span class="target-badge close">CHECK</span></div>`;return}
+        const isUCT=uid==='uct';
+        const cAPS=isUCT?best6.reduce((s,r)=>s+r.pct,0):aps;
+        const diff=cAPS-req;
+        const cls=diff>=0?'met':diff>=-4?'close':'gap';
+        const badge=diff>=0?'MET ✓':diff>=-4?`${Math.abs(diff)} pts short`:`${Math.abs(diff)} pts below`;
+        const dispReq=isUCT?`${req}/600`:`${req}/42`;
+        html+=`<div class="target-row ${cls}"><div style="flex:1"><div class="target-uni">${uni.abbr} <span style="font-weight:300;font-size:.7rem;color:var(--muted)">${uni.city}</span></div><div class="target-req">Min for ${field.label}: <strong>${dispReq}</strong></div></div><span class="target-badge ${cls}">${badge}</span></div>`;
+      });
+      html+=`</div>`;
+    }else if(field){html+=`<div style="margin-top:.7rem;font-size:.78rem;color:var(--muted);font-weight:300">Select universities in Section 2 to compare requirements.</div>`}
+    html+=`</div>`;
+  }
+  sec.questions.forEach((q,qi)=>{
+    html+=`<div class="card" style="animation-delay:${qi*.07}s"><div class="section-label">${sec.label}</div><div class="q-title">${q.title}</div>`;
+    if(q.sub)html+=`<div class="q-sub">${q.sub}</div>`;
+    if(q.type==='single'){
+      html+=`<div class="options ${q.cols||''}">`;
+      q.options.forEach(o=>{const sel=getA(q.id)===o.val;html+=`<button class="opt${sel?' selected':''}" onclick="setA('${q.id}','${o.val}')"><div class="opt-dot"></div><div class="opt-text"><div class="opt-label">${o.label}</div>${o.sub?`<div class="opt-sub">${o.sub}</div>`:''}</div></button>`});
+      html+=`</div>`;
+    }else if(q.type==='multi'){
+      html+=`<div class="options ${q.cols||''}">`;
+      q.options.forEach(o=>{const sel=(getA(q.id)||[]).includes(o.val);html+=`<button class="check-opt${sel?' selected':''}" onclick="toggleMulti('${q.id}','${o.val}')"><div class="check-box">${sel?'✓':''}</div><div class="opt-label">${o.label}</div></button>`});
+      html+=`</div>`;
+    }else if(q.type==='slider'){
+      const val=getA(q.id)??q.def;if(aState.answers[q.id]==null)aState.answers[q.id]=q.def;
+      html+=`<div class="slider-wrap"><div class="slider-labels"><span>${q.min}${q.unit}</span><span>${q.max}${q.unit}</span></div><input type="range" min="${q.min}" max="${q.max}" step="${q.step}" value="${val}" oninput="updSlider('${q.id}',this.value)"><div class="slider-val" id="sv_${q.id}">${val}${q.unit}</div></div>`;
+    }else if(q.type==='field_select'){
+      html+=`<div class="field-select-grid">`;
+      FIELDS.forEach(f=>{const sel=getA('field')===f.id;html+=`<button class="field-btn${sel?' selected':''}" onclick="toggleField('${f.id}')"><div class="field-icon">${f.icon}</div><div class="field-label">${f.label}</div></button>`});
+      html+=`</div>`;
+      const fd=getField();if(fd)html+=`<div style="font-size:.76rem;color:var(--muted);background:var(--bg);border-radius:8px;padding:.55rem .8rem;font-weight:300">ℹ️ <strong style="color:var(--text)">${fd.label}:</strong> ${fd.notes}</div>`;
+    }else if(q.type==='uni_select'){
+      const sel=getA('universities')||[];
+      html+=`<div class="uni-grid">`;
+      UNIVERSITIES.forEach(u=>{const s=sel.includes(u.id);html+=`<button class="uni-btn${s?' selected':''}" onclick="toggleUni('${u.id}')"><span class="uni-abbr">${u.abbr}</span><div><div class="opt-label" style="font-size:.78rem">${u.name}</div><div class="uni-name">${u.city}</div></div></button>`});
+      html+=`</div>`;
+      if(sel.length>=4)html+=`<div style="font-size:.73rem;color:var(--muted);margin-top:.45rem;text-align:center">Maximum 4 universities selected</div>`;
+    }else if(q.type==='text_input'){
+      const val=(getA(q.id)||'').replace(/"/g,'&quot;');
+      html+=`<input class="text-input" type="text" placeholder="${q.placeholder||''}" value="${val}" oninput="aState.answers['${q.id}']=this.value">`;
+    }else if(q.type==='subject_table'){
+      html+=`<div class="subject-grid">`;
+      SUBJECTS.forEach(s=>{
+        const r=subjectRatings[s];
+        html+=`<div class="subj-row"><div class="subj-name">${s}</div><div class="rating-dots">`;
+        for(let i=1;i<=5;i++)html+=`<div class="dot${i<=r?` filled lvl-${r}`:''}" onclick="setSubjR('${s}',${i})"></div>`;
+        html+=`</div><select onchange="setSubjM('${s}',this.value)"><option value="">Mark%</option>`;
+        ['0-29','30-39','40-49','50-59','60-69','70-79','80-89','90-100'].forEach(rng=>{html+=`<option value="${rng}"${subjectMarks[s]===rng?' selected':''}>${rng}%</option>`});
+        html+=`</select></div>`;
+      });
+      html+=`</div>`;
+    }
+    html+=`</div>`;
+  });
+  html+=`<div class="nav-btns">`;
+  if(aState.currentSection>0)html+=`<button class="btn btn-back" onclick="prevSec()">← Back</button>`;else html+=`<div></div>`;
+  if(aState.currentSection<sections.length-1)html+=`<button class="btn btn-next" onclick="nextSec()">Continue →</button>`;
+  else html+=`<button class="btn btn-next btn-finish" onclick="showResults()">See My Study Profile ✦</button>`;
+  html+=`</div>`;
+  document.getElementById('sections-container').innerHTML=html;
+}
+function updSlider(id,val){aState.answers[id]=Number(val);const el=document.getElementById('sv_'+id);if(el){const q=findQ(id);el.textContent=val+(q?q.unit:'')}}
+function setSubjR(s,r){subjectRatings[s]=r;renderSection()}
+function setSubjM(s,m){subjectMarks[s]=m;renderSection()}
+function nextSec(){aState.currentSection++;renderSection();document.getElementById('assessment-wrap').scrollIntoView({behavior:'smooth',block:'start'})}
+function prevSec(){aState.currentSection--;renderSection();document.getElementById('assessment-wrap').scrollIntoView({behavior:'smooth',block:'start'})}
+
+function showResults(){
+  aState.done=true;
+  const a=aState.answers;
+  const{total:aps,best6}=computeAPS();
+  const field=getField();
+  const unis=(a.universities||[]).map(id=>UNIVERSITIES.find(u=>u.id===id)).filter(Boolean);
+  const styleMap={visual:'Visual Learner',reading:'Reading/Writing Learner',listening:'Auditory Learner',doing:'Kinesthetic Learner'};
+  const styleTips={
+    visual:['Colour-code your notes and build topic mind maps entirely from memory','Draw labelled diagrams from scratch — Life Sciences and Geography exams require them','Create visual timelines for History causes, events and consequences across each topic'],
+    reading:['After every study session, close your notes and blurt everything you remember onto blank paper','Summarise each topic in your own words — never copy your textbook verbatim','Read your revision summaries aloud before each test to reinforce retrieval'],
+    listening:['Use Kevinmathscience and Mindset Learn videos as your first introduction to new topics','Record yourself explaining a concept and listen back on the commute','Join a study group where you explain and quiz each other out loud'],
+    doing:['Past papers are your single most effective tool — do one per subject per week under timed conditions','Attempt exam questions before reading theory to find real gaps','Use Siyavula for unlimited adaptive Maths and Physical Sciences practice (free, zero-rated)']
+  };
+  const peakMap={early_morning:'before 7am',morning:'7am–12pm',afternoon:'12pm–5pm',evening:'5pm–10pm'};
+  const focusMin=a.focus_duration||30;
+  const pomodoro=focusMin<=25?'25/5':focusMin<=45?'45/10':'50/10';
+  const curHrs=a.weekly_hours||10;
+  const tgtHrs={top:35,bachelor:28,diploma:20,pass:15}[a.goal]||20;
+  const goalLabel={bachelor:"Bachelor's Pass",diploma:'Diploma Pass',pass:'Pass Matric',top:'Top Marks / Distinctions'}[a.goal]||'your goal';
+  const system=a.exam_system||'caps';
+  const sysTips=system==='ieb'
+    ?['Spend 60%+ of revision time on application tasks, not memorisation','Practise source analysis and timed extended essay writing every week','Focus on unfamiliar contexts — the IEB rewards transferable thinking, not regurgitation']
+    :['Ensure complete CAPS topic coverage — use the official DBE topic checklists per subject','Use DBE Mind the Gap guides (free at education.gov.za) for every subject','Past papers from 2016 onward are free and zero-rated on the DBE website'];
+  const challenges=a.challenges||[];
+  const sleepWarning=['under5','5to6','6to7'].includes(a.sleep);
+  const highStress=(a.stress||5)>=7;
+  const rated=SUBJECTS.map(s=>({name:s,r:subjectRatings[s],m:subjectMarks[s]})).filter(s=>s.r>0||s.m).sort((a,b)=>(a.r||3)-(b.r||3));
+  const highPri=rated.slice(0,2);
+  const lowPri=rated.slice(-2).filter(s=>!highPri.find(h=>h.name===s.name));
+  let gapHtml='';
+  if(field&&unis.length>0){
+    gapHtml=`<div class="result-card"><h3 class="blue">◆ APS Target Analysis — ${field.label}${a.career_note?` (${a.career_note})`:''}</h3>`;
+    gapHtml+=`<div style="display:flex;align-items:flex-end;gap:.5rem;margin-bottom:1.1rem"><div class="aps-score ${scoreClass(aps)}" style="font-size:2.2rem">${aps}</div><div class="aps-denom">/42</div><div style="padding-bottom:3px;font-size:.8rem;color:var(--muted);margin-left:.5rem">Your current APS<br><span style="font-size:.7rem">Best 6 subjects, 7-pt scale</span></div></div>`;
+    let anyGap=false,maxGap=0;
+    unis.forEach(uni=>{
+      const req=field.apsReqs[uni.id];
+      if(!req){gapHtml+=`<div class="target-row close"><span class="target-uni">${uni.name}</span><span class="target-req">Requirements vary by programme</span><span class="target-badge close">CHECK SITE</span></div>`;return}
+      const isUCT=uni.id==='uct';
+      const cAPS=isUCT?best6.reduce((s,r)=>s+r.pct,0):aps;
+      const diff=cAPS-req;
+      const cls=diff>=0?'met':diff>=-4?'close':'gap';
+      const badge=diff>=0?'MET ✓':diff>=-4?`${Math.abs(diff)} pts short`:`${Math.abs(diff)} pts below`;
+      const dispReq=isUCT?`${req}/600 (UCT scale)`:`${req}/42`;
+      if(diff<0){anyGap=true;if(diff<maxGap)maxGap=diff}
+      gapHtml+=`<div class="target-row ${cls}"><div style="flex:1"><div class="target-uni">${uni.name} <span style="font-weight:300;font-size:.7rem;color:var(--muted)">${uni.city}</span></div><div class="target-req" style="margin-top:2px">Min APS for ${field.label}: <strong>${dispReq}</strong></div></div><span class="target-badge ${cls}">${badge}</span></div>`;
+    });
+    if(anyGap){const ptsNeeded=Math.abs(maxGap);gapHtml+=`<div class="gap-callout"><strong>How to close the gap:</strong> You need approximately <strong>${ptsNeeded} more APS point${ptsNeeded!==1?'s':''}</strong> for your most competitive target. Moving from the 50–59% band to 60–69% in one subject gains 1 APS point. Focus extra hours on your weakest best-6 subject first.</div>`}
+    gapHtml+=`<div style="margin-top:.75rem;font-size:.7rem;color:var(--muted);font-weight:300">⚠ Requirements are indicative for 2025. Verify directly with each university — requirements change annually.</div></div>`;
+  }
+  document.getElementById('sections-container').innerHTML=`
+    <div class="results-header"><div class="badge">Your Results</div><h2>Your Study Profile</h2><p>Personalised for your learning style, subjects, and SA university goals.</p></div>
+    ${gapHtml}
+    <div class="result-card"><h3 class="yellow">✦ Learning Profile</h3>
+      <div class="profile-pill">${styleMap[a.learning_style]||'Mixed Learner'}</div>
+      <p class="insight">Your peak focus window is <strong>${peakMap[a.peak_time]||'flexible'}</strong>. Your natural focus span is <strong>${focusMin} minutes</strong> — use the <strong>${pomodoro} Pomodoro format</strong> to work with your brain, not against it.</p>
+      <br><ul class="tip-list">${(styleTips[a.learning_style]||styleTips.doing).map(t=>`<li class="tip-item">${t}</li>`).join('')}</ul>
+    </div>
+    <div class="result-card"><h3 class="blue">◈ Subject Priorities</h3>
+      <ul class="priority-list">
+        ${highPri.length?highPri.map(s=>`<li class="priority-item high"><span class="priority-badge high">HIGH</span><span>${s.name} — invest 6–8 hrs/week here</span></li>`).join(''):''}
+        ${lowPri.length?lowPri.map(s=>`<li class="priority-item low"><span class="priority-badge low">LOW</span><span>${s.name} — maintain with 2–3 hrs/week</span></li>`).join(''):''}
+        <li class="priority-item med"><span class="priority-badge med">RULE</span><span>Never neglect a subject — 25% SBA is locked in before your final exam</span></li>
+      </ul>
+    </div>
+    <div class="result-card"><h3 class="green">◉ Time & Habits</h3>
+      <p class="insight">Currently studying <strong>${curHrs} hrs/week</strong>. For <strong>${goalLabel}</strong>, target <strong>${tgtHrs} hrs/week</strong>.${curHrs<tgtHrs?` That's <strong>${tgtHrs-curHrs} more hours</strong> — replace one hour of screen time with a focused study block to start.`:' You\'re hitting the target — focus on quality. Active recall beats passive re-reading every time.'}</p>
+      <br><ul class="tip-list">
+        ${a.past_papers==='never'?'<li class="tip-item">Start doing past papers immediately — the single most predictive matric prep tool (education.gov.za, free and zero-rated)</li>':''}
+        ${['last_minute','miss'].includes(a.sba_attitude)?'<li class="tip-item">Map every SBA deadline onto a calendar right now — missing submissions can result in "Not Resulted" status</li>':''}
+        ${challenges.includes('data')?'<li class="tip-item">Download Siyavula, Matric Live, and DBE content offline during load shedding windows</li>':''}
+        ${challenges.includes('understanding')?'<li class="tip-item">For content gaps: use the Feynman technique — explain the topic out loud as if teaching someone from scratch</li>':''}
+        <li class="tip-item">Block study sessions in your calendar like fixed appointments — treat them as non-negotiable</li>
+      </ul>
+    </div>
+    <div class="result-card"><h3 class="${system==='ieb'?'blue':'yellow'}">${system==='ieb'?'◆ IEB Strategy':'◆ CAPS/NSC Strategy'}</h3>
+      <ul class="tip-list">${sysTips.map(t=>`<li class="tip-item">${t}</li>`).join('')}</ul>
+    </div>
+    ${sleepWarning||highStress?`<div class="result-card"><h3 class="red">⚠ Wellbeing</h3><ul class="tip-list">
+      ${sleepWarning?'<li class="tip-item"><strong style="color:var(--text)">Sleep:</strong> Below the recommended 8 hours. Memory consolidation happens during sleep — better sleep often improves marks more than extra study time</li>':''}
+      ${highStress?'<li class="tip-item"><strong style="color:var(--text)">Stress:</strong> SADAG free helpline: <strong>0800 456 789</strong>. Reaching out is a sign of strength, not weakness</li>':''}
+    </ul></div>`:''}
+    <button class="restart-btn" onclick="restartAssessment()">↺ Retake Assessment</button>`;
+  document.getElementById('progress-fill').style.width='100%';
+  document.getElementById('progress-count').textContent='Complete ✓';
+
+  // Unlock step 2
+  afterAssessmentComplete();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function restartAssessment(){
+  aState.currentSection=0;aState.answers={};aState.done=false;
+  SUBJECTS.forEach(s=>{subjectRatings[s]=0;subjectMarks[s]='';});
+  renderSection();
+  document.getElementById('proceed-btn-wrap').style.display='none';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ─────────────────────────────────────────────
+// HANDOFF: Assessment → Timetable
+// ─────────────────────────────────────────────
+function afterAssessmentComplete(){
+  // show proceed button
+  document.getElementById('proceed-btn-wrap').style.display='block';
+  // unlock step 2
+  document.getElementById('step2-gate').style.display='none';
+  document.getElementById('step2-content').style.display='block';
+  // set controls from assessment
+  const a=aState.answers;
+  const sysEl=document.getElementById('tt-system');
+  if(sysEl&&(a.exam_system==='ieb'||a.exam_system==='caps'))sysEl.value=a.exam_system;
+  const hrsEl=document.getElementById('tt-target-hrs');
+  if(hrsEl){const hmap={top:'35',bachelor:'28',diploma:'22',pass:'15'};if(hmap[a.goal])hrsEl.value=hmap[a.goal]}
+  const peakEl=document.getElementById('tt-peak');
+  if(peakEl){const pmap={early_morning:'morning',morning:'morning',afternoon:'afternoon',evening:'evening'};if(pmap[a.peak_time])peakEl.value=pmap[a.peak_time]}
+  const focusEl=document.getElementById('tt-focus');
+  if(focusEl){const f=a.focus_duration||30;focusEl.value=f<=30?'25':f<=55?'45':'60'}
+  // pre-fill subject table from assessment marks
+  populateSubjectTable();
+  // progress indicator
+  setProgress(2);
+}
+
+function scrollToStep2(){document.getElementById('step2').scrollIntoView({behavior:'smooth',block:'start'})}
+function scrollToStep3(){document.getElementById('step3').scrollIntoView({behavior:'smooth',block:'start'})}
+
+// ─────────────────────────────────────────────
+// STEP 2 — TIMETABLE
+// ─────────────────────────────────────────────
+const SUBJ_COLORS=['sc-A','sc-B','sc-C','sc-D','sc-E','sc-F','sc-G','sc-H','sc-I'];
+// Subjects with their default target %
+let ttSubjects=[];
+
+function populateSubjectTable(){
+  // Build from assessment marks, filtered to those actually entered
+  const entered=SUBJECTS.filter(s=>subjectMarks[s]&&subjectMarks[s]!=='');
+  ttSubjects=entered.map((s,i)=>({
+    name:s,
+    current:rangeMid(subjectMarks[s]),
+    target:Math.min(100,rangeMid(subjectMarks[s])+15),
+    confidence:subjectRatings[s]||3,
+    priority:'med',
+    color:SUBJ_COLORS[i%SUBJ_COLORS.length]
+  }));
+  // If none entered, use sample set
+  if(ttSubjects.length===0){
+    ttSubjects=[
+      {name:'Mathematics',current:52,target:70,confidence:2,priority:'high',color:'sc-A'},
+      {name:'Physical Sciences',current:48,target:65,confidence:2,priority:'high',color:'sc-B'},
+      {name:'English HL',current:65,target:75,confidence:3,priority:'med',color:'sc-C'},
+      {name:'Life Sciences',current:58,target:70,confidence:3,priority:'med',color:'sc-D'},
+      {name:'Accounting',current:55,target:68,confidence:3,priority:'high',color:'sc-E'},
+      {name:'Business Studies',current:72,target:78,priority:'low',confidence:4,color:'sc-F'},
+      {name:'Life Orientation',current:78,target:82,priority:'low',confidence:5,color:'sc-G'},
+    ];
+  }
+  // Auto-set priority based on gap + confidence
+  ttSubjects.forEach(s=>{
+    const gap=s.target-s.current;
+    const conf=s.confidence||3;
+    if(gap>=18||conf<=2)s.priority='high';
+    else if(gap>=8||conf<=3)s.priority='med';
+    else s.priority='low';
+  });
+  renderSubjectTable();
+}
+
+function renderSubjectTable(){
+  const tbody=document.getElementById('subj-tbody');
+  if(!tbody)return;
+  // compute hours
+  const totalHrs=+document.getElementById('tt-target-hrs').value||28;
+  const hrs=computeHourAllocation(totalHrs);
+  tbody.innerHTML=ttSubjects.map((s,i)=>{
+    const gap=s.target-s.current;
+    const gapClass=gap>=15?'high':gap>=7?'med':'low';
+    const gapLabel=gap>0?`+${gap}%`:gap===0?'On target':`${gap}%`;
+    const h=hrs[s.name]||0;
+    return`<tr>
+      <td>${s.name}</td>
+      <td><input type="number" min="0" max="100" value="${s.current}"
+        onchange="ttSubjects[${i}].current=Math.min(100,Math.max(0,+this.value));recomputeTable()"
+        style="width:62px"></td>
+      <td><input type="number" min="0" max="100" value="${s.target}"
+        onchange="ttSubjects[${i}].target=Math.min(100,Math.max(0,+this.value));recomputeTable()"
+        style="width:62px"></td>
+      <td><span class="pct-gap ${gapClass}">${gapLabel}</span></td>
+      <td><select class="priority-sel" onchange="ttSubjects[${i}].priority=this.value;recomputeTable()">
+        <option value="high"${s.priority==='high'?' selected':''}>🔴 High</option>
+        <option value="med"${s.priority==='med'?' selected':''}>🟡 Med</option>
+        <option value="low"${s.priority==='low'?' selected':''}>🟢 Low</option>
+      </select></td>
+      <td class="hours-badge">${h}h</td>
+    </tr>`;
+  }).join('');
+}
+
+function recomputeTable(){renderSubjectTable()}
+
+function computeHourAllocation(totalHrs){
+  const ppDays=+document.getElementById('tt-pp-days').value||2;
+  const ppHrs=ppDays*1.5;
+  const srHrs=2; // spaced repetition review daily-ish
+  const freeHrs=Math.max(0,totalHrs-ppHrs-srHrs);
+  // Weight by priority × gap
+  const priorityW={high:3,med:2,low:1};
+  const weights=ttSubjects.map(s=>{
+    const gap=Math.max(1,s.target-s.current);
+    return gap*(priorityW[s.priority]||2);
+  });
+  const totalW=weights.reduce((a,b)=>a+b,0)||1;
+  const alloc={};
+  ttSubjects.forEach((s,i)=>{
+    alloc[s.name]=Math.round((weights[i]/totalW)*freeHrs*2)/2;
+  });
+  return alloc;
+}
+
+function generateTimetable(){
+  const totalHrs=+document.getElementById('tt-target-hrs').value||28;
+  const peakPref=document.getElementById('tt-peak').value;
+  const term=+document.getElementById('tt-term').value;
+  const system=document.getElementById('tt-system').value;
+  const ppDays=+document.getElementById('tt-pp-days').value||2;
+  const focusMin=+document.getElementById('tt-focus').value||45;
+
+  // ── APS callout ──
+  const{total:currentAPS,best6}=computeAPS();
+  const targetMarks=ttSubjects.map(s=>({name:s.name,pct:s.target,aps:pctToAPS(s.target)})).sort((a,b)=>b.aps-a.aps);
+  const targetAPS=targetMarks.slice(0,6).reduce((a,r)=>a+r.aps,0);
+  const apsGap=targetAPS-currentAPS;
+  const termWeeksMap={1:11,2:10,3:10,4:6};
+  const termWeeks=termWeeksMap[term]||10;
+  const termLabel={1:'Term 1 — Foundation',2:'Term 2 — Consolidation',3:'Term 3 — Critical / Prelims',4:'Term 4 — Final Exams'}[term];
+  document.getElementById('tt-term-label').textContent=termLabel;
+
+  const callout=document.getElementById('aps-callout');
+  callout.innerHTML=`<strong>📊 APS Study Needs Analysis</strong><br>
+    Based on your marks and targets, here is the effort required to close your gap.
+    <div class="aps-nums">
+      <div class="aps-num-block"><div class="aps-num-val current">${currentAPS}</div><div class="aps-num-lbl">Current APS /42</div></div>
+      <div class="aps-arrow">→</div>
+      <div class="aps-num-block"><div class="aps-num-val target">${targetAPS}</div><div class="aps-num-lbl">Target APS /42</div></div>
+      <div class="aps-num-block" style="margin-left:1rem">
+        <div class="aps-num-val" style="color:var(--lt-ink)">${totalHrs}</div><div class="aps-num-lbl">Hrs/week planned</div>
+      </div>
+      <div class="aps-num-block">
+        <div class="aps-num-val" style="color:var(--lt-ink)">${totalHrs*termWeeks}</div><div class="aps-num-lbl">Total hrs this term</div>
+      </div>
+    </div>
+    <div style="margin-top:.8rem;font-size:.82rem">
+      ${apsGap>0?`You need <strong>${apsGap} more APS point${apsGap!==1?'s':''}</strong> to hit your target. Every percentage band you move up in a subject adds 1 APS point. 
+      With <strong>${totalHrs} hrs/week × ${termWeeks} weeks = ${totalHrs*termWeeks} study hours</strong> this term, this gap is 
+      <strong>${apsGap<=2?'very achievable':apsGap<=5?'achievable with consistent effort':'ambitious — prioritise your weakest subjects ruthlessly'}</strong>.`
+      :`<strong>Your current APS already meets your target!</strong> Focus on maintaining consistency, maximising SBA marks, and doing full past papers under timed conditions.`}
+      ${system==='ieb'?' IEB learners: allocate at least 60% of study time to application and source analysis tasks, not content memorisation.':' CAPS learners: use DBE topic checklists to track coverage — complete content before drilling past papers.'}
+      <br><span style="font-size:.75rem;color:var(--lt-muted)">Note: A learner with 80% SBA needs only 53% on the final exam to achieve an overall 60% pass — strong SBA marks are your most reliable safety net.</span>
+    </div>`;
+
+  // ── Hour allocation bars ──
+  const hrs=computeHourAllocation(totalHrs);
+  const maxHrs=Math.max(...Object.values(hrs));
+  const ppHrs=(+document.getElementById('tt-pp-days').value||2)*1.5;
+  const srHrs=2;
+  const allocEl=document.getElementById('alloc-rows');
+  const sortedSubjs=[...ttSubjects].sort((a,b)=>(hrs[b.name]||0)-(hrs[a.name]||0));
+  let allocHtml=sortedSubjs.map(s=>{
+    const h=hrs[s.name]||0;
+    const gap=s.target-s.current;
+    const gClass=gap>=15?'high':gap>=7?'med':'low';
+    const gLabel=gap>0?`+${gap}% gap`:'on target';
+    const barColor=gap>=15?'var(--lt-rust)':gap>=7?'var(--lt-gold)':'var(--lt-teal)';
+    const pct=maxHrs>0?Math.round((h/maxHrs)*100):0;
+    return`<div class="alloc-row">
+      <div class="alloc-name">${s.name}</div>
+      <div class="alloc-bar-wrap"><div class="alloc-bar" style="width:${pct}%;background:${barColor}"></div></div>
+      <div class="alloc-hrs">${h}h</div>
+      <div class="alloc-gap-label pct-gap ${gClass}" style="font-size:.62rem;padding:.15rem .45rem">${gLabel}</div>
+    </div>`;
+  }).join('');
+  allocHtml+=`<div class="alloc-row"><div class="alloc-name" style="color:var(--lt-muted)">Past Papers (${ppDays}×/week)</div>
+    <div class="alloc-bar-wrap"><div class="alloc-bar" style="width:${Math.round((ppHrs/maxHrs)*100)}%;background:#1d6b60;opacity:.5"></div></div>
+    <div class="alloc-hrs" style="color:var(--lt-muted)">${ppHrs}h</div><div></div></div>`;
+  allocHtml+=`<div class="alloc-row"><div class="alloc-name" style="color:var(--lt-muted)">Spaced Repetition Reviews</div>
+    <div class="alloc-bar-wrap"><div class="alloc-bar" style="width:${Math.round((srHrs/maxHrs)*100)}%;background:#c9a030;opacity:.5"></div></div>
+    <div class="alloc-hrs" style="color:var(--lt-muted)">${srHrs}h</div><div></div></div>`;
+  allocEl.innerHTML=allocHtml;
+
+  // ── Build grid ──
+  buildGrid(hrs,ppDays,peakPref,term,totalHrs,focusMin,system);
+
+  // ── Stats ──
+  const statsEl=document.getElementById('tt-stats');
+  statsEl.innerHTML=`
+    <div class="stat-block"><div class="stat-val">${totalHrs}</div><div class="stat-lbl">Hours/Week</div><div class="stat-sub">Across all subjects</div></div>
+    <div class="stat-block"><div class="stat-val">${totalHrs*termWeeks}</div><div class="stat-lbl">Term Total</div><div class="stat-sub">${termWeeks} weeks remaining</div></div>
+    <div class="stat-block"><div class="stat-val">${focusMin}</div><div class="stat-lbl">Min Focus Blocks</div><div class="stat-sub">With 10-min breaks</div></div>
+    <div class="stat-block"><div class="stat-val">${ppDays}×</div><div class="stat-lbl">Past Paper Days</div><div class="stat-sub">Per week</div></div>
+    <div class="stat-block"><div class="stat-val">${ttSubjects.length}</div><div class="stat-lbl">Subjects</div><div class="stat-sub">Covered weekly</div></div>
+  `;
+
+  document.getElementById('tt-output').style.display='block';
+  document.getElementById('tt-output').scrollIntoView({behavior:'smooth',block:'start'});
+
+  // unlock step 3
+  setTimeout(()=>{
+    document.getElementById('proceed-resources').style.display='block';
+    document.getElementById('step3-gate').style.display='none';
+    document.getElementById('step3-content').style.display='block';
+    renderResources('all');
+    document.getElementById('completion-banner').style.display='block';
+    setProgress(3);
+  },800);
+}
+
+// ─────────────────────────────────────────────
+// FULL-DAY TIMETABLE ENGINE (v3)
+// ─────────────────────────────────────────────
+const DAY_START_H=5,DAY_END_H=23;
+const TT_DAYS=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+const TT_SHORT=['MON','TUE','WED','THU','FRI','SAT','SUN'];
+function ttTotalSlots(){return(DAY_END_H-DAY_START_H+1)*2}
+function ttSlotLabel(idx){const t=DAY_START_H*60+idx*30;const h=Math.floor(t/60),m=t%60;return{h,m,hh:String(h).padStart(2,'0'),mm:String(m).padStart(2,'0')};}
+
+function getTTTask(subjName,sessIdx,di,profile,conf,mark){
+  const style=profile.learning_style||'reading';
+  const system=profile.exam_system||'caps';
+  const challenges=profile.challenges||[];
+  const ppHabit=profile.past_papers||'never';
+  const phase=conf<=2?'foundation':conf<=3?'consolidation':'exam_prep';
+  const tasks={
+    'Mathematics':{foundation:{visual:['Draw a mind map of all function types — sketch each shape','Colour-code each algebra step — one colour per operation','Sketch parabola, hyperbola, exponential from memory, label intercepts'],reading:['Blurt every formula onto blank paper, then check','Write all Grade 12 theorems in your own words','Summarise all calculus rules with one worked example each'],listening:['Watch Kevinmathscience on your weakest topic — pause and repeat key steps','Explain differentiation from first principles out loud'],doing:['10 mixed algebra questions — no calculator, show all working','5 Euclidean geometry riders — write every reason','8 function graph questions under 15 min']},consolidation:{visual:['Sketch 8 function transformations from memory'],reading:['One-page summary of all Paper 1 topics — close book first','Flashcards: theorem statement front, proof back'],doing:['Paper 1 Section A — no calculator, 20 min strict','Pick 3 weakest question types, drill 5 each']},exam_prep:{visual:['Time-trial: full functions question under 8 min'],reading:['Annotate a past paper memo — circle every mark you would have lost'],doing:['Full past paper under exam conditions — no notes','Self-mark with DBE memo, tally every lost mark by topic']}},
+    'Physical Sciences':{foundation:{visual:['Draw a labelled circuit diagram from memory','Mind-map Newton Laws with force diagrams'],reading:['Blurt all Physics equations, then check formula sheet','Write all definitions from today chapter in your own words'],listening:['Watch Mindset Learn on your weakest Physics chapter','Explain the photoelectric effect out loud until fluent'],doing:['8 calculation questions — show units every step','Balance 8 chemical equations without examples']},consolidation:{visual:['Compare all wave properties side by side in a table'],reading:['Write definitions for all Grade 10-12 key terms — examinable across grades'],doing:['Timed: 10 electricity calculations in 20 min','Drill all explain-the-difference questions from past papers']},exam_prep:{doing:['Full Paper 1 under strict 3-hour exam conditions','Memo analysis: write WHY each mark is awarded beside every answer']}},
+    'Life Sciences':{foundation:{visual:['Draw full DNA replication from memory — every enzyme labelled','Sketch mitosis vs meiosis side by side — all stages'],reading:['Blurt everything you know about this chapter, find every gap','Summarise each life process in 5 bullets, then test yourself'],doing:['All textbook questions for this chapter','Redo every incorrect answer from your last Life Sciences test']},consolidation:{visual:['Draw full protein synthesis — DNA to amino acid, no notes'],reading:['Comparison table: mitosis vs meiosis, every difference'],doing:['10 source-based questions — use only the provided source','Practice essay on evolution in 25 min']},exam_prep:{doing:[system==='ieb'?'Full 40-mark source essay timed at 45 min (IEB)':'Full Paper 2 section under exam conditions','Blank-page diagram drill: 3 key diagrams from memory']}},
+    'English HL':{foundation:{visual:['Character web for your novel — link every motivation','Mind-map all themes with 2 quotes each'],reading:['Blurt full plot of prescribed novel — check gaps','Write 5 key quotes per character and what each reveals'],doing:['One timed PEEL paragraph on a set-work theme — 15 min','Comprehension passage with inference questions — 20 min']},consolidation:{reading:['Write intro and conclusion for 3 different essay questions'],doing:['Full timed essay — 40 min — no planning, straight to writing','Unseen poem analysis: tone, imagery, structure, message']},exam_prep:{doing:['Full Paper 2 literature essay — 45 min per essay','Revise all grammar and punctuation rules from Paper 1 Section A']}},
+    'Accounting':{foundation:{visual:['Draw the accounting equation with labelled T-accounts'],reading:['Write all definitions: debits, credits, assets, liabilities','Summarise the bookkeeping cycle in your own words — all 8 steps'],doing:['Full set of journals for a sample transaction','Post to ledger, balance, check totals']},consolidation:{reading:['Write the formula for every ratio — memorise 5 by blurting'],doing:['Full Income Statement and Balance Sheet under 45 min','Interpret all ratios: one sentence each explaining business health']},exam_prep:{doing:['Paper 1 Section A — journals under strict time (1.2 min per mark)','Calculate and interpret all key ratios from a past paper question']}},
+    'Business Studies':{foundation:{visual:['PESTLE analysis map for a South African business'],reading:['Blurt all consumer protection legislation: CPA, BBBEE, EEA','Comparison table: all 3 forms of business ownership'],doing:['Full PEEL essay on a prescribed topic — 25 min','5 case study questions from a past paper']},consolidation:{reading:['Memorise all 8 forms of ownership from memory'],doing:['40-mark essay — intro, 5 body paragraphs, recommendation','Data response question from a past paper — full answer']},exam_prep:{doing:['Full exam essay on your weakest topic — time strictly','Mark against memo, tally every missed mark']}},
+    'History':{foundation:{visual:['Timeline of all key events in your first essay topic','Mind-map causes, events, consequences'],reading:['Blurt key facts of this chapter, check textbook for gaps'],doing:['Full source analysis using SORC method','Introduction for 3 different essay questions']},consolidation:{reading:['Full essay plan: thesis, 4 argument points, conclusion outline'],doing:['Timed essay — 45 min — on your weakest topic','Evaluate 4 sources: origin, purpose, bias, reliability']},exam_prep:{doing:['Full Paper 1 source analysis — timed at 2.5 hours','One essay per exam topic — 40 min each']}},
+    'Geography':{foundation:{visual:['Draw a river valley cross-section from source to mouth','Sketch a synoptic weather chart — label all features'],reading:['Blurt all mapwork skills: contour, gradient, bearing, cross-section'],doing:['Full mapwork exercise: gradient and cross-section and bearing','5 source-based questions on a topographic map extract']},consolidation:{doing:['Full mapwork section in 45 min — timed','Full paragraph answers on all settlement pattern types']},exam_prep:{doing:['Full Paper 1 under timed conditions: Physical and Mapwork','All GIS question types from past papers']}},
+    'Life Orientation':{foundation:{reading:['Check LO portfolio requirements — list what is outstanding'],doing:['Write one paragraph on personal development — peer review ready','Complete any outstanding LO SBA task or CAT component']},exam_prep:{doing:['Finalise LO portfolio — check all evidence is included','Complete CAT practice questions']}}
+  };
+  const generic={foundation:{visual:'Draw a topic mind map from memory, then check for gaps',reading:'Blurt: close notes, write everything you know, fill gaps',listening:'Record yourself explaining this topic — replay and improve',doing:'10 practice questions on today topic — no notes'},consolidation:{visual:'Visual comparison of the two hardest sub-topics',reading:'One-page topic summary in your own words — test yourself',listening:'Explain this topic to a family member for 5 min',doing:'20 questions in 25 min — check every answer'},exam_prep:{visual:'Map every question type and what each demands',reading:'Annotate past paper answers against the memo',listening:'Narrate reasoning aloud as you write each answer',doing:'Full past paper — strict exam conditions, no notes'}};
+  const subKey=Object.keys(tasks).find(k=>subjName.toLowerCase().includes(k.toLowerCase()));
+  let task='';
+  if(subKey&&tasks[subKey][phase]){
+    const po=tasks[subKey][phase];
+    const arr=po[style]||po.doing||po.reading||Object.values(po)[0];
+    task=Array.isArray(arr)?arr[sessIdx%arr.length]:arr;
+  } else {task=generic[phase][style]||generic[phase].doing;}
+  if(challenges.includes('understanding')&&phase==='foundation')task='Gap focus: '+task;
+  if(challenges.includes('procrastination'))task='Start with the easiest part first. '+task;
+  if(challenges.includes('anxiety')&&phase==='exam_prep')task='Box breathe x4 first. '+task;
+  if(system==='ieb'&&phase==='exam_prep')task+=' [IEB: focus on application and source analysis]';
+  if(ppHabit==='never'&&phase!=='foundation')task+=' — also do 10 min of a past paper after';
+  return task;
+}
+
+const TT_RES_DB={
+  'Mathematics':[{i:'🎥',n:'Kevinmathscience',d:'YouTube · CAPS & IEB aligned',u:'https://www.youtube.com/@Kevinmathscience'},{i:'📘',n:'Siyavula Maths Gr 12',d:'Free adaptive practice, zero-rated',u:'https://www.siyavula.com/read/maths/grade-12'},{i:'📄',n:'DBE Past Papers — Maths',d:'All papers 2016+, free',u:'https://www.education.gov.za/Curriculum/NationalSeniorCertificate(NSC)Examinations/NSCPastExaminationpapers.aspx'},{i:'📖',n:'DBE Mind the Gap — Maths',d:'Worked examples and summaries',u:'https://www.education.gov.za/Curriculum/CurriculumAssessmentPolicyStatements(CAPS)/MindtheGap.aspx'}],
+  'Physical Sciences':[{i:'🎥',n:'Kevinmathscience — Phys Sci',d:'Physics and Chemistry, CAPS and IEB',u:'https://www.youtube.com/@Kevinmathscience'},{i:'📘',n:'Siyavula Physical Sciences',d:'Free practice, zero-rated',u:'https://www.siyavula.com/read/science/grade-12'},{i:'📄',n:'DBE Past Papers — Physical Sciences',d:'Papers and memos from 2016',u:'https://www.education.gov.za/Curriculum/NationalSeniorCertificate(NSC)Examinations/NSCPastExaminationpapers.aspx'},{i:'📖',n:'DBE Mind the Gap — Phys Sci',d:'Official study guide, free',u:'https://www.education.gov.za/Curriculum/CurriculumAssessmentPolicyStatements(CAPS)/MindtheGap.aspx'}],
+  'Life Sciences':[{i:'🎥',n:'Mindset Learn — Life Sciences',d:'Free video lessons by topic',u:'https://www.mindset.co.za'},{i:'📄',n:'DBE Past Papers — Life Sciences',d:'Papers and memos from 2016',u:'https://www.education.gov.za/Curriculum/NationalSeniorCertificate(NSC)Examinations/NSCPastExaminationpapers.aspx'},{i:'📖',n:'DBE Mind the Gap — Life Sciences',d:'Diagrams, summaries and questions',u:'https://www.education.gov.za/Curriculum/CurriculumAssessmentPolicyStatements(CAPS)/MindtheGap.aspx'},{i:'🔍',n:'SA Exam Papers — Life Sciences',d:'Papers back to 2008',u:'https://www.saexampapers.co.za'}],
+  'English':[{i:'📄',n:'DBE Past Papers — English HL/FAL',d:'All papers from 2016',u:'https://www.education.gov.za/Curriculum/NationalSeniorCertificate(NSC)Examinations/NSCPastExaminationpapers.aspx'},{i:'🔍',n:'SA Exam Papers — English',d:'Papers from 2008',u:'https://www.saexampapers.co.za'},{i:'📖',n:'DBE Mind the Gap — English HL',d:'Language, literature and writing',u:'https://www.education.gov.za/Curriculum/CurriculumAssessmentPolicyStatements(CAPS)/MindtheGap.aspx'}],
+  'Accounting':[{i:'🎥',n:'Mindset Learn — Accounting',d:'Financial statements video lessons',u:'https://www.mindset.co.za'},{i:'📄',n:'DBE Past Papers — Accounting',d:'Papers and memos from 2016',u:'https://www.education.gov.za/Curriculum/NationalSeniorCertificate(NSC)Examinations/NSCPastExaminationpapers.aspx'},{i:'📖',n:'DBE Mind the Gap — Accounting',d:'Ratios, statements and worked examples',u:'https://www.education.gov.za/Curriculum/CurriculumAssessmentPolicyStatements(CAPS)/MindtheGap.aspx'}],
+  'Business Studies':[{i:'🎥',n:'Mindset Learn — Business Studies',d:'Free video lessons by topic',u:'https://www.mindset.co.za'},{i:'📄',n:'DBE Past Papers — Business Studies',d:'Papers and memos from 2016',u:'https://www.education.gov.za/Curriculum/NationalSeniorCertificate(NSC)Examinations/NSCPastExaminationpapers.aspx'},{i:'📖',n:'DBE Mind the Gap — Business Studies',d:'Essay guides and legislation summaries',u:'https://www.education.gov.za/Curriculum/CurriculumAssessmentPolicyStatements(CAPS)/MindtheGap.aspx'}],
+  'History':[{i:'🎥',n:'Mindset Learn — History',d:'Source analysis and essay video lessons',u:'https://www.mindset.co.za'},{i:'📄',n:'DBE Past Papers — History',d:'Papers and memos from 2016',u:'https://www.education.gov.za/Curriculum/NationalSeniorCertificate(NSC)Examinations/NSCPastExaminationpapers.aspx'},{i:'📖',n:'DBE Mind the Gap — History',d:'Source skills and essay frameworks',u:'https://www.education.gov.za/Curriculum/CurriculumAssessmentPolicyStatements(CAPS)/MindtheGap.aspx'}],
+  'Geography':[{i:'🎥',n:'Mindset Learn — Geography',d:'Mapwork and physical geography videos',u:'https://www.mindset.co.za'},{i:'📄',n:'DBE Past Papers — Geography',d:'Papers and memos from 2016',u:'https://www.education.gov.za/Curriculum/NationalSeniorCertificate(NSC)Examinations/NSCPastExaminationpapers.aspx'},{i:'📖',n:'DBE Mind the Gap — Geography',d:'Mapwork and human geography guides',u:'https://www.education.gov.za/Curriculum/CurriculumAssessmentPolicyStatements(CAPS)/MindtheGap.aspx'}],
+  'Life Orientation':[{i:'📖',n:'AVBOB Step 12 — LO Guide',d:'Free in all 11 SA languages',u:'https://step12.avbob.co.za'},{i:'📄',n:'DBE Past Papers — Life Orientation',d:'CAT papers and memos',u:'https://www.education.gov.za/Curriculum/NationalSeniorCertificate(NSC)Examinations/NSCPastExaminationpapers.aspx'}],
+  '_pp':[{i:'📄',n:'DBE NSC Past Papers (all subjects)',d:'2016-2024, free, zero-rated',u:'https://www.education.gov.za/Curriculum/NationalSeniorCertificate(NSC)Examinations/NSCPastExaminationpapers.aspx'},{i:'🔍',n:'SA Exam Papers (2008-present)',d:'Largest SA collection, all subjects',u:'https://www.saexampapers.co.za'},{i:'📱',n:'Matric Exam Papers App',d:'DBE and IEB and provincial, offline-capable',u:'https://play.google.com/store/search?q=matric+exam+papers'}],
+  '_sr':[{i:'🃏',n:'Anki Flashcards',d:'Free on Android, SM-2 algorithm',u:'https://apps.ankiweb.net'},{i:'💬',n:'Maski — WhatsApp AI Tutor',d:'SA-built, 100k+ users, any phone',u:'https://wa.me/27600123456'},{i:'⚡',n:'Matric Live — Quiz Battles',d:'Gamified revision, offline capable',u:'https://www.matriclive.com'}],
+  '_default':[{i:'📄',n:'DBE Past Papers',d:'All NSC papers 2016+, free',u:'https://www.education.gov.za/Curriculum/NationalSeniorCertificate(NSC)Examinations/NSCPastExaminationpapers.aspx'},{i:'⚡',n:'Matric Live',d:'Interactive lessons and AI support',u:'https://www.matriclive.com'},{i:'📖',n:'AVBOB Step 12',d:'Free in all 11 SA languages',u:'https://step12.avbob.co.za'}]
+};
+function getTTResources(subjName,type){
+  if(type==='pp')return TT_RES_DB['_pp'];
+  if(type==='sr')return TT_RES_DB['_sr'];
+  const k=Object.keys(TT_RES_DB).find(k=>k[0]!=='_'&&subjName.toLowerCase().includes(k.toLowerCase()));
+  return TT_RES_DB[k]||TT_RES_DB['_default'];
+}
+
+function openBlkModal(data){
+  const d=typeof data==='string'?JSON.parse(data):data;
+  const subj=d.subjName||d.label||'Session';
+  const scBg={sc_A:'#dff3e4',sc_B:'#dde8f7',sc_C:'#fef3d8',sc_D:'#f7ddf0',sc_E:'#ddf7f4',sc_F:'#f7ede0',sc_G:'#ede0f7',sc_H:'#f0f7dd',sc_I:'#f7dddd'};
+  const scFg={sc_A:'#155a28',sc_B:'#153480',sc_C:'#7a4a08',sc_D:'#7a1060',sc_E:'#0a5550',sc_F:'#7a3808',sc_G:'#4a0a78',sc_H:'#3a5808',sc_I:'#7a1818'};
+  const ck=(d.colorCls||'').replace('-','_');
+  const badge=document.getElementById('bm-badge');
+  badge.textContent=d.label||subj;
+  badge.style.background=d.type==='pp'?'#1a1814':d.type==='sr'?'#fff3c8':scBg[ck]||'#f0ece4';
+  badge.style.color=d.type==='pp'?'#f4f1eb':d.type==='sr'?'#6a5000':scFg[ck]||'#333';
+  document.getElementById('bm-title').textContent=subj;
+  const task=d.task||'Complete your assessment first — personalised tasks appear after you submit your profile.';
+  document.getElementById('bm-task').textContent=task;
+  const resources=getTTResources(subj,d.type);
+  document.getElementById('bm-resources').innerHTML=resources.map(r=>`<a class="bm-res-link" href="${r.u}" target="_blank" rel="noopener"><span class="bm-rl-icon">${r.i}</span><div class="bm-rl-body"><span class="bm-rl-name">${r.n}</span><span class="bm-rl-desc">${r.d}</span></div><span class="bm-rl-arr">↗</span></a>`).join('');
+  const confLabel=['','Struggling','Shaky','Getting there','Confident','Strong'][d.conf||3];
+  const phase=(d.conf||3)<=2?'Foundation — build from zero':(d.conf||3)<=3?'Consolidation — deepen understanding':'Exam prep — timed and high-stakes';
+  document.getElementById('bm-meta').innerHTML=d.mark?`<strong>Current mark:</strong> ~${d.mark}% &nbsp;·&nbsp; <strong>Confidence:</strong> ${confLabel} &nbsp;·&nbsp; <strong>Phase:</strong> ${phase}`:`Click any study block to see tasks and direct links to free SA resources.`;
+  document.getElementById('blk-modal').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeBlkModal(e){if(e.target===document.getElementById('blk-modal'))closeBlkModalBtn();}
+function closeBlkModalBtn(){document.getElementById('blk-modal').classList.remove('open');document.body.style.overflow='';}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeBlkModalBtn();});
+
+function buildGrid(hrs,ppDays,peakPref,term,totalHrs,focusMin,system){
+  const nS=ttTotalSlots();
+  const schoolEnd=14,dinnerH=18,sleepH=22;
+  const schedule=TT_DAYS.map((_,di)=>{
+    const isWknd=di>=5;
+    return Array(nS).fill(null).map((_,si)=>{
+      const{h,m}=ttSlotLabel(si);
+      const wakeH=isWknd?8:7;
+      if(h<wakeH||h>=sleepH)return{type:'sleep',label:'😴 Sleep',sub:''};
+      if(!isWknd){
+        if(h===7&&m===30)return{type:'school',label:'🏫 School',sub:'Attend classes'};
+        if(h>7&&h<schoolEnd)return{type:'school',label:'🏫 School',sub:'Attend classes'};
+        if(h===schoolEnd&&m===0)return{type:'school',label:'🏫 School',sub:'Class ends'};
+      }
+      if(!isWknd&&h===13&&m===0)return{type:'lunch',label:'🍽 Lunch',sub:'30 min — step away'};
+      if(isWknd&&h===12&&m===30)return{type:'lunch',label:'🍽 Lunch',sub:'30 min break'};
+      if(!isWknd&&h===schoolEnd&&m===30)return{type:'leisure',label:'🚌 Travel Home',sub:'Decompress'};
+      if(!isWknd&&h===schoolEnd+1&&m===0)return{type:'leisure',label:'🎮 Break',sub:'Rest before study'};
+      if(h===dinnerH-1&&m===30)return{type:'leisure',label:'🎮 Leisure',sub:'Walk / unwind'};
+      if(h===dinnerH&&m===0)return{type:'dinner',label:'🍜 Dinner',sub:'Family time'};
+      if(h===dinnerH&&m===30)return{type:'leisure',label:'🌙 Unwind',sub:'After dinner'};
+      if(h===sleepH-1&&m===30)return{type:'leisure',label:'📖 Wind Down',sub:'Screen-free'};
+      if(isWknd&&h>=8&&h<10)return{type:'leisure',label:'☀️ Morning Free',sub:'Recharge'};
+      if(isWknd&&h>=15&&h<16)return{type:'leisure',label:'⚽ Sport / Hobby',sub:'Active break'};
+      return{type:'open'};
+    });
+  });
+
+  const openByDay=TT_DAYS.map((_,di)=>schedule[di].reduce((a,s,si)=>s?.type==='open'?[...a,si]:a,[]));
+  const ppSlots=ppDays*2;
+  const ppDayIdx=ppDays===0?[]:ppDays===1?[5]:ppDays===2?[5,2]:[5,2,4];
+  const targetSlots=Math.min(totalHrs*2,openByDay.reduce((a,b)=>a+b.length,0));
+  const pool=[];
+  const wts=ttSubjects.map(s=>{const g=Math.max(1,s.target-s.current);return g*({high:3,med:2,low:1}[s.priority]||2);});
+  const totalW=wts.reduce((a,b)=>a+b,0)||1;
+  ttSubjects.forEach((s,i)=>{const c=Math.round((wts[i]/totalW)*targetSlots*1.2);for(let j=0;j<c;j++)pool.push(i);});
+  const shuffled=smartShuffle(pool);
+  let pi=0,ppPlaced=0,srPlaced=0;
+  const sessCount={};
+  const profile=aState.answers;
+
+  TT_DAYS.forEach((_,di)=>{
+    const isWknd=di>=5;
+    const open=openByDay[di];
+    open.forEach((si,oi)=>{
+      if(isWknd&&oi<2&&ppPlaced<ppSlots){
+        const ppTask=profile.past_papers==='never'?'Start with Section A only (30 min). Check against memo. Write down every mark lost.':'Full past paper — DBE exam conditions. Self-mark strictly against memo.';
+        schedule[di][si]={type:'pp',label:'📝 Past Paper',sub:'Timed practice',task:ppTask,colorCls:'',conf:3,mark:0,subjName:'Past Paper'};
+        ppPlaced++;return;
+      }
+      if(di===6&&oi>=open.length-2&&srPlaced<2){
+        const srTask={visual:'Review all mind maps from this week — cover and redraw from memory.',reading:'Blurt all topics studied this week — 10 min per subject. Check gaps.',listening:'Record a 2-min summary of each topic. Replay all.',doing:'Flashcard drill: all cards from this week. Failed cards back to box 1.'}[profile.learning_style||'doing'];
+        schedule[di][si]={type:'sr',label:'🔁 Spaced Review',sub:'Recall and consolidate',task:srTask,colorCls:'',conf:3,mark:0,subjName:'Spaced Review'};
+        srPlaced++;return;
+      }
+      if(pi<shuffled.length&&oi<Math.ceil(targetSlots/7)*(isWknd?2:1)){
+        const sIdx=shuffled[pi%shuffled.length];
+        const subj=ttSubjects[sIdx]||ttSubjects[0];
+        if(!subj){pi++;return;}
+        const key=`${di}-${subj.name}`;
+        sessCount[key]=(sessCount[key]||0)+1;
+        const conf=subjectRatings[subj.name]||subj.confidence||3;
+        const mark=rangeMid(subjectMarks[subj.name])||subj.current||55;
+        const cls='sc-'+'ABCDEFGHI'[sIdx%9];
+        const task=aState.done?getTTTask(subj.name,sessCount[key]-1,di,profile,conf,mark):null;
+        schedule[di][si]={type:'study',label:abbrevSubj(subj.name),sub:subj.name,colorCls:cls,task,conf,mark,subjName:subj.name};
+        pi++;return;
+      }
+      schedule[di][si]={type:'free'};
+    });
+  });
+
+  // render HTML
+  let html='<thead><tr class="day-row"><th style="position:sticky;left:0;z-index:10">TIME</th>';
+  TT_SHORT.forEach((d,di)=>{html+=`<th class="${di>=5?'wknd':''}">${d}<br><span style="font-size:.45rem;font-weight:400;opacity:.5;letter-spacing:0">${TT_DAYS[di]}</span></th>`;});
+  html+='</tr></thead><tbody>';
+  for(let si=0;si<nS;si++){
+    const{hh,mm}=ttSlotLabel(si);
+    const isHStart=si%2===0;
+    html+=`<tr class="${isHStart?'hr-start':''}"><td class="tt-time-cell"><div class="tt-time-inner">`;
+    if(isHStart)html+=`<span class="tt-hh">${hh}:00</span>`;
+    else html+=`<span class="tt-mm">:30</span>`;
+    html+=`</div></td>`;
+    TT_DAYS.forEach((_,di)=>{
+      const slot=schedule[di][si];
+      const isRepeat=['sleep','school','leisure'].includes(slot?.type)&&!isHStart;
+      const label=slot&&!isRepeat?slot.label:'';
+      const sub=slot&&!isRepeat&&slot.sub?slot.sub:'';
+      const task=slot?.task||'';
+      const cls=slot?.type==='sleep'?'b-sleep':slot?.type==='school'?'b-school':slot?.type==='lunch'?'b-lunch':slot?.type==='dinner'?'b-dinner':slot?.type==='leisure'?'b-leisure':slot?.type==='pp'?'b-pp':slot?.type==='sr'?'b-sr':slot?.colorCls||'b-empty';
+      const isClickable=slot&&['study','pp','sr'].includes(slot.type)&&!isRepeat;
+      let clickAttr='';
+      if(isClickable){
+        const safe=JSON.stringify({type:slot.type,label:(slot.label||''),subjName:(slot.subjName||''),colorCls:slot.colorCls||'',task:(slot.task||''),conf:slot.conf||3,mark:slot.mark||55}).replace(/"/g,'&quot;');
+        clickAttr=` onclick="openBlkModal('${safe.replace(/'/g,"\'")}'"`;
+        clickAttr+=')';
+      }
+      html+=`<td class="tt-block-cell"><div class="tt-blk ${cls}${isClickable?' clickable':''}"${clickAttr}>`;
+      if(label)html+=`<span class="tt-blk-label">${label}</span>`;
+      if(task&&!isRepeat)html+=`<span class="tt-blk-task">${task.substring(0,72)}${task.length>72?'…':''}</span>`;
+      else if(sub&&!isRepeat)html+=`<span class="tt-blk-sub">${sub}</span>`;
+      html+=`</div></td>`;
+    });
+    html+=`</tr>`;
+  }
+  html+='</tbody>';
+  document.getElementById('tt-table').innerHTML=html;
+
+  document.getElementById('tt-legend').innerHTML=
+    ttSubjects.map((s,i)=>`<div class="legend-chip"><div class="legend-dot sc-${'ABCDEFGHI'[i%9]}"></div><span>${s.name}</span></div>`).join('')+
+    `<div class="legend-chip"><div class="legend-dot b-pp" style="width:10px;height:10px;border-radius:3px"></div><span>Past Papers</span></div>`+
+    `<div class="legend-chip"><div class="legend-dot" style="background:#fff3c8;width:10px;height:10px;border-radius:3px;border:1px solid #f0d080"></div><span>Spaced Review</span></div>`+
+    `<div class="legend-chip"><div class="legend-dot b-leisure" style="width:10px;height:10px;border-radius:3px"></div><span>Leisure / Meals</span></div>`+
+    `<div class="legend-chip"><div class="legend-dot b-school" style="width:10px;height:10px;border-radius:3px"></div><span>School / Sleep</span></div>`;
+}
+
+function abbrevSubj(name){
+  const map={'Mathematics':'Maths','Mathematical Literacy':'Maths Lit','Physical Sciences':'Phys Sci','Life Sciences':'Life Sci','English HL':'Eng HL','English FAL':'Eng FAL','Accounting':'Acc','Business Studies':'Biz Stud','Life Orientation':'LO','Information Technology':'IT','Economics':'Econ','History':'History','Geography':'Geo','Afrikaans':'Afr','isiZulu / isiXhosa / Other Lang':'Lang','Other Subject':'Other'};
+  return map[name]||name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,5);
+}
+function smartShuffle(arr){
+  const a=[...arr].sort(()=>Math.random()-.5);
+  for(let i=2;i<a.length;i++){if(a[i]===a[i-1]&&a[i]===a[i-2]){for(let j=i+1;j<a.length;j++){if(a[j]!==a[i]){[a[i],a[j]]=[a[j],a[i]];break;}}}}
+  return a;
+}
+
+// ─────────────────────────────────────────────
+// STEP 3 — RESOURCES
+// ─────────────────────────────────────────────
+const RESOURCES=[
+  {cat:'practice',icon:'📄',name:'DBE Past Papers',tag:'FREE',tc:'free',accent:'var(--lt-teal)',desc:'All NSC papers from 2016 onward with full memorandums. Official and zero-rated on major SA networks.',url:'https://www.education.gov.za/Curriculum/NationalSeniorCertificate(NSC)Examinations.aspx'},
+  {cat:'practice',icon:'📋',name:'SA Exam Papers',tag:'FREE',tc:'free',accent:'var(--lt-teal)',desc:'The largest collection of SA past papers dating to 2008 across all subjects — DBE, IEB, and provincial.',url:'https://www.saexampapers.co.za'},
+  {cat:'practice',icon:'📘',name:'IEB Past Papers',tag:'FREE',tc:'free',accent:'var(--lt-teal)',desc:'Official IEB papers from the last five years. Free at ieb.co.za — essential for IEB learners.',url:'https://www.ieb.co.za'},
+  {cat:'practice',icon:'📱',name:'Matric Exam Papers App',tag:'FREE',tc:'free',accent:'var(--lt-teal)',desc:'DBE, IEB, and provincial papers from 2008 for 40+ subjects in one offline-capable app.',url:'https://play.google.com/store'},
+  {cat:'video',icon:'▶️',name:'Kevinmathscience',tag:'FREE',tc:'free',accent:'var(--lt-rust)',desc:'SA\'s most popular curriculum-aligned channel — nearly 1 million subscribers. Maths and Science for both CAPS and IEB.',url:'https://www.youtube.com/@Kevinmathscience'},
+  {cat:'video',icon:'🎬',name:'Mindset Learn',tag:'ZERO-RATED',tc:'zero',accent:'var(--lt-rust)',desc:'Comprehensive video lessons across all major subjects. Part of the Vodacom Digital Classroom network.',url:'https://www.mindset.co.za'},
+  {cat:'video',icon:'📡',name:'Vodacom e-School',tag:'ZERO-RATED',tc:'zero',accent:'var(--lt-rust)',desc:'Free video lessons for Grades 10–12. Zero-rated on Vodacom. Download content for load-shedding sessions.',url:'https://vodacom.co.za/eschool'},
+  {cat:'video',icon:'🏫',name:'MTN Online School',tag:'ZERO-RATED',tc:'zero',accent:'var(--lt-rust)',desc:'CAPS-aligned video lessons across all grades. Zero-rated on MTN. Supports offline downloads.',url:'https://mtn.co.za/online-school'},
+  {cat:'adaptive',icon:'🔢',name:'Siyavula',tag:'ZERO-RATED',tc:'zero',accent:'var(--lt-gold)',desc:'Free adaptive learning for Maths and Physical Sciences (Gr 10–12). Unlimited practice with instant feedback. Zero-rated on MTN, Vodacom, and Telkom.',url:'https://www.siyavula.com'},
+  {cat:'adaptive',icon:'⚡',name:'Matric Live',tag:'FREE',tc:'free',accent:'var(--lt-gold)',desc:'FNB App of the Year 2024. AI chat support, interactive video lessons, mock exam simulations, and gamified quiz battles. Offline capable.',url:'https://www.matriclive.com'},
+  {cat:'adaptive',icon:'💬',name:'Maski (WhatsApp AI)',tag:'FREE',tc:'free',accent:'var(--lt-gold)',desc:'SA-built AI tutor via WhatsApp, backed by Maskew Miller Longman. Over 100,000 users since March 2025 launch. Works on any phone.',url:'https://wa.me/27600123456'},
+  {cat:'adaptive',icon:'🃏',name:'Anki Flashcards',tag:'FREE',tc:'free',accent:'var(--lt-gold)',desc:'Spaced repetition system using the SM-2 algorithm. Free on Android. Ideal for Life Sciences, History, and Business Studies.',url:'https://apps.ankiweb.net'},
+  {cat:'tools',icon:'📅',name:'Google Calendar',tag:'FREE',tc:'free',accent:'var(--lt-teal)',desc:'Block study sessions and SBA deadlines. Set recurring spaced-repetition review reminders. Syncs across all devices.',url:'https://calendar.google.com'},
+  {cat:'tools',icon:'📓',name:'Notion Study Wiki',tag:'FREE',tc:'free',accent:'var(--lt-teal)',desc:'Build subject wikis, track SBA tasks, and create linked topic databases. Free for students.',url:'https://www.notion.so'},
+  {cat:'tools',icon:'✅',name:'Todoist',tag:'FREE',tc:'free',accent:'var(--lt-teal)',desc:'Manage SBA deadlines and daily study tasks. Priority levels and recurring review reminders.',url:'https://todoist.com'},
+  {cat:'tools',icon:'📖',name:'DBE Mind the Gap',tag:'FREE',tc:'free',accent:'var(--lt-teal)',desc:'Official DBE study guides for all major subjects. Includes diagrams, summaries, and past paper questions. Zero-rated at education.gov.za.',url:'https://www.education.gov.za'},
+  {cat:'wellbeing',icon:'💚',name:'SADAG Helpline',tag:'FREE',tc:'free',accent:'var(--lt-teal)',desc:'SA Depression and Anxiety Group. Free matric-specific mental health support. Helpline: 0800 456 789. Weekly TikTok wellbeing content for matric learners.',url:'https://www.sadag.org'},
+  {cat:'wellbeing',icon:'🌍',name:'AVBOB Step 12',tag:'FREE',tc:'free',accent:'var(--lt-teal)',desc:'Free CAPS exam prep guides in all 11 official SA languages. Family-friendly — study together. Created by qualified subject advisors.',url:'https://step12.avbob.co.za'},
+  {cat:'wellbeing',icon:'📞',name:'Childline SA',tag:'FREE',tc:'free',accent:'var(--lt-teal)',desc:'Free counselling for young people. Call 116 (toll-free) anytime. Exam stress support available.',url:'https://www.childlinesa.org.za'},
+  {cat:'wellbeing',icon:'😮‍💨',name:'7 Cups',tag:'FREE',tc:'free',accent:'var(--lt-teal)',desc:'Free online emotional support and listener chat. No registration required. Available 24/7 during exam season.',url:'https://www.7cups.com'},
+];
+
+function renderResources(cat){
+  const filtered=cat==='all'?RESOURCES:RESOURCES.filter(r=>r.cat===cat);
+  document.getElementById('res-grid').innerHTML=filtered.map(r=>`
+    <a href="${r.url}" target="_blank" rel="noopener" class="res-card" style="--card-accent:${r.accent}">
+      <div class="rc-top">
+        <div class="rc-icon">${r.icon}</div>
+        <div class="rc-tag ${r.tc}">${r.tag}</div>
+      </div>
+      <div class="rc-name">${r.name}</div>
+      <div class="rc-desc">${r.desc}</div>
+      <div class="rc-link">Visit resource →</div>
+    </a>`).join('');
+}
+
+function filterRes(cat,btn){
+  document.querySelectorAll('.res-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderResources(cat);
+}
+
+// ─────────────────────────────────────────────
+// PROGRESS INDICATOR
+// ─────────────────────────────────────────────
+function setProgress(step){
+  for(let i=1;i<=3;i++){
+    const el=document.getElementById(`ps${i}`);
+    el.classList.remove('active','done');
+    if(i<step)el.classList.add('done');
+    if(i===step)el.classList.add('active');
+  }
+  document.getElementById('prog-pct').textContent=`Step ${step} of 3`;
+  // hero step cards
+  if(step>=2){
+    document.getElementById('sc1-num').textContent='STEP 01 ✓';
+    document.getElementById('sc1-num').classList.add('done');
+    document.getElementById('sc1').classList.add('done');
+  }
+  if(step>=3){
+    document.getElementById('sc2-num').textContent='STEP 02 ✓';
+    document.getElementById('sc2-num').classList.add('done');
+    document.getElementById('sc2').classList.add('done');
+  }
+}
+
+// scroll spy
+const spyObserver=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(!e.isIntersecting)return;
+    if(e.target.id==='step1')setProgress(1);
+    if(e.target.id==='step2')setProgress(Math.max(2,aState.done?2:1));
+    if(e.target.id==='step3')setProgress(3);
+  });
+},{threshold:.2});
+['step1','step2','step3'].forEach(id=>{const el=document.getElementById(id);if(el)spyObserver.observe(el)});
+
+// ─────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────
+renderSection();
+</script>
+</body>
+</html>

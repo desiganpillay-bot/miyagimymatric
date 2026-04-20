@@ -2,11 +2,17 @@
 
 ## Read this first, every session
 
-This is the primary context file for Claude Code. Before doing anything, read:
+Before doing anything, read in this order:
 1. This file (CLAUDE.md) — project overview, architecture, constraints, decisions
 2. STATUS.md — what is done, what is open, what has been decided
+3. LAST_SESSION.md — last session date, title, files changed (auto-generated at launch)
 
 STATUS.md wins over everything else if there is any conflict.
+If LAST_SESSION.md shows a more recent date than STATUS.md's last updated line, flag this to the user.
+
+## Auto-start rule
+
+If STATUS.md contains a **⚡ NEXT SPRINT** section, begin building it immediately at session start — do not wait for the user to ask. Announce what you are starting in one sentence, then go.
 
 ---
 
@@ -285,15 +291,20 @@ Lower priority:
 **Start of session:**
 1. Read CLAUDE.md (this file)
 2. Read STATUS.md
-3. Confirm current state before building anything
+3. Read LAST_SESSION.md
+4. Confirm current state before building anything
 
-**End of session:**
-Output a STATUS.md update block:
-```
-## STATUS.md UPDATE — [date]
-COMPLETED: [item]
-OPENED: [item]
-DECISION: [what was decided]
-FILE UPDATED: [old] superseded by [new]
-```
-User applies the update manually.
+**End of session — MANDATORY:**
+Before the session closes, Claude MUST:
+1. Update the 🟢 LIVE, 🔴 OPEN, 🟡 DEFERRED sections of STATUS.md to reflect current state
+2. Update the **Last updated** line at the top of STATUS.md
+3. Append a new entry to the ## SESSION LOG section of STATUS.md:
+
+   ### YYYY-MM-DD — Session Title
+   - What was built or changed
+   - Files modified
+   - Decisions made
+   - What is open next
+
+Do not end the session without completing this step.
+If the user says "done", "wrap up", "bye", or closes the topic — execute the session end protocol first.

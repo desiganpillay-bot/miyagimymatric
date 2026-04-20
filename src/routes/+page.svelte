@@ -1,120 +1,187 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
 
-  function goToMyPlan() {
-    goto('/assessment?signin=1');
+  let hasAssessment = false;
+
+  onMount(() => {
+    hasAssessment = !!localStorage.getItem('mmm_assessment_v1');
+  });
+
+  function handleCTA() {
+    if (hasAssessment) {
+      goto('/dashboard');
+    } else {
+      goto('/assessment');
+    }
   }
 </script>
 
 <svelte:head>
   <title>Miyagi My Matric — Your Matric Sensei</title>
-  <meta name="description" content="Your SA Grade 12 study companion. APS tracker, smart timetable, study sessions and personalised strategy — built for SA learners." />
+  <meta name="description" content="Your SA Grade 12 study companion. APS tracker, smart timetable, and personalised strategy — built for SA learners." />
 </svelte:head>
 
-<div class="app">
-  <!-- Header -->
+<div class="app landing">
   <header class="hero">
-    <div class="badge">IEB · CAPS · NSC · Grade 10–12</div>
+    <div class="badge">IEB · CAPS · Grade 10–12</div>
+
     <h1>Miyagi<span class="accent-text">My</span>Matric</h1>
     <p class="tagline">Your Matric Sensei</p>
-    <p class="positioning">
-      Miyagi My Matric guides SA Grade 10–12 learners from first visit to exam-ready. A smart assessment profiles your subjects, intensity, and readiness — then generates a fully personalised study plan.
+
+    <p class="sub">
+      5-minute assessment → personalised study plan → exam ready.
     </p>
-    <div class="route-fork">
-      <button class="btn btn-next fork-primary" on:click={() => goto('/assessment')}>
-        Start Assessment →
+
+    <div class="cta-wrap">
+      <button class="btn btn-next cta-main" on:click={handleCTA}>
+        {hasAssessment ? 'Continue my plan →' : 'Start — it\'s free →'}
       </button>
-      <a href="/how-it-works" class="btn btn-ghost fork-secondary">How it works</a>
+      {#if !hasAssessment}
+        <p class="cta-note">No login · under 5 minutes · built for SA learners</p>
+      {:else}
+        <p class="cta-note">Welcome back — your plan is saved</p>
+      {/if}
     </div>
-    <p class="no-login">It takes less than five minutes to get started · no login required</p>
+
+    <!-- Inline micro-steps — no separate page needed -->
+    <div class="steps-row">
+      <div class="micro-step">
+        <span class="step-num">01</span>
+        <span class="step-text">Tell us your subjects & marks</span>
+      </div>
+      <span class="step-arrow">›</span>
+      <div class="micro-step">
+        <span class="step-num">02</span>
+        <span class="step-text">Get your live APS + priority gaps</span>
+      </div>
+      <span class="step-arrow">›</span>
+      <div class="micro-step">
+        <span class="step-num">03</span>
+        <span class="step-text">Smart timetable built around you</span>
+      </div>
+    </div>
   </header>
 
-  <!-- Resources teaser -->
-  <section class="resources-teaser">
-    <p class="teaser-label">Complete your assessment to unlock</p>
-    <div class="teaser-grid">
-      <div class="teaser-item locked">
-        <span class="teaser-icon">📄</span>
-        <div>
-          <div class="teaser-name">Past Papers</div>
-          <div class="teaser-sub">IEB + NSC · matched to your subjects</div>
+  <!-- What you unlock -->
+  <section class="unlock-section">
+    <p class="unlock-label">What you unlock in 5 minutes</p>
+    <div class="unlock-list">
+      <div class="unlock-item hot">
+        <span class="unlock-icon">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M13 2L4.5 13.5H11L10 22L20.5 9.5H14L13 2Z" fill="url(#g-danger)" stroke="none"/>
+            <defs><linearGradient id="g-danger" x1="4" y1="2" x2="21" y2="22" gradientUnits="userSpaceOnUse"><stop stop-color="#FF5C8A"/><stop offset="1" stop-color="#FF5C8A" stop-opacity=".6"/></linearGradient></defs>
+          </svg>
+        </span>
+        <div class="unlock-text">
+          <span class="unlock-name">Panic Mode</span>
+          <span class="unlock-desc">Exam tomorrow? Get a rescue plan for every hour you have left.</span>
         </div>
-        <span class="lock">🔒</span>
+        <span class="unlock-badge new-badge">New</span>
       </div>
-      <div class="teaser-item locked">
-        <span class="teaser-icon">📐</span>
-        <div>
-          <div class="teaser-name">Siyavula</div>
-          <div class="teaser-sub">Adaptive Maths & Science · zero-rated</div>
+      <div class="unlock-item">
+        <span class="unlock-icon">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="3" y="12" width="4" height="9" rx="1" fill="url(#g-aps)"/>
+            <rect x="10" y="7" width="4" height="14" rx="1" fill="url(#g-aps)" opacity=".8"/>
+            <rect x="17" y="3" width="4" height="18" rx="1" fill="url(#g-aps)" opacity=".6"/>
+            <defs><linearGradient id="g-aps" x1="3" y1="3" x2="21" y2="21" gradientUnits="userSpaceOnUse"><stop stop-color="#7C4DFF"/><stop offset="1" stop-color="#E040FB"/></linearGradient></defs>
+          </svg>
+        </span>
+        <div class="unlock-text">
+          <span class="unlock-name">Live APS Score</span>
+          <span class="unlock-desc">See exactly where you stand vs UCT, Wits, UP — updates as your marks change.</span>
         </div>
-        <span class="lock">🔒</span>
       </div>
-      <div class="teaser-item locked">
-        <span class="teaser-icon">▶️</span>
-        <div>
-          <div class="teaser-name">Video Lessons</div>
-          <div class="teaser-sub">Kevinmathscience · Mindset Learn</div>
+      <div class="unlock-item">
+        <span class="unlock-icon">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 3V15M12 3L8 7M12 3L16 7" stroke="url(#g-share)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M5 17V19C5 20.1 5.9 21 7 21H17C18.1 21 19 20.1 19 19V17" stroke="url(#g-share)" stroke-width="2" stroke-linecap="round"/>
+            <defs><linearGradient id="g-share" x1="5" y1="3" x2="19" y2="21" gradientUnits="userSpaceOnUse"><stop stop-color="#E040FB"/><stop offset="1" stop-color="#FFB300"/></linearGradient></defs>
+          </svg>
+        </span>
+        <div class="unlock-text">
+          <span class="unlock-name">Shareable APS Card</span>
+          <span class="unlock-desc">Post your score to WhatsApp status or IG stories. Show your progress.</span>
         </div>
-        <span class="lock">🔒</span>
+        <span class="unlock-badge fire-badge">Hot</span>
       </div>
-      <div class="teaser-item locked">
-        <span class="teaser-icon">🤖</span>
-        <div>
-          <div class="teaser-name">AI Tutors</div>
-          <div class="teaser-sub">Maski WhatsApp · 100k+ learners</div>
+      <div class="unlock-item">
+        <span class="unlock-icon">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="3" y="4" width="18" height="17" rx="2" stroke="url(#g-cal)" stroke-width="1.8"/>
+            <path d="M3 9H21" stroke="url(#g-cal)" stroke-width="1.8"/>
+            <path d="M8 2V6M16 2V6" stroke="url(#g-cal)" stroke-width="1.8" stroke-linecap="round"/>
+            <rect x="7" y="13" width="3" height="3" rx=".5" fill="url(#g-cal)"/>
+            <rect x="14" y="13" width="3" height="3" rx=".5" fill="url(#g-cal)" opacity=".6"/>
+            <defs><linearGradient id="g-cal" x1="3" y1="2" x2="21" y2="21" gradientUnits="userSpaceOnUse"><stop stop-color="#7C4DFF"/><stop offset="1" stop-color="#69B4FF"/></linearGradient></defs>
+          </svg>
+        </span>
+        <div class="unlock-text">
+          <span class="unlock-name">Smart Timetable</span>
+          <span class="unlock-desc">Auto-built for your weakest subjects. 3 intensity modes.</span>
         </div>
-        <span class="lock">🔒</span>
       </div>
-      <div class="teaser-item locked">
-        <span class="teaser-icon">🧠</span>
-        <div>
-          <div class="teaser-name">Flashcard Tools</div>
-          <div class="teaser-sub">Anki · Quizlet · spaced repetition</div>
+      <div class="unlock-item">
+        <span class="unlock-icon">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M9 11L12 14L22 4" stroke="url(#g-sba)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M21 12V19C21 20.1 20.1 21 19 21H5C3.9 21 3 20.1 3 19V5C3 3.9 3.9 3 5 3H16" stroke="url(#g-sba)" stroke-width="1.8" stroke-linecap="round"/>
+            <defs><linearGradient id="g-sba" x1="3" y1="3" x2="22" y2="21" gradientUnits="userSpaceOnUse"><stop stop-color="#7AFF7A"/><stop offset="1" stop-color="#69B4FF"/></linearGradient></defs>
+          </svg>
+        </span>
+        <div class="unlock-text">
+          <span class="unlock-name">SBA Tracker</span>
+          <span class="unlock-desc">Every deadline, colour-coded by urgency. Never "Not Resulted".</span>
         </div>
-        <span class="lock">🔒</span>
       </div>
-      <div class="teaser-item locked">
-        <span class="teaser-icon">📅</span>
-        <div>
-          <div class="teaser-name">Study Timetable</div>
-          <div class="teaser-sub">Personalised · 3 intensity modes</div>
+      <div class="unlock-item">
+        <span class="unlock-icon">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="12" r="9" stroke="url(#g-timer)" stroke-width="1.8"/>
+            <path d="M12 7V12L15.5 14.5" stroke="url(#g-timer)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M10 2H14" stroke="url(#g-timer)" stroke-width="2" stroke-linecap="round"/>
+            <defs><linearGradient id="g-timer" x1="3" y1="2" x2="21" y2="21" gradientUnits="userSpaceOnUse"><stop stop-color="#FFB300"/><stop offset="1" stop-color="#E040FB"/></linearGradient></defs>
+          </svg>
+        </span>
+        <div class="unlock-text">
+          <span class="unlock-name">50/10 Pomodoro</span>
+          <span class="unlock-desc">SA educators' format. Tracks your hours per subject automatically.</span>
         </div>
-        <span class="lock">🔒</span>
       </div>
     </div>
-    <button class="btn btn-ghost teaser-cta" on:click={goToMyPlan}>
-      Take me back to my Plan →
-    </button>
-  </section>
-
-  <!-- Footer -->
-  <footer class="footer">
-    <p>Built for SA learners · IEB + CAPS · Free for now</p>
-    <p class="footer-sub">
-      SADAG mental health support: <strong>0800 456 789</strong> (free) ·
-      DBE past papers: <strong>education.gov.za</strong>
-    </p>
+  </section> class="footer">
+    <p>Built for SA learners · IEB + CAPS · Free</p>
     <p class="footer-links">
-      <a href="/how-it-works">How It Works</a> ·
       <a href="/privacy">Privacy</a> ·
-      <a href="/terms">Terms</a>
+      <a href="/terms">Terms</a> ·
+      SADAG: <strong>0800 456 789</strong>
     </p>
   </footer>
 </div>
 
 <style>
+  .landing {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    justify-content: center;
+  }
+
   .hero {
     text-align: center;
-    padding: 3rem 0 2.5rem;
-    animation: fadeDown .6s ease both;
+    padding: 3rem 0 2rem;
+    animation: fadeDown .5s ease both;
   }
 
   h1 {
     font-family: var(--font-head);
-    font-size: clamp(2rem, 6vw, 3.5rem);
+    font-size: clamp(2.4rem, 7vw, 4rem);
     font-weight: 800;
     line-height: 1;
-    margin-bottom: .5rem;
+    margin-bottom: .4rem;
     background: linear-gradient(135deg, #FFF4E8 0%, rgba(255,244,232,.6) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -130,162 +197,120 @@
 
   .tagline {
     font-family: var(--font-head);
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 600;
     color: var(--accent);
-    letter-spacing: .12em;
+    letter-spacing: .14em;
     text-transform: uppercase;
-    margin-bottom: 1rem;
+    margin-bottom: 1.4rem;
   }
 
-  .positioning {
+  .sub {
+    font-size: 1rem;
     color: var(--muted);
-    font-size: .95rem;
     font-weight: 300;
-    max-width: 520px;
-    margin: 0 auto 1.8rem;
-    line-height: 1.75;
+    margin-bottom: 2rem;
+    line-height: 1.6;
   }
 
-  .route-fork {
+  /* CTA */
+  .cta-wrap {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: .75rem;
-    margin-bottom: .8rem;
+    gap: .6rem;
+    margin-bottom: 2.5rem;
   }
 
-  .fork-primary  { width: 100%; max-width: 340px; }
-  .fork-secondary { width: 100%; max-width: 340px; font-size: .82rem; }
-
-  .btn-ghost {
-    background: rgba(255, 244, 232, 0.06);
-    border: 1px solid rgba(255, 244, 232, 0.28);
-    color: rgba(255, 244, 232, 0.85);
-    font-family: var(--font-head);
-    font-weight: 600;
-    font-size: .88rem;
-    padding: .7rem 1.4rem;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: border-color .2s, color .2s, background .2s;
+  .cta-main {
+    width: 100%;
+    max-width: 320px;
+    font-size: 1rem;
+    padding: 1rem 2rem;
   }
-  .btn-ghost:hover { border-color: rgba(255,244,232,.55); color: var(--text); background: rgba(255,244,232,.10); }
 
-  .no-login {
-    font-size: .82rem;
+  .cta-note {
+    font-size: .78rem;
     color: var(--accent3);
-    font-weight: 600;
-    margin-bottom: 0;
+    font-weight: 500;
     letter-spacing: .02em;
   }
 
-  /* 3-step journey */
-  .steps {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1rem;
-    margin: 2.5rem 0;
+  /* Micro steps */
+  .steps-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: .75rem;
+    flex-wrap: wrap;
+    margin-bottom: .5rem;
   }
 
-  .step-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 1.4rem;
-    animation: fadeUp .4s ease both;
-    transition: border-color .2s, transform .2s;
+  .micro-step {
     display: flex;
     flex-direction: column;
-    gap: .6rem;
-  }
-
-  .step-card:hover {
-    border-color: rgba(255,82,82,.30);
-    transform: translateY(-2px);
+    align-items: center;
+    gap: .3rem;
+    max-width: 120px;
   }
 
   .step-num {
     font-family: var(--font-head);
-    font-size: .65rem;
+    font-size: .6rem;
     font-weight: 700;
-    color: var(--muted);
+    color: var(--accent);
     letter-spacing: .1em;
-    text-transform: uppercase;
   }
 
-  .step-num.accent { color: var(--accent); }
-
-  .step-card h3 {
-    font-family: var(--font-head);
-    font-size: .9rem;
-    font-weight: 700;
-    color: var(--text);
-    margin: 0;
-    line-height: 1.3;
-  }
-
-  .step-card p {
-    font-size: .8rem;
+  .step-text {
+    font-size: .72rem;
     color: var(--muted);
-    font-weight: 300;
-    line-height: 1.6;
-    margin: 0;
-    flex: 1;
-  }
-
-  .step-link {
-    font-family: var(--font-head);
-    font-size: .78rem;
-    font-weight: 700;
-    color: var(--accent2);
-    text-decoration: none;
-    transition: color .2s;
-  }
-  .step-link:hover { color: var(--accent); }
-
-  /* Tools section */
-  .tools-section {
-    margin: 0 0 2.5rem;
-    animation: fadeUp .4s ease both;
-  }
-
-  .tools-heading {
-    font-family: var(--font-head);
-    font-size: 1rem;
-    font-weight: 700;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: .08em;
-    margin: 0 0 1rem;
+    font-weight: 400;
+    line-height: 1.4;
     text-align: center;
+  }
+
+  .step-arrow {
+    color: rgba(255,244,232,.2);
+    font-size: 1.2rem;
+    align-self: center;
+    margin-top: .2rem;
+  }
+
+  /* Tool preview */
+  .tools-preview {
+    margin: 0 0 2rem;
+    animation: fadeUp .5s ease .15s both;
+  }
+
+  .tools-label {
+    font-family: var(--font-head);
+    font-size: .62rem;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-align: center;
+    margin-bottom: .9rem;
   }
 
   .tools-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: .65rem;
+    grid-template-columns: 1fr 1fr;
+    gap: .5rem;
   }
 
-  .tool-link {
+  .tool-card {
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: .2rem;
+    align-items: center;
+    gap: .75rem;
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 12px;
-    padding: .9rem 1rem;
-    text-decoration: none;
-    transition: border-color .2s, transform .15s;
+    padding: .85rem 1rem;
   }
 
-  .tool-link:hover {
-    border-color: rgba(255,45,166,.35);
-    transform: translateY(-1px);
-  }
-
-  .tool-icon { font-size: 1.25rem; }
+  .tool-icon { font-size: 1.2rem; flex-shrink: 0; }
 
   .tool-name {
     font-family: var(--font-head);
@@ -296,76 +321,83 @@
   }
 
   .tool-desc {
-    font-size: .68rem;
+    font-size: .65rem;
     color: var(--muted);
-    line-height: 1.3;
+    margin-top: .1rem;
   }
 
-  /* Sensei block */
-  .sensei-block {
-    text-align: center;
-    padding: 2rem;
-    margin: 1rem 0 2rem;
-    background: linear-gradient(135deg, rgba(255,82,82,.05), rgba(105,180,255,.04));
-    border: 1px solid rgba(255,82,82,.18);
-    border-radius: 16px;
-    animation: fadeIn .5s ease both;
+  /* Unlock section */
+  .unlock-section {
+    margin: 0 0 2rem;
+    animation: fadeUp .5s ease .1s both;
   }
 
-  .sensei-quote {
+  .unlock-label {
     font-family: var(--font-head);
-    font-size: clamp(1rem, 3vw, 1.3rem);
-    font-weight: 600;
+    font-size: .62rem; font-weight: 700;
+    letter-spacing: .14em; text-transform: uppercase;
+    color: var(--muted); text-align: center;
+    margin-bottom: .9rem;
+  }
+
+  .unlock-list {
+    display: flex; flex-direction: column; gap: .45rem;
+  }
+
+  .unlock-item {
+    display: flex; align-items: center; gap: .85rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: .75rem 1rem;
+    transition: border-color .2s;
+  }
+  .unlock-item:hover { border-color: rgba(124,77,255,.3); }
+  .unlock-item.hot { border-color: rgba(255,92,138,.2); }
+
+  .unlock-icon {
+    width: 32px; height: 32px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--surface2);
+    border-radius: 9px;
+    padding: 6px;
+  }
+  .unlock-icon svg { width: 100%; height: 100%; }
+
+  .unlock-text {
+    flex: 1; display: flex; flex-direction: column; gap: 1px; min-width: 0;
+  }
+  .unlock-name {
+    font-family: var(--font-head); font-size: .82rem; font-weight: 700;
     color: var(--text);
-    font-style: italic;
-    margin-bottom: .5rem;
+  }
+  .unlock-desc {
+    font-size: .7rem; color: var(--muted); font-weight: 300;
+    line-height: 1.4;
   }
 
-  .sensei-attr {
-    font-size: .78rem;
-    color: var(--muted);
-    font-weight: 300;
+  .unlock-badge {
+    font-family: var(--font-head); font-size: .6rem; font-weight: 700;
+    padding: .18rem .5rem; border-radius: 5px;
+    flex-shrink: 0; white-space: nowrap;
   }
-
-  /* CTA block */
-  .cta-block {
-    text-align: center;
-    padding: 2.5rem 1rem;
-    animation: fadeUp .4s ease both;
-  }
-
-  .cta-block h2 {
-    font-family: var(--font-head);
-    font-size: 1.8rem;
-    font-weight: 800;
-    margin-bottom: .6rem;
-  }
-
-  .cta-block p {
-    color: var(--muted);
-    font-weight: 300;
-    max-width: 480px;
-    margin: 0 auto 1.5rem;
-    line-height: 1.6;
-    font-size: .9rem;
-  }
+  .new-badge { background: rgba(124,77,255,.15); color: var(--accent); border: 1px solid rgba(124,77,255,.3); }
+  .fire-badge { background: rgba(255,179,0,.12); color: var(--accent4); border: 1px solid rgba(255,179,0,.25); font-size: .8rem; }
 
   /* Footer */
   .footer {
     text-align: center;
-    padding: 2rem 0 1rem;
+    padding: 1.5rem 0 .5rem;
     border-top: 1px solid var(--border);
-    margin-top: 2rem;
+    margin-top: auto;
   }
 
   .footer p {
-    font-size: .78rem;
+    font-size: .75rem;
     color: var(--muted);
     font-weight: 300;
     margin-bottom: .3rem;
   }
-
-  .footer-sub { font-size: .72rem !important; }
 
   .footer-links a {
     color: var(--muted);
@@ -374,101 +406,10 @@
   }
   .footer-links a:hover { color: var(--text); }
 
-  /* Resources teaser */
-  .resources-teaser {
-    margin: 0 0 2.5rem;
-    animation: fadeUp .5s ease .1s both;
-  }
-
-  .teaser-label {
-    font-family: var(--font-head);
-    font-size: .68rem;
-    font-weight: 700;
-    letter-spacing: .12em;
-    text-transform: uppercase;
-    color: var(--muted);
-    text-align: center;
-    margin-bottom: 1rem;
-  }
-
-  .teaser-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: .5rem;
-    margin-bottom: 1.1rem;
-  }
-
-  .teaser-item {
-    display: flex;
-    align-items: center;
-    gap: .75rem;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: .75rem .9rem;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .teaser-item.locked {
-    opacity: .55;
-    filter: blur(0px);
-  }
-
-  .teaser-item.locked::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: repeating-linear-gradient(
-      45deg,
-      transparent,
-      transparent 6px,
-      rgba(255,244,232,.015) 6px,
-      rgba(255,244,232,.015) 12px
-    );
-    pointer-events: none;
-  }
-
-  .teaser-icon {
-    font-size: 1.3rem;
-    flex-shrink: 0;
-  }
-
-  .teaser-item > div { flex: 1; min-width: 0; }
-
-  .teaser-name {
-    font-family: var(--font-head);
-    font-size: .78rem;
-    font-weight: 700;
-    color: var(--text);
-    line-height: 1.2;
-  }
-
-  .teaser-sub {
-    font-size: .65rem;
-    color: var(--muted);
-    line-height: 1.3;
-    margin-top: .1rem;
-  }
-
-  .lock {
-    font-size: .75rem;
-    flex-shrink: 0;
-    opacity: .5;
-  }
-
-  .teaser-cta {
-    display: block;
-    width: 100%;
-    max-width: 340px;
-    margin: 0 auto;
-  }
-
-  /* Mobile */
-  @media (max-width: 640px) {
-    .steps { grid-template-columns: 1fr; }
-    .tools-grid { grid-template-columns: repeat(2, 1fr); }
-    .hero { padding: 2rem 0 1.5rem; }
-    .hero-actions { flex-direction: column; }
+  @media (max-width: 480px) {
+    .steps-row { gap: .5rem; }
+    .step-arrow { display: none; }
+    .micro-step { max-width: 80px; }
+    .tools-grid { grid-template-columns: 1fr; }
   }
 </style>

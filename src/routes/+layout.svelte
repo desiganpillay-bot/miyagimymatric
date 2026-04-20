@@ -2,110 +2,97 @@
   import '../app.css';
   import { onMount } from 'svelte';
   import { page } from '$app/stores';
-  import { getSupabase } from '$lib/supabase';
   import { User, Compass, CalendarDays, TrendingUp, BarChart2 } from 'lucide-svelte';
 
-  type NavState = 'public' | 'onboarding' | 'active';
+  const NAV_ITEMS = [
+    { href: '/dashboard',  icon: Compass,      label: 'My Plan'   },
+    { href: '/timetable',  icon: CalendarDays, label: 'Timetable' },
+    { href: '/sba',        icon: TrendingUp,   label: 'SBA'       },
+    { href: '/marks',      icon: BarChart2,    label: 'Marks'     },
+    { href: '/assessment', icon: User,         label: 'Profile'   },
+  ];
 
-  let navState: NavState = 'public';
-  let steps = {
-    assessment: false,
-    timetable:  false,
-    sba:        false,
+  // Page titles for top bar
+  const PAGE_TITLES: Record<string, string> = {
+    '/dashboard':  'My Plan',
+    '/timetable':  'Timetable',
+    '/sba':        'SBA Tracker',
+    '/marks':      'Marks',
+    '/subjects':   'Subjects',
+    '/techniques': 'Techniques',
+    '/resources':  'Resources',
+    '/pomodoro':   'Pomodoro',
+    '/panic':      '🚨 Panic Mode',
+    '/share':      'My APS Card',
   };
 
+  // Utility/auth pages — never show nav or top bar
+  const UTILITY = ['/auth/callback', '/privacy', '/terms', '/how-it-works'];
+  // Assessment has its own header — show bottom nav but no top bar
+  const NO_TOPBAR = ['/assessment'];
+
+  let hasAssessment = false;
+  let localAPS = 0;
+
   onMount(() => {
-    const sb = getSupabase();
-
-    function readSteps() {
-      // SBA counts as done once at least one task has a date entered
-      let sbaDone = false;
-      try {
-        const raw = localStorage.getItem('mmm_sba_v1');
-        if (raw) {
-          const tasks = JSON.parse(raw);
-          sbaDone = Array.isArray(tasks) && tasks.some((t: { due_date?: string }) => t.due_date);
-        }
-      } catch {}
-      steps = {
-        assessment: !!localStorage.getItem('mmm_assessment_v1'),
-        timetable:  !!localStorage.getItem('mmm_timetable_v1'),
-        sba:        sbaDone,
-      };
-    }
-
-    async function updateNavState() {
-      const { data: { session } } = await sb.auth.getSession();
-      if (!session) { navState = 'public'; return; }
-      readSteps();
-      navState = (steps.assessment && steps.timetable) ? 'active' : 'onboarding';
-    }
-
-    updateNavState();
-    sb.auth.onAuthStateChange(() => updateNavState());
+    hasAssessment = !!localStorage.getItem('mmm_assessment_v1');
+    try {
+      const raw = localStorage.getItem('mmm_assessment_v1');
+      if (raw) {
+        const state = JSON.parse(raw);
+        localAPS = state.apsTotal ?? 0;
+      }
+    } catch {}
   });
 
-  // Assessment ✓ = mmm_assessment_v1 exists
-  // Profile    ✓ = same (profile is assessment output)
-  // Study Plan ✓ = same (plan is generated from assessment)
-  // Timetable  ✓ = mmm_timetable_v1 exists
-  // Resources  = always accessible; "matched" once assessment done
-  $: strip = [
-    { label: 'Assessment', done: steps.assessment },
-    { label: 'Study Plan', done: steps.assessment },
-    { label: 'Timetable',  done: steps.timetable  },
-    { label: 'SBA Dates',  done: steps.sba        },
-  ];
-  $: allDone = strip.every(s => s.done);
+  $: path       = $page.url.pathname;
+  $: isUtility  = UTILITY.some(r => path.startsWith(r));
+  $: isLanding  = path === '/';
+  $: isNoTopbar = NO_TOPBAR.some(r => path.startsWith(r));
 
-  const ACTIVE_NAV = [
-    { href: '/dashboard',  icon: Compass,     label: 'My Plan'  },
-    { href: '/timetable',  icon: CalendarDays,label: 'Timetable'  },
-    { href: '/sba',        icon: TrendingUp,  label: 'SBA'        },
-    { href: '/marks',      icon: BarChart2,   label: 'Marks'      },
-    { href: '/assessment', icon: User,        label: 'Profile'    },
-  ];
+  $: showNav    = !isUtility && (!isLanding || hasAssessment);
+  $: showTopBar = !isUtility && !isLanding && !isNoTopbar;
+  $: pageTitle  = PAGE_TITLES[path] ?? '';
 
-  // Routes that never show the bottom nav
-  const PUBLIC_ROUTES = ['/', '/how-it-works', '/privacy', '/terms', '/auth/callback'];
-
-  $: current   = $page.url.pathname;
-  $: showNav   = !PUBLIC_ROUTES.includes($page.url.pathname);
-  $: navItems  = ACTIVE_NAV;
-  $: showStrip = navState !== 'public';
-
-  // Use $page.url.pathname directly so Svelte tracks the store subscription
-  // explicitly — reading through `current` can miss re-renders in Svelte 4.
   function isActive(href: string): boolean {
-    const path = $page.url.pathname;
     if (href === '/') return path === '/';
     return path === href || path.startsWith(href + '/');
   }
 </script>
 
-<div class="layout-wrap">
+<div class="layout-wrap" class:has-nav={showNav} class:has-topbar={showTopBar}>
 
-  {#if showStrip}
-    <div class="setup-strip" class:all-done={allDone}>
-      {#each strip as s, i}
-        <div class="strip-step" class:done={s.done} class:next={!s.done && (i === 0 || strip[i-1].done)}>
-          <span class="strip-icon">{s.done ? '✓' : (i + 1)}</span>
-          <span class="strip-label">{s.label}</span>
-        </div>
-        {#if i < strip.length - 1}
-          <span class="strip-divider">›</span>
-        {/if}
-      {/each}
-    </div>
+  {#if showTopBar}
+    <header class="top-bar">
+      <!-- Logo mark -->
+      <a href="/" class="top-logo">
+        <span class="logo-m">M</span>
+      </a>
+
+      <!-- Page title -->
+      <span class="top-title">{pageTitle}</span>
+
+      <!-- APS chip — quick access to dashboard -->
+      {#if hasAssessment && localAPS > 0}
+        <a href="/dashboard" class="aps-chip">
+          <span class="aps-chip-val">{localAPS}</span>
+          <span class="aps-chip-label">APS</span>
+        </a>
+      {:else}
+        <a href="/dashboard" class="top-plan-btn">My Plan</a>
+      {/if}
+    </header>
   {/if}
 
   <slot />
 
   {#if showNav}
     <nav class="bottom-nav">
-      {#each navItems as n}
+      {#each NAV_ITEMS as n}
         <a href={n.href} class="nav-item" class:active={isActive(n.href)}>
-          <span class="nav-icon"><svelte:component this={n.icon} size={20} strokeWidth={1.6} /></span>
+          <span class="nav-icon">
+            <svelte:component this={n.icon} size={20} strokeWidth={1.6} />
+          </span>
           <span class="nav-label">{n.label}</span>
         </a>
       {/each}
@@ -116,100 +103,108 @@
 <style>
   .layout-wrap {
     min-height: 100vh;
-    padding-bottom: 72px;
   }
+  .layout-wrap.has-nav    { padding-bottom: 60px; }
+  .layout-wrap.has-topbar { padding-top: 52px; }
 
-  /* ── Setup progress strip ─────────────────────────────── */
-  .setup-strip {
-    position: sticky;
-    top: 0;
-    z-index: 50;
+  /* ── Top bar ─────────────────────────────────────────────── */
+  .top-bar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 52px;
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: .35rem;
-    padding: .45rem 1rem;
-    background: rgba(7, 7, 11, 0.88);
-    border-bottom: 1px solid rgba(255, 244, 232, 0.08);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    overflow-x: auto;
-    scrollbar-width: none;
-    flex-wrap: nowrap;
+    justify-content: space-between;
+    padding: 0 1.1rem;
+    background: rgba(13, 10, 24, 0.90);
+    border-bottom: 1px solid rgba(255, 244, 232, 0.07);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    z-index: 100;
   }
 
-  .setup-strip::-webkit-scrollbar { display: none; }
-
-  .setup-strip.all-done {
-    border-bottom-color: rgba(122, 255, 122, 0.20);
-  }
-
-  .strip-step {
-    display: flex;
-    align-items: center;
-    gap: .3rem;
+  .top-logo {
+    width: 30px; height: 30px;
+    border-radius: 8px;
+    background: var(--grad-cta);
+    display: flex; align-items: center; justify-content: center;
+    text-decoration: none;
     flex-shrink: 0;
   }
 
-  .strip-icon {
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: .6rem;
+  .logo-m {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: .85rem;
+    font-weight: 800;
+    color: #0D0A18;
+    line-height: 1;
+  }
+
+  .top-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: .82rem;
     font-weight: 700;
-    font-family: 'Space Grotesk', sans-serif;
-    background: rgba(255, 244, 232, 0.08);
-    color: rgba(255, 244, 232, 0.30);
-    flex-shrink: 0;
+    color: rgba(255, 244, 232, 0.75);
+    letter-spacing: .02em;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
   }
 
-  .strip-label {
+  /* APS chip */
+  .aps-chip {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    background: rgba(124, 77, 255, 0.15);
+    border: 1px solid rgba(124, 77, 255, 0.35);
+    border-radius: 100px;
+    padding: .25rem .65rem;
+    text-decoration: none;
+    transition: background .15s;
+  }
+  .aps-chip:hover { background: rgba(124, 77, 255, 0.25); }
+
+  .aps-chip-val {
     font-family: 'Space Grotesk', sans-serif;
-    font-size: .62rem;
+    font-size: .78rem;
+    font-weight: 800;
+    color: #7C4DFF;
+    line-height: 1;
+  }
+
+  .aps-chip-label {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: .58rem;
     font-weight: 600;
+    color: rgba(124, 77, 255, 0.7);
+    letter-spacing: .06em;
+  }
+
+  .top-plan-btn {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: .72rem;
+    font-weight: 700;
+    color: rgba(255, 244, 232, 0.45);
+    text-decoration: none;
     letter-spacing: .04em;
-    color: rgba(255, 244, 232, 0.30);
-    white-space: nowrap;
+    transition: color .15s;
   }
+  .top-plan-btn:hover { color: var(--text); }
 
-  /* Next step to complete */
-  .strip-step.next .strip-icon {
-    background: rgba(255, 82, 82, 0.20);
-    color: #FF5252;
-  }
-  .strip-step.next .strip-label { color: #FF5252; }
-
-  /* Completed step */
-  .strip-step.done .strip-icon {
-    background: rgba(122, 255, 122, 0.20);
-    color: #7AFF7A;
-  }
-  .strip-step.done .strip-label { color: rgba(255, 244, 232, 0.65); }
-
-  .strip-divider {
-    font-size: .6rem;
-    color: rgba(255, 244, 232, 0.18);
-    flex-shrink: 0;
-  }
-
-  /* ── Bottom nav ───────────────────────────────────────── */
+  /* ── Bottom nav ──────────────────────────────────────────── */
   .bottom-nav {
     position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    bottom: 0; left: 0; right: 0;
     height: 60px;
-    background: rgba(7, 7, 11, 0.92);
-    border-top: 1px solid rgba(255, 244, 232, 0.10);
+    background: rgba(13, 10, 24, 0.94);
+    border-top: 1px solid rgba(255, 244, 232, 0.08);
     display: flex;
     align-items: stretch;
     z-index: 100;
     padding-bottom: env(safe-area-inset-bottom, 0px);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
   }
 
   .nav-item {
@@ -220,13 +215,14 @@
     justify-content: center;
     gap: 3px;
     text-decoration: none;
-    color: rgba(255, 244, 232, 0.40);
+    color: rgba(255, 244, 232, 0.30);
     transition: color 0.15s;
     padding: 6px 0;
+    -webkit-tap-highlight-color: transparent;
   }
 
-  .nav-item:hover { color: rgba(255, 244, 232, 0.80); }
-  .nav-item.active { color: #FF5252; }
+  .nav-item:hover  { color: rgba(255, 244, 232, 0.70); }
+  .nav-item.active { color: var(--accent); }
 
   .nav-icon {
     display: flex;
@@ -236,9 +232,9 @@
   }
 
   .nav-label {
-    font-size: 0.52rem;
+    font-size: 0.50rem;
     font-weight: 700;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.05em;
     text-transform: uppercase;
     font-family: 'Space Grotesk', sans-serif;
     white-space: nowrap;

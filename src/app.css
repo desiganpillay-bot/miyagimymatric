@@ -13,24 +13,25 @@
 
 /* ── Default theme (applied via :root — swappable per user) ── */
 :root {
-  --bg: #07070B;
-  --surface: #0e0e15;
-  --surface2: #16161e;
-  --border: rgba(255, 244, 232, 0.12);
-  --accent: #FF5252;       /* Coral — primary CTA, active states */
-  --accent2: #69B4FF;      /* Sky Blue — secondary, links */
+  --bg: #0D0A18;
+  --surface: #120F1E;
+  --surface2: #1A1628;
+  --border: rgba(255, 244, 232, 0.10);
+  --accent: #7C4DFF;       /* Purple — primary CTA, active states */
+  --accent2: #E040FB;      /* Magenta — highlights, labels */
   --accent3: #7AFF7A;      /* Lime — scores, success, met targets */
-  --accent4: #F5F56A;      /* Lemon — highlights, warnings */
+  --accent4: #FFB300;      /* Amber — warnings, APS score */
+  --accent5: #69B4FF;      /* Sky — secondary links */
   --text: #FFF4E8;         /* Porcelain */
-  --muted: rgba(212, 190, 130, 0.55);   /* Sand-tinted muted */
-  --danger: #FF5252;
+  --muted: rgba(212, 190, 130, 0.55);
+  --danger: #FF5C8A;       /* Hot pink — urgent/danger */
   --radius: 12px;
   --font-head: 'Space Grotesk', sans-serif;
   --font-body: 'Inter', sans-serif;
 
-  /* Gradient shortcuts */
-  --grad-cta: linear-gradient(to right, #FF5252, #F5F56A, #7AFF7A);
-  --grad-cta-135: linear-gradient(135deg, #FF5252, #F5F56A, #7AFF7A);
+  /* Gradient shortcuts — Purple → Magenta → Amber */
+  --grad-cta: linear-gradient(to right, #7C4DFF, #E040FB, #FFB300);
+  --grad-cta-135: linear-gradient(135deg, #7C4DFF, #E040FB, #FFB300);
 }
 
 html {
@@ -47,7 +48,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Background gradient — coral / lime / sky orbs */
+/* Background gradient — purple / magenta / amber orbs */
 body::before {
   content: '';
   position: fixed;
@@ -55,9 +56,9 @@ body::before {
   pointer-events: none;
   z-index: 0;
   background:
-    radial-gradient(ellipse 70% 50% at 15% 0%,   rgba(105,180,255,.10) 0%, transparent 55%),
-    radial-gradient(ellipse 55% 40% at 85% 10%,  rgba(255,82,82,.08)   0%, transparent 50%),
-    radial-gradient(ellipse 60% 45% at 80% 100%, rgba(122,255,122,.07) 0%, transparent 55%);
+    radial-gradient(ellipse 70% 50% at 15% 0%,   rgba(124,77,255,.12) 0%, transparent 55%),
+    radial-gradient(ellipse 55% 40% at 85% 10%,  rgba(224,64,251,.08) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 45% at 80% 100%, rgba(255,179,0,.06)  0%, transparent 55%);
 }
 
 /* ============================================================
