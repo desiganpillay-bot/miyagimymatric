@@ -1,5 +1,5 @@
 # STATUS.md — Miyagi My Matric
-_Last updated: 2026-04-18 (session 6)_
+_Last updated: 2026-04-21 (session 7)_
 
 ---
 
@@ -19,16 +19,19 @@ _Last updated: 2026-04-18 (session 6)_
 | `src/routes/marks/+page.svelte` | Mark entry — subject tabs from assessment, topic + sections + file attach, trend indicator, APS calculator |
 | `src/routes/subjects/+page.svelte` | Subject strategy guide (8 subjects) |
 | `src/routes/techniques/+page.svelte` | Study techniques reference |
-| `src/routes/resources/+page.svelte` | Resource directory — zero-rated platforms flagged |
+| `src/routes/resources/+page.svelte` | Resource directory — full rewrite, curated drop format, share buttons, Panic Mode CTA |
+| `src/routes/share/+page.svelte` | Shareable APS card — WhatsApp/IG share |
+| `src/routes/panic/+page.svelte` | Panic Mode — rescue study plan generator |
 | **Vercel deploy** | Live at `miyagimymatric.com` + `www.miyagimymatric.com`. SSL active. Auto-deploys from GitHub main. |
 | **Supabase auth emails** | Confirm signup + Magic link templates branded — dark card, yellow CTA, SA footer. |
 | `src/lib/constants.ts` | 15 subjects, 20 SA universities, 15 fields of study with APS requirements, mark ranges, exam dates |
 | `src/lib/aps.ts` | APS calculation, SBA cushion calculator, score formatting helpers |
 | `src/lib/stores/assessment.ts` | Svelte stores with localStorage auto-persist (`mmm_assessment_v1`) |
-| `src/lib/supabase.ts` | Supabase browser client |
-| `src/lib/auth.ts` | Magic link + Google OAuth helpers |
-| `src/app.css` | Design system — new palette: Coral #FF5252, Lemon #F5F56A, Lime #7AFF7A, Sky #69B4FF. All inner pages updated. |
-| **Bottom nav** | Route-based visibility — shows on all non-public inner pages regardless of auth. 5 items: My Plan · Timetable · SBA · Marks · Profile |
+| `src/lib/supabase.ts` | Stub — Supabase auth removed; prevents import errors |
+| `src/lib/auth.ts` | Stub — auth removed; prevents import errors |
+| `src/app.css` | Design system — IG Energy palette: purple #7C4DFF · magenta #E040FB · amber #FFB300. All pages updated. |
+| **Top bar** | Persistent on all inner pages — logo + page title + live APS chip |
+| **Bottom nav** | Route-based visibility — localStorage-driven (no auth gate). 5 items: My Plan · Timetable · SBA · Marks · Profile |
 | `supabase/migrations/001_initial_schema.sql` | All tables: profiles, learner_subjects, subject_marks, goals, timetable_templates, timetable_slots, study_sessions, sba_tasks, report_uploads, achievements, assessment_snapshots |
 | `supabase/migrations/002_rls_policies.sql` | RLS on all tables — `auth.uid() = user_id` pattern |
 | `supabase/migrations/003_functions_triggers.sql` | handle_new_user trigger, update_streak function, handle_session_xp trigger |
@@ -41,15 +44,13 @@ _Last updated: 2026-04-18 (session 6)_
 
 ### ⚡ NEXT SPRINT (start here next session)
 
-**Sprint goal: Google OAuth fix, then PWA offline cache**
+**Sprint goal: Surface streak + XP on dashboard, /share and /panic links, report card auto-import**
 
-1. **OAuth diagnosis first — before touching any code:**
-   - Check Supabase dashboard → Authentication → Logs for exact error
-   - Check Google Cloud Console → OAuth consent screen — is it still in "Testing" mode? (limits to 100 users)
-   - Verify redirect URI in Google Cloud matches exactly: `https://rdyeimdlnueqolptkpqx.supabase.co/auth/v1/callback`
-   - Only write code if the issue is not a config fix
-
-2. **PWA after OAuth:** Add `vite-plugin-pwa`, configure service worker, test offline behaviour. Watch for Svelte 4 / Vite compatibility issues.
+1. Surface streak + XP on dashboard (schema already has these columns)
+2. Add /share and /panic to dashboard quick-actions
+3. Report card photo → auto-import (Claude Haiku OCR)
+4. Parent read-only share link
+5. WhatsApp daily nudge integration
 
 Build in this order:
 
@@ -226,6 +227,24 @@ Manual slot edit preserved. localStorage persist preserved.
 
 ## SESSION LOG
 _Session history written here by Claude at end of each session_
+
+### 2026-04-21 — UI overhaul session (design/Miyagi project)
+
+- IG Energy palette applied globally: purple #7C4DFF · magenta #E040FB · amber #FFB300
+- Landing page: smart CTA (new vs returning user), tool cards removed, premium SVG unlock list added
+- Layout: persistent top bar (logo + page title + live APS chip) on all inner pages
+- Layout: nav visibility driven by localStorage, not auth state; setup strip removed
+- Assessment: "View My Plan" as primary CTA, email save made collapsible
+- Marks: palette updated, redundant back-link hidden
+- Dashboard: palette updated
+- Resources: full rewrite — curated drop format with share buttons + Panic Mode CTA
+- NEW: `src/routes/share/+page.svelte` — shareable APS card (WhatsApp/IG)
+- NEW: `src/routes/panic/+page.svelte` — rescue study plan generator
+- /share and /panic added to layout PAGE_TITLES map
+- Hotfixes this session: restored deleted lib files (aps, constants, highValueTopics, storage, stores/assessment), removed stale .vercel/output from repo, restored src/app.html, fixed malformed footer tag in +page.svelte
+- Google OAuth credential (`client_secret*.json`) removed from repo and rotated; `client_secret*.json` added to .gitignore
+- Open: auth.ts and supabase.ts are now stubs — pages referencing them need to be migrated to localStorage-only pattern
+- Files modified: `src/app.css`, `src/routes/+page.svelte`, `src/routes/+layout.svelte`, `src/routes/assessment/+page.svelte`, `src/routes/dashboard/+page.svelte`, `src/routes/marks/+page.svelte`, `src/routes/resources/+page.svelte`, all lib files restored, `src/routes/share/+page.svelte` (new), `src/routes/panic/+page.svelte` (new)
 
 ### 2026-04-18 — Palette consistency + nav active state fix
 
