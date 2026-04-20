@@ -152,7 +152,8 @@
         </div>
       </div>
     </div>
-  </section> class="footer">
+  </section>
+  <footer class="footer">
     <p>Built for SA learners · IEB + CAPS · Free</p>
     <p class="footer-links">
       <a href="/privacy">Privacy</a> ·
