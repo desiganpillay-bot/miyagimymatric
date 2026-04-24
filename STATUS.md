@@ -1,5 +1,5 @@
 # STATUS.md — Miyagi My Matric
-_Last updated: 2026-04-21 (session 7)_
+_Last updated: 2026-04-24 (session 9)_
 
 ---
 
@@ -9,7 +9,7 @@ _Last updated: 2026-04-21 (session 7)_
 |------|-------------|
 | `src/routes/+page.svelte` | Landing: Start Assessment CTA (primary) + How it works pill (ghost) + resources teaser + "Take me back to my Plan" |
 | `src/routes/assessment/+page.svelte` | Full 6-section self-assessment. Reactivity fixed. localStorage auto-persist. POPIA consent checkboxes. |
-| `src/routes/auth/callback/+page.svelte` | Auth callback — PKCE exchange, POPIA consent persist to DB, redirect to dashboard |
+| `src/routes/auth/callback/+page.svelte` | Auth callback — implicit flow via `onAuthStateChange`, error query param detection, 10s timeout fallback |
 | `src/routes/dashboard/+page.svelte` | "My Plan" — APS ring, prelim/finals countdowns, streak, recent marks, SBA alert. Spinner fix (try/catch/finally + 8s safety). |
 | `src/routes/privacy/+page.svelte` | POPIA Privacy Notice — full legal text, design system |
 | `src/routes/terms/+page.svelte` | Terms of Use + disclaimer + limited indemnity |
@@ -27,8 +27,8 @@ _Last updated: 2026-04-21 (session 7)_
 | `src/lib/constants.ts` | 15 subjects, 20 SA universities, 15 fields of study with APS requirements, mark ranges, exam dates |
 | `src/lib/aps.ts` | APS calculation, SBA cushion calculator, score formatting helpers |
 | `src/lib/stores/assessment.ts` | Svelte stores with localStorage auto-persist (`mmm_assessment_v1`) |
-| `src/lib/supabase.ts` | Stub — Supabase auth removed; prevents import errors |
-| `src/lib/auth.ts` | Stub — auth removed; prevents import errors |
+| `src/lib/supabase.ts` | Full Supabase client — `$env/static/public`, implicit flow, null guard |
+| `src/lib/auth.ts` | Full auth helpers — magic link + Google OAuth, try/catch hardened |
 | `src/app.css` | Design system — IG Energy palette: purple #7C4DFF · magenta #E040FB · amber #FFB300. All pages updated. |
 | **Top bar** | Persistent on all inner pages — logo + page title + live APS chip |
 | **Bottom nav** | Route-based visibility — localStorage-driven (no auth gate). 5 items: My Plan · Timetable · SBA · Marks · Profile |
@@ -95,7 +95,9 @@ Manual slot edit preserved. localStorage persist preserved.
 | **Next** | **Timetable rebuild** | See sprint detail above |
 | Deferred | Marks → Supabase sync | Not blocking learner value |
 | Deferred | Pomodoro session logging | Not blocking learner value |
-| Deferred | Auth fix (localhost→miyagimymatric.com) | Free tier, not urgent |
+| **Immediate** | **Paste new Google OAuth secret into Supabase** | New secret `****ul9p` (Apr 24) created — must be saved in Supabase → Auth → Providers → Google |
+| Deferred | Remove debug URL from callback page | After auth confirmed working |
+| Deferred | Delete old Google secret `****qfxR` (Apr 20) from Google Cloud Console | After new secret confirmed working |
 | Deferred | Subject strategy pages (dynamic routes) | Nice to have |
 | Deferred | Report upload + AI parsing | Phase 3 |
 | Deferred | PWA / offline cache | After core features stable |
@@ -227,6 +229,26 @@ Manual slot edit preserved. localStorage persist preserved.
 
 ## SESSION LOG
 _Session history written here by Claude at end of each session_
+
+### 2026-04-24 — Google OAuth auth debugging + supabase.ts restore (session 9)
+
+- Processed multiple Claude Design src exports — diffs reviewed, validated, merged into project
+- Restored `src/lib/supabase.ts` from stub to full client: fixed broken `import.meta.env` → `$env/static/public` (critical — was why Google button was unresponsive); added `flowType: 'implicit'`, `detectSessionInUrl: true`, null guard
+- Restored `src/lib/auth.ts` from stub to full Supabase auth (magic link + Google OAuth) with try/catch hardening
+- Rewrote `src/routes/auth/callback/+page.svelte`: PKCE → implicit flow via `onAuthStateChange`, error query param detection, debug URL display, 10s timeout fallback
+- Fixed `src/routes/assessment/+page.svelte`: removed 60-line orphaned login gate (merge artefact causing `</div> attempted to close an element that was not open` parse error)
+- Cleared Supabase DB (all users + assessment_snapshots) for fresh testing
+- Debugged Google OAuth end-to-end: root cause = stale Google client secret in Supabase (old `****qfxR` Apr 20 vs new `****ul9p` Apr 24). Supabase was returning `?error=server_error&error_description=Unable+to+exchange+external+code`
+- **PENDING**: User must paste new Google client secret (`****ul9p`) into Supabase → Auth → Providers → Google → Save
+- Files modified: `src/lib/supabase.ts`, `src/lib/auth.ts`, `src/routes/auth/callback/+page.svelte`, `src/routes/assessment/+page.svelte`, `src/lib/constants.ts`, `src/lib/aps.ts`, `src/routes/share/+page.svelte`
+
+### 2026-04-21 — IB China scoping (session 8)
+
+- Discussed effort to add International Baccalaureate (IB) support for a specific user in China
+- Scoped as: IB mode (not a full fork) if targeting self-assessment + timetable only
+- Key differences: 1–7 scoring, 45-point max, EE/TOK/CAS components, Chinese university targets, China-accessible resources
+- Decision: on hold — user to confirm which tools needed, university targets, and language requirement before building
+- No files modified this session
 
 ### 2026-04-21 — UI overhaul session (design/Miyagi project)
 

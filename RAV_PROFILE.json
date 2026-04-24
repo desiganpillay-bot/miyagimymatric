@@ -1,0 +1,242 @@
+{
+  "meta": {
+    "schema_version": "miyagi_v2",
+    "assessment_version": "v2_deep",
+    "generated_date": "2026-04-23",
+    "remeasure_date": "2026-05-21",
+    "tier": "sensei"
+  },
+  "student": {
+    "name": "Ravanth Pillay",
+    "preferred_name": "Rav",
+    "grade": 12,
+    "school": "Crawford Lonehill",
+    "exam_board": "IEB",
+    "year": 2026
+  },
+  "targets": {
+    "field": "BCom",
+    "universities": [
+      {
+        "name": "University of Pretoria",
+        "faculty": "Economic and Management Sciences",
+        "aps_required": null,
+        "status": "met"
+      },
+      {
+        "name": "University of the Witwatersrand",
+        "faculty": "Commerce, Law and Management",
+        "aps_required": null,
+        "status": "4_points_short"
+      }
+    ],
+    "aps_gap_to_wits": 4
+  },
+  "subjects": [
+    {
+      "name": "Mathematics",
+      "cycle1_mark_pct": 97,
+      "aps_points": 7,
+      "priority_band": "STRONG",
+      "confidence_rating": 7.5,
+      "confidence_gap_type": "maintenance",
+      "notes": "Ceiling performance. Maintenance only. Method (YouTube → worked examples → problems) is transferable to other subjects."
+    },
+    {
+      "name": "Computer Applications Technology",
+      "short_name": "CAT",
+      "cycle1_mark_pct": 90,
+      "aps_points": 7,
+      "priority_band": "STRONG",
+      "confidence_rating": 7.5,
+      "confidence_gap_type": "maintenance",
+      "notes": "Maintenance only."
+    },
+    {
+      "name": "History",
+      "cycle1_mark_pct": 82,
+      "aps_points": 6,
+      "priority_band": "STRONG",
+      "confidence_rating": 7.5,
+      "confidence_gap_type": "maintenance",
+      "notes": "Confidence well-calibrated. Protect, do not neglect."
+    },
+    {
+      "name": "English Home Language",
+      "short_name": "English",
+      "cycle1_mark_pct": 76,
+      "aps_points": 6,
+      "priority_band": "MEDIUM",
+      "confidence_rating": 5.5,
+      "confidence_gap_type": "imposter_anxiety",
+      "notes": "Confidence (5-6) is below mark (76). He underestimates his ability here. Easy lift via past papers and reassurance — no rebuild needed, just evidence."
+    },
+    {
+      "name": "Afrikaans First Additional Language",
+      "short_name": "Afrikaans",
+      "cycle1_mark_pct": 54,
+      "aps_points": 3,
+      "priority_band": "HIGH",
+      "confidence_rating": 3.5,
+      "confidence_gap_type": "real_gap",
+      "notes": "Confidence matches mark — not a blind spot. Real gap requiring active work. Lower APS leverage than LO admin completion despite feeling like the priority."
+    },
+    {
+      "name": "Physical Sciences",
+      "short_name": "Sciences",
+      "cycle1_mark_pct": 43,
+      "aps_points": 2,
+      "priority_band": "HIGH",
+      "confidence_rating": 3.5,
+      "confidence_gap_type": "real_gap",
+      "notes": "Largest content gap. Confidence tracks mark — not a blind spot but a genuine rebuild. Solo studying does not work here. Peer session required. Target 55-60% by end of year."
+    },
+    {
+      "name": "Life Orientation",
+      "short_name": "LO",
+      "cycle1_mark_pct": null,
+      "aps_points": null,
+      "priority_band": "HIGH",
+      "confidence_rating": {
+        "exams": 7.5,
+        "admin_community_service": 1.5
+      },
+      "confidence_gap_type": "structural_collapse",
+      "notes": "Exam component is fine. Community Service admin/logging is completely uncompleted. Estimated 15-20 APS-relevant marks unclaimed. Highest leverage APS play on the entire profile — requires no learning, only task completion. This is a Saturday fix, not a semester rebuild."
+    }
+  ],
+  "aps": {
+    "cycle1_computed": 31,
+    "computation_note": "Based on IEB APS scale: 90-100=7, 80-89=6, 70-79=5, 60-69=4, 50-59=3, 40-49=2, 30-39=1. Maths(7) + CAT(7) + History(6) + English(6) + Afrikaans(3) + Sciences(2) = 31. LO excluded pending admin completion. LO completion expected to add material points.",
+    "aps_at_full_lo": "TBC — depends on final LO admin completion",
+    "highest_leverage_action": "LO community service admin completion (no learning curve)"
+  },
+  "dimensions": {
+    "d1_learning_modality": {
+      "primary": "visual",
+      "pattern": "watch_then_practice",
+      "description": "Learns by watching worked examples first, then attempting problems. Not a reader-first learner. Textbook-led studying without video scaffold is low yield for him.",
+      "action": "Every new topic: find a YouTube explainer first. Attempt problems only after watching. Do not start with the textbook."
+    },
+    "d2_focus_energy": {
+      "peak_window": "late_night",
+      "peak_window_detail": "9pm–11pm",
+      "focus_span_minutes": 52,
+      "focus_span_range": "45-60",
+      "session_killers": ["phone_nearby", "hitting_unknown_question"],
+      "crash_pattern": "focus collapses at point of not-knowing, not at time limit",
+      "recovery": "short break — extending session does not work",
+      "problem_type": "friction, not time management",
+      "action": "Phone in another room for the 9pm block. Pre-decide response to wall-hitting: flag it, skip it, photo to a mate. Session-killers don't kill sessions when the exit is pre-built."
+    },
+    "d3_procrastination": {
+      "type": "deadline_driven",
+      "onset": "starts but loses momentum within 20 minutes on heavy subjects",
+      "delay_range_minutes": {
+        "most_subjects": "5-30",
+        "hardest_subjects": "60+"
+      },
+      "avoidance_function": "distraction_from_feeling_stuck",
+      "avoidance_detail": "Not boredom, not pressure — specifically the 'I don't know what to do next' feeling triggers avoidance",
+      "override_mechanism": "external_deadline_only",
+      "plan_implication": "Plans built on 'study for X hours' will fail. Plans built on appointments, external deadlines, and co-study slots will work.",
+      "action": "Replace time-based goals with event-based commitments. 'Tuesdays 8pm I study Sciences with [name]' outperforms 'I'll study Sciences 3x a week'."
+    },
+    "d4_confidence_map": {
+      "calibration_quality": "high",
+      "calibration_note": "Rav's confidence ratings track his marks closely across almost every subject. Unusual self-awareness — not a blind-spot profile.",
+      "subjects": [
+        { "subject": "Mathematics", "confidence": 7.5, "mark_pct": 97, "gap_type": "maintenance" },
+        { "subject": "CAT", "confidence": 7.5, "mark_pct": 90, "gap_type": "maintenance" },
+        { "subject": "History", "confidence": 7.5, "mark_pct": 82, "gap_type": "maintenance" },
+        { "subject": "English", "confidence": 5.5, "mark_pct": 76, "gap_type": "imposter_anxiety" },
+        { "subject": "Afrikaans", "confidence": 3.5, "mark_pct": 54, "gap_type": "real_gap" },
+        { "subject": "Physical Sciences", "confidence": 3.5, "mark_pct": 43, "gap_type": "real_gap" },
+        { "subject": "LO (exams)", "confidence": 7.5, "mark_pct": null, "gap_type": "maintenance" },
+        { "subject": "LO (admin)", "confidence": 1.5, "mark_pct": null, "gap_type": "structural_collapse" }
+      ],
+      "remeasure_date": "2026-05-21",
+      "leading_indicator_target": "Physical Sciences confidence moves from 3-4 to 5-6 by remeasure date"
+    },
+    "d5_defence_mechanism": {
+      "type": "peer_learner",
+      "description": "When hitting an unknown question, first move is to ask a mate who gets it",
+      "peer_network_quality": "strong",
+      "peer_network_note": "Has a genuine go-to mate in every main subject including Sciences — unusually well-networked",
+      "weakness": "Mates unavailable at 11pm when the wall hits. On-demand help fails at peak study time.",
+      "intervention_design": "Scheduled peer sessions, not on-demand requests",
+      "action": "Book a standing Sciences session with a named mate. Same time every week. Not 'let me know if you need help' — a calendar appointment."
+    },
+    "d6_stakes_accountability": {
+      "stakes_awareness": {
+        "score": "partial",
+        "knows_aps_target": true,
+        "up_status": "met",
+        "wits_gap": 4,
+        "highest_leverage_subject_self_reported": "Afrikaans",
+        "highest_leverage_subject_actual": "LO_admin",
+        "stakes_correction_delivered": true,
+        "reframe_note": "LO community service completion outperforms Afrikaans in APS-per-hour — zero learning curve, pure task completion"
+      },
+      "accountability_preference": {
+        "what_works": "working_alongside_someone",
+        "what_works_detail": "Co-study, in-person or FaceTime — another human present or on-call",
+        "what_does_not_work": ["charts_streaks", "consequences", "parent_check_ins", "intrinsic_motivation"],
+        "structure_type": "co_presence",
+        "action": "Two fixed co-study slots per week: Sciences + one other weak subject. Same time, same place or call. Binary: happened or it didn't."
+      }
+    },
+    "d7_honesty_flag": {
+      "flag": true,
+      "response": "yes — there is something about matric not shared with parents or teachers",
+      "follow_up": "also reported: does not tell anyone when stressed; considers this acceptable",
+      "tension_noted": true,
+      "intervention": "private_note_delivered_in_profile",
+      "escalation": "not_required — surfaced and acknowledged; not scored; Desi's territory",
+      "note_for_codebase": "Do not display this dimension publicly. Include only in parent/guardian view if that tier is built."
+    }
+  },
+  "archetype": {
+    "name": "The Calibrated Outperformer",
+    "tagline": "You know exactly where you stand. The problem is you keep trying to fix it alone — and alone is the one mode you told us doesn't work.",
+    "insight": "You're not avoiding Sciences because you're lazy. You're avoiding it because hitting a wall alone at 11pm with no clear next move is a genuinely bad feeling, and your brain has learned to route around it. The fix isn't willpower. It's removing the solo.",
+    "strength": "Self-honesty. Rav's confidence ratings match his marks almost exactly — he's not delusional about his position, which makes intervention design far easier.",
+    "risk": "Solo-running a problem that requires co-presence. High self-awareness without structural support becomes 'I know what's wrong' paralysis.",
+    "highest_leverage_action": "LO admin completion (Saturday fix, no learning curve, material APS impact)",
+    "second_highest_leverage_action": "Standing peer session for Physical Sciences (structural, not motivational fix)"
+  },
+  "recommendations": {
+    "this_week": [
+      {
+        "priority": 1,
+        "action": "Complete LO community service logging and admin",
+        "rationale": "Highest APS return per hour on the entire profile. Pure task completion — no learning required.",
+        "timing": "Saturday morning before anything else"
+      },
+      {
+        "priority": 2,
+        "action": "Book a named, standing Sciences co-study session with a specific mate",
+        "rationale": "Peer-learner defence mechanism requires structural availability, not on-demand requests",
+        "timing": "This week — calendar slot with notification"
+      },
+      {
+        "priority": 3,
+        "action": "Apply the Maths method to one Physics or Chemistry topic",
+        "rationale": "YouTube explainer → 5 problems → repeat. He already owns this method. Redirect it.",
+        "timing": "First co-study session"
+      },
+      {
+        "priority": 4,
+        "action": "Phone in another room for the 9pm study block",
+        "rationale": "Phone proximity is a named session-killer. Removal, not DND.",
+        "timing": "Tonight"
+      }
+    ],
+    "four_week_milestone": {
+      "date": "2026-05-21",
+      "target": "Physical Sciences confidence moves from 3-4 to 5-6 on the same 1-10 scale",
+      "measure": "Re-run Dimension 4 confidence map on all 7 subjects",
+      "leading_indicator_note": "Confidence shift precedes mark shift. If confidence moves, the intervention is working before results confirm it."
+    }
+  }
+}

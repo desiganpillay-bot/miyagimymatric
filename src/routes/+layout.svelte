@@ -32,7 +32,7 @@
   // Routes that never show nav or top bar
   const UTILITY = ['/auth/callback', '/privacy', '/terms', '/how-it-works'];
   // Routes that are public (no auth redirect)
-  const PUBLIC = ['/', '/assessment', '/auth/callback', '/privacy', '/terms', '/how-it-works', '/panic', '/resources', '/techniques', '/subjects', '/timetable', '/sba', '/marks', '/dashboard', '/pomodoro', '/share'];
+  const PUBLIC = ['/', '/assessment', '/auth/callback', '/privacy', '/terms', '/how-it-works', '/panic', '/resources', '/techniques', '/subjects', '/timetable', '/sba', '/marks', '/dashboard', '/pomodoro', '/share', '/sensei'];
 
   let authed    = false;
   let localAPS  = 0;
@@ -88,13 +88,47 @@
     if (href === '/') return path === '/';
     return path === href || path.startsWith(href + '/');
   }
+
+  // ── Secret door — long-press M logo 3s → /sensei ───────────
+  let logoPressTimer: ReturnType<typeof setTimeout> | null = null;
+  let logoPressing = false;
+
+  function startLogoPress(e: Event) {
+    e.preventDefault();
+    logoPressing = true;
+    logoPressTimer = setTimeout(() => {
+      logoPressing = false;
+      if (typeof navigator !== 'undefined' && navigator.vibrate) navigator.vibrate([60, 40, 120]);
+      goto('/sensei');
+    }, 3000);
+  }
+
+  function endLogoPress() {
+    if (logoPressTimer) { clearTimeout(logoPressTimer); logoPressTimer = null; }
+    if (logoPressing) { logoPressing = false; goto('/'); }
+  }
+
+  function cancelLogoPress() {
+    if (logoPressTimer) { clearTimeout(logoPressTimer); logoPressTimer = null; }
+    logoPressing = false;
+  }
 </script>
 
 <div class="layout-wrap" class:has-nav={showNav} class:has-topbar={showTopBar}>
 
   {#if showTopBar}
     <header class="top-bar">
-      <a href="/" class="top-logo">
+      <a href="/"
+         class="top-logo"
+         class:logo-pressing={logoPressing}
+         on:mousedown={startLogoPress}
+         on:mouseup={endLogoPress}
+         on:mouseleave={cancelLogoPress}
+         on:touchstart|preventDefault={startLogoPress}
+         on:touchend={endLogoPress}
+         on:touchcancel={cancelLogoPress}
+         on:click|preventDefault={() => {}}
+      >
         <span class="logo-m">M</span>
       </a>
 
@@ -148,10 +182,20 @@
     background: var(--grad-cta);
     display: flex; align-items: center; justify-content: center;
     text-decoration: none; flex-shrink: 0;
+    transition: box-shadow .15s;
+    user-select: none; -webkit-user-select: none;
+  }
+  .top-logo.logo-pressing {
+    animation: sensei-charge 0.4s ease infinite;
   }
   .logo-m {
     font-family: 'Space Grotesk', sans-serif;
     font-size: .85rem; font-weight: 800; color: #0D0A18; line-height: 1;
+  }
+  @keyframes sensei-charge {
+    0%   { box-shadow: 0 0 0 0 rgba(124,77,255,.8); }
+    50%  { box-shadow: 0 0 0 8px rgba(124,77,255,.2); }
+    100% { box-shadow: 0 0 0 14px rgba(124,77,255,0); }
   }
 
   .top-title {

@@ -1,5 +1,5 @@
 # LAST SESSION — Matric Study Guide
-_Generated: 2026-04-20 23:53 — auto-generated at launch. Do not edit manually._
+_Generated: 2026-04-24 13:32 — auto-generated at launch. Do not edit manually._
 _Source: ~/Desktop/Claude Recovery/claude-code-sessions/_
 
 ---
@@ -13,21 +13,21 @@ _Source: ~/Desktop/Claude Recovery/claude-code-sessions/_
 
 ## Files Modified This Session
 
-- `src/routes/timetable/+page.svelte`
-- `src/routes/share/+page.svelte`
-- `src/routes/sba/+page.svelte`
-- `src/routes/resources/+page.svelte`
-- `src/routes/panic/+page.svelte`
-- `src/routes/marks/+page.svelte`
-- `src/routes/how-it-works/+page.svelte`
-- `src/routes/dashboard/+page.svelte`
 - `src/routes/assessment/+page.svelte`
-- `src/routes/+page.svelte`
-- `src/routes/+layout.svelte`
-- `src/app.css`
+- `src/lib/constants.ts`
+- `src/lib/aps.ts`
+- `src/routes/share/+page.svelte`
 - `STATUS.md`
-- `Miyagi-MyMatric-Site-Architecture-and-Visual-Flow.pdf`
-- `package-lock.json`
+- `src/routes/+page.svelte`
+- `src/app.html`
+- `src/lib/supabase.ts`
+- `src/lib/auth.ts`
+- `src/lib/stores/assessment.ts`
+- `src/lib/highValueTopics.ts`
+- `src/lib/storage.ts`
+- `Miyagi.zip`
+- `src/routes/timetable/+page.svelte`
+- `src/routes/sba/+page.svelte`
 
 ## Active Plan (at session end)
 ```
