@@ -5,8 +5,10 @@
 
   let status = 'Signing you in...';
   let error = '';
+  let debugUrl = '';
 
   onMount(() => {
+    debugUrl = window.location.href;
     const sb = getSupabase();
     let resolved = false;
 
@@ -79,6 +81,9 @@
     {:else}
       <div class="cb-spinner"></div>
       <div class="cb-status">{status}</div>
+      {#if debugUrl}
+        <div style="font-size:.55rem;color:#444;word-break:break-all;max-width:340px;margin-top:.5rem">{debugUrl}</div>
+      {/if}
     {/if}
   </div>
 </div>
