@@ -49,16 +49,23 @@
     } catch {}
 
     // Check auth
-    const session = await getSession();
-    authed = !!session;
-    userEmail = session?.user?.email ?? '';
+    try {
+      const session = await getSession();
+      authed = !!session;
+      userEmail = session?.user?.email ?? '';
 
-    // Listen for auth state changes
-    const sb = getSupabase();
-    sb.auth.onAuthStateChange((_event, s) => {
-      authed = !!s;
-      userEmail = s?.user?.email ?? '';
-    });
+      // Listen for auth state changes
+      const sb = getSupabase();
+      if (sb) {
+        sb.auth.onAuthStateChange((_event, s) => {
+          authed = !!s;
+          userEmail = s?.user?.email ?? '';
+        });
+      }
+    } catch (e) {
+      console.warn('Auth check failed:', e);
+      authed = false;
+    }
 
     // Gate protected routes — redirect to home if not authed
     const path = $page.url.pathname;
