@@ -9,10 +9,16 @@
   onMount(async () => {
     const sb = getSupabase();
 
-    // Handle PKCE code exchange
-    const { data, error: authError } = await sb.auth.exchangeCodeForSession(
-      window.location.search
-    );
+    // Extract code from URL — exchangeCodeForSession needs the raw code, not the full search string
+    const code = new URLSearchParams(window.location.search).get('code');
+
+    if (!code) {
+      error = 'No sign-in code received. Please try again.';
+      status = '';
+      return;
+    }
+
+    const { data, error: authError } = await sb.auth.exchangeCodeForSession(code);
 
     if (authError || !data.session) {
       error = authError?.message ?? 'Sign-in failed. Please try again.';
