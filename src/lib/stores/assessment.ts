@@ -1,5 +1,5 @@
 import { writable, derived } from 'svelte/store';
-import { computeAPS } from '$lib/aps';
+import { computeAPS, computeWitsIEBAPS } from '$lib/aps';
 import { SUBJECTS } from '$lib/constants';
 import { saveAssessment, loadAssessment } from '$lib/storage';
 
@@ -28,6 +28,12 @@ export const subjectRatings = writable<Record<string, number>>(initSubjectRating
 
 // Live APS — recalculates whenever subjectMarks changes
 export const apsResult = derived(subjectMarks, ($marks) => computeAPS($marks));
+
+// Wits IEB APS — only populated when exam_system === 'ieb'
+export const witsIEBResult = derived([subjectMarks, answers], ([$marks, $answers]) => {
+  if (($answers['exam_system'] as string) !== 'ieb') return null;
+  return computeWitsIEBAPS($marks as Record<string, string | number>);
+});
 
 // Persist to localStorage on any change
 answers.subscribe($a => {

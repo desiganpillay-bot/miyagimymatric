@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { currentSection, answers, subjectMarks, subjectRatings, apsResult, resetAssessment } from '$lib/stores/assessment';
+  import { currentSection, answers, subjectMarks, subjectRatings, apsResult, witsIEBResult, resetAssessment } from '$lib/stores/assessment';
   import { SUBJECTS, UNIVERSITIES, FIELDS, MARK_RANGES } from '$lib/constants';
   import { scoreClass, barColor, pClass, passLabel } from '$lib/aps';
   import { signInWithMagicLink, signInWithGoogle } from '$lib/auth';
@@ -271,6 +271,7 @@
   $: focusDuration = num(a['focus_duration'], 30);
   $: pomodoroFmt = focusDuration <= 25 ? '25/5' : focusDuration <= 45 ? '45/10' : '50/10';
   $: examSystem = str(a['exam_system'], 'caps');
+  $: isIEB = examSystem === 'ieb';
   $: sleepVal = str(a['sleep']);
   $: stressVal = num(a['stress'], 5);
   $: sleepWarning = ['under5','5to6','6to7'].includes(sleepVal);
@@ -316,14 +317,17 @@
           </div>
         {:else}
           {@const isUCT = uni.id === 'uct'}
-          {@const cAPS  = isUCT ? best6.reduce((s, r) => s + r.pct, 0) : aps}
-          {@const diff  = cAPS - req}
+          {@const isWitsIEB = isIEB && uni.id === 'wits' && resultField.witsIEBReq != null}
+          {@const witsReq = resultField.witsIEBReq ?? 0}
+          {@const effReq = isWitsIEB ? witsReq : req}
+          {@const cAPS  = isUCT ? best6.reduce((s, r) => s + r.pct, 0) : isWitsIEB ? ($witsIEBResult?.total ?? aps) : aps}
+          {@const diff  = cAPS - effReq}
           {@const cls   = diff >= 0 ? 'met' : diff >= -4 ? 'close' : 'gap'}
           {@const badge = diff >= 0 ? 'MET ✓' : diff >= -4 ? `${Math.abs(diff)} pts short` : `${Math.abs(diff)} pts below`}
           <div class="target-row {cls}">
             <div style="flex: 1">
               <div class="target-uni">{uni.name} <span style="font-weight:300;font-size:.72rem;color:var(--muted)">{uni.city}</span></div>
-              <div class="target-req" style="margin-top: 2px">Min APS for {resultField.label}: <strong>{isUCT ? `${req}/600 (UCT scale)` : `${req}/42`}</strong></div>
+              <div class="target-req" style="margin-top: 2px">Min APS for {resultField.label}: <strong>{isUCT ? `${req}/600 (UCT scale)` : isWitsIEB ? `${witsReq}/~56 (Wits IEB)` : `${req}/42`}</strong></div>
             </div>
             <span class="target-badge {cls}">{badge}</span>
           </div>
@@ -446,9 +450,10 @@
 
     <!-- Live APS panel (visible from section 2 onward) -->
     {#if $currentSection >= 2}
-      {@const liveAPS = $apsResult.total}
-      {@const liveBest6 = $apsResult.best6}
-      {@const livePct = Math.min(100, Math.round((liveAPS / 42) * 100))}
+      {@const liveWitsIEB = $witsIEBResult}
+      {@const liveAPS = liveWitsIEB ? liveWitsIEB.total : $apsResult.total}
+      {@const liveBest6 = liveWitsIEB ? liveWitsIEB.rows : $apsResult.best6}
+      {@const livePct = Math.min(100, Math.round((liveAPS / (liveWitsIEB ? 56 : 42)) * 100))}
       {@const liveField = FIELDS.find(f => f.id === $answers['field'])}
       {@const liveUnis = arr($answers['universities'])}
 
@@ -456,8 +461,8 @@
         <h3>◈ Your Live APS Score</h3>
         <div class="aps-display">
           <div class="aps-score {scoreClass(liveAPS)}">{liveAPS}</div>
-          <div class="aps-denom">/ 42</div>
-          <div class="aps-label">{passLabel(liveAPS)}<br><span style="font-size:.72rem;color:var(--border)">Best 6 subjects</span></div>
+          <div class="aps-denom">/ {liveWitsIEB ? '~56' : '42'}</div>
+          <div class="aps-label">{liveWitsIEB ? 'Wits IEB scale' : passLabel(liveAPS)}<br><span style="font-size:.72rem;color:var(--border)">{liveWitsIEB ? 'incl. distinctions + bonuses' : 'Best 6 subjects'}</span></div>
         </div>
         <div class="aps-bar-wrap">
           <div class="aps-bar-track">
@@ -491,14 +496,17 @@
                   </div>
                 {:else}
                   {@const isUCT = uid === 'uct'}
-                  {@const cAPS  = isUCT ? liveBest6.reduce((s, r) => s + r.pct, 0) : liveAPS}
-                  {@const diff  = cAPS - req}
+                  {@const isWitsIEB = !!liveWitsIEB && uid === 'wits' && liveField.witsIEBReq != null}
+                  {@const liveWitsReq = liveField.witsIEBReq ?? 0}
+                  {@const effReq = isWitsIEB ? liveWitsReq : req}
+                  {@const cAPS  = isUCT ? liveBest6.reduce((s, r) => s + r.pct, 0) : isWitsIEB ? (liveWitsIEB?.total ?? liveAPS) : liveAPS}
+                  {@const diff  = cAPS - effReq}
                   {@const cls   = diff >= 0 ? 'met' : diff >= -4 ? 'close' : 'gap'}
                   {@const badge = diff >= 0 ? 'MET ✓' : diff >= -4 ? `${Math.abs(diff)} pts short` : `${Math.abs(diff)} pts below`}
                   <div class="target-row {cls}">
                     <div style="flex: 1">
                       <div class="target-uni">{uni.abbr} <span style="font-weight:300;font-size:.72rem;color:var(--muted)">{uni.city}</span></div>
-                      <div class="target-req">Min for {liveField.label}: <strong>{isUCT ? `${req}/600` : `${req}/42`}</strong></div>
+                      <div class="target-req">Min for {liveField.label}: <strong>{isUCT ? `${req}/600` : isWitsIEB ? `${liveWitsReq}/~56 (IEB)` : `${req}/42`}</strong></div>
                     </div>
                     <span class="target-badge {cls}">{badge}</span>
                   </div>
