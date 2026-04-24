@@ -32,10 +32,30 @@
       { topic: 'Probability — Venn diagrams, counting principle', tip: 'Draw the Venn first. Label ALL regions including the outside.' },
     ],
     'Physical Sciences': [
+      { topic: '[P1] Newton\'s Laws — free body diagrams, net force', tip: 'Always draw the FBD. Label every force with magnitude and direction.' },
+      { topic: '[P2] Organic Chemistry — naming, reactions, functional groups', tip: 'IUPAC naming: longest chain first. Count carbons carefully.' },
+      { topic: '[P1] Electricity & Circuits — Ohm\'s Law, series vs parallel', tip: 'Series: same current. Parallel: same voltage. Write this on your page.' },
+      { topic: '[P2] Acids & Bases — pH, neutralisation, indicators', tip: 'pH < 7 = acid, > 7 = base. Know the reactions: acid + base → salt + water.' },
+      { topic: '[P1] Momentum & Impulse — collisions, Newton\'s 3rd law', tip: 'Elastic: KE conserved. Inelastic: momentum conserved but KE lost.' },
+      { topic: '[P2] Chemical Change — reaction types, energy changes', tip: 'Exothermic releases energy (products lower). Endothermic absorbs energy.' },
+      { topic: '[P1] Waves & Light — Doppler effect, interference', tip: 'Doppler: higher frequency when approaching. Draw wave fronts.' },
+      { topic: '[P2] Matter & Materials — atomic structure, periodic trends', tip: 'Ionisation energy and electronegativity increase across a period.' },
+    ],
+    'Physical Sciences Paper 1': [
       { topic: 'Newton\'s Laws — free body diagrams, net force', tip: 'Always draw the FBD. Label every force with magnitude and direction.' },
-      { topic: 'Electricity — Ohm\'s Law, series vs parallel circuits', tip: 'Series: same current. Parallel: same voltage. Write this on your page.' },
-      { topic: 'Organic Chemistry — naming, reactions, functional groups', tip: 'IUPAC naming: longest chain first. Count carbons carefully.' },
-      { topic: 'Waves & Light — Doppler effect, interference', tip: 'Doppler: higher frequency when approaching. Draw wave fronts.' },
+      { topic: 'Electricity & Circuits — Ohm\'s Law, series vs parallel', tip: 'Series: same current. Parallel: same voltage. Write this on your page.' },
+      { topic: 'Momentum & Impulse — collisions, conservation', tip: 'Elastic: KE conserved. Inelastic: momentum conserved but KE lost.' },
+      { topic: 'Waves & Light — Doppler effect, interference, diffraction', tip: 'Doppler: higher frequency when approaching. Draw wave fronts.' },
+      { topic: 'Vertical projectile motion — equations of motion', tip: 'Take upward as positive. At max height, v = 0. g = 9.8 m/s².' },
+      { topic: 'Work, energy and power — conservation of mechanical energy', tip: 'W = F·d·cosθ. If no friction: KE + PE = constant throughout.' },
+    ],
+    'Physical Sciences Paper 2': [
+      { topic: 'Organic Chemistry — naming, functional groups, reactions', tip: 'IUPAC naming: longest chain first. Count carbons carefully.' },
+      { topic: 'Acids & Bases — pH, neutralisation, indicators', tip: 'pH < 7 = acid, > 7 = base. Acid + base → salt + water.' },
+      { topic: 'Chemical Change — reaction types, energy changes', tip: 'Exothermic releases energy (products lower). Endothermic absorbs energy.' },
+      { topic: 'Electrochemistry — galvanic vs electrolytic cells', tip: 'Galvanic: spontaneous. Electrolytic: requires external power. Know the table.' },
+      { topic: 'Matter & Materials — atomic structure, periodic trends', tip: 'Ionisation energy and electronegativity increase across a period.' },
+      { topic: 'Chemical equilibrium — Le Chatelier\'s principle', tip: 'System shifts to oppose the change. Increase pressure → fewer moles of gas.' },
     ],
     'Life Sciences': [
       { topic: 'DNA & Protein synthesis — transcription, translation', tip: 'Use the codon table in the exam. Know the steps in order.' },
@@ -175,7 +195,19 @@
   });
 
   $: isBreak = (b: StudyBlock) => b.subject === '—';
-  $: subjectList = assessmentSubjects.length ? assessmentSubjects : SUBJECTS.slice(0, 8);
+  function expandSubjects(subjects: string[]): string[] {
+    const out: string[] = [];
+    for (const s of subjects) {
+      if (s === 'Physical Sciences') {
+        out.push('Physical Sciences', 'Physical Sciences Paper 1', 'Physical Sciences Paper 2');
+      } else {
+        out.push(s);
+      }
+    }
+    return out;
+  }
+
+  $: subjectList = expandSubjects(assessmentSubjects.length ? assessmentSubjects : SUBJECTS.slice(0, 8));
 </script>
 
 <svelte:head>
