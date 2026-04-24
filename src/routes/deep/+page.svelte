@@ -521,7 +521,7 @@
             <div class="conf-row">
               <div class="conf-name">{subj}</div>
               <div class="conf-track">
-                <div class="conf-fill" style="width:{(conf as number) * 10}%"></div>
+                <div class="conf-fill" style="width:{Number(conf) * 10}%"></div>
               </div>
               <div class="conf-val">{conf}/10</div>
             </div>
