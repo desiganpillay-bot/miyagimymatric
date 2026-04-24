@@ -1,8 +1,9 @@
-// Real Supabase client using env vars (never reads from JSON file)
+// Real Supabase client — uses SvelteKit $env/static/public (required for browser access)
 import { createClient } from '@supabase/supabase-js';
+import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from '$env/static/public';
 
-const supabaseUrl  = import.meta.env.PUBLIC_SUPABASE_URL  as string;
-const supabaseKey  = import.meta.env.PUBLIC_SUPABASE_ANON_KEY as string;
+const supabaseUrl  = PUBLIC_SUPABASE_URL;
+const supabaseKey  = PUBLIC_SUPABASE_ANON_KEY;
 
 let _client: ReturnType<typeof createClient> | null = null;
 
