@@ -15,7 +15,7 @@ export function getSupabase() {
   if (!_client) {
     _client = createClient(supabaseUrl, supabaseKey, {
       auth: {
-        flowType: 'pkce',
+        flowType: 'implicit',
         detectSessionInUrl: true,
       },
     });

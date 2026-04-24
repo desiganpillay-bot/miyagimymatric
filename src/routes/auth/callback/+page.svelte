@@ -6,53 +6,59 @@
   let status = 'Signing you in...';
   let error = '';
 
-  onMount(async () => {
+  onMount(() => {
     const sb = getSupabase();
+    let resolved = false;
 
-    // PKCE flow — Supabase parses the code from the full search string
-    const { data, error: authError } = await sb.auth.exchangeCodeForSession(
-      window.location.search
-    );
+    // Implicit flow: Supabase detects access_token in URL hash and fires SIGNED_IN
+    const { data: { subscription } } = sb.auth.onAuthStateChange(async (event, session) => {
+      if (resolved) return;
+      if ((event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') && session) {
+        resolved = true;
+        subscription.unsubscribe();
 
-    if (authError || !data.session) {
-      error = authError?.message ?? 'Sign-in failed. Please try again.';
-      status = '';
-      return;
-    }
+        const user = session.user;
 
-    const session = data.session;
+        // Persist POPIA consent
+        try {
+          const consentRaw = localStorage.getItem('mmm_popia_consent');
+          const consentAt  = consentRaw ? JSON.parse(consentRaw).consented_at : null;
+          if (consentAt) {
+            await sb.from('profiles').upsert({
+              id:           user.id,
+              consented_at: consentAt,
+              terms_version: '1.0',
+            }, { onConflict: 'id' });
+          }
+        } catch {}
 
-    const user = data.session.user;
+        // Migrate localStorage assessment (non-blocking)
+        try {
+          const raw = localStorage.getItem('mmm_assessment_v1');
+          if (raw) {
+            await sb.from('assessment_snapshots').upsert({
+              user_id: user.id,
+              snapshot: JSON.parse(raw),
+              created_at: new Date().toISOString(),
+            }, { onConflict: 'user_id' });
+          }
+        } catch {}
 
-    // Persist POPIA consent to DB if not already done
-    try {
-      const consentRaw = localStorage.getItem('mmm_popia_consent');
-      const consentAt  = consentRaw ? JSON.parse(consentRaw).consented_at : null;
-      if (consentAt) {
-        await sb.from('profiles').upsert({
-          user_id:      user.id,
-          consented_at: consentAt,
-          terms_version: '1.0',
-        }, { onConflict: 'user_id' });
+        status = 'Signed in! Loading your plan...';
+        const hasAssessment = !!localStorage.getItem('mmm_assessment_v1');
+        setTimeout(() => goto(hasAssessment ? '/dashboard' : '/assessment'), 800);
       }
-    } catch {}
+    });
 
-    // Migrate localStorage assessment to Supabase (non-blocking)
-    try {
-      const raw = localStorage.getItem('mmm_assessment_v1');
-      if (raw) {
-        const state = JSON.parse(raw);
-        await sb.from('assessment_snapshots').upsert({
-          user_id: user.id,
-          snapshot: state,
-          created_at: new Date().toISOString(),
-        }, { onConflict: 'user_id' });
+    // Timeout fallback — if no auth event after 10s, show error
+    setTimeout(() => {
+      if (!resolved) {
+        resolved = true;
+        subscription.unsubscribe();
+        error = 'Sign-in timed out. Please try again.';
+        status = '';
       }
-    } catch {}
-
-    status = 'Signed in! Loading your plan...';
-    const hasAssessment = !!localStorage.getItem('mmm_assessment_v1');
-    setTimeout(() => goto(hasAssessment ? '/dashboard' : '/assessment'), 800);
+    }, 10000);
   });
 </script>
 
