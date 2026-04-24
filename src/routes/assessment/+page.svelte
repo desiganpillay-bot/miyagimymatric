@@ -402,22 +402,31 @@
     </div>
     {/if}
 
-    <!-- PRIMARY CTA — goes to dashboard immediately, no friction -->
+    <!-- POST-ASSESSMENT CTA — user is already signed in -->
     <div class="primary-cta-block">
-      <a href="/dashboard" class="btn btn-finish" style="display: flex; align-items: center; justify-content: center; width: 100%; text-decoration: none; margin-bottom: .75rem;">
+      <a href="/dashboard" class="btn btn-finish" style="display:flex;align-items:center;justify-content:center;width:100%;text-decoration:none;margin-bottom:.75rem;">
         View My Plan →
       </a>
-      <p class="cta-sub">Your study profile is saved in this browser — no account needed to continue.</p>
     </div>
 
-    <!-- Save Profile — secondary / optional -->
-    <details class="save-card save-card-collapsible">
-      <summary class="save-summary">
-        <span>💾 Save across devices (optional)</span>
-        <span class="save-chevron">›</span>
-      </summary>
-      <div class="save-inner">
-      <p>Enter your email to sync your profile across devices — no password needed.</p>
+    <!-- Quick links -->
+    <div class="next-steps">
+      <p class="next-steps-label">Explore your tools</p>
+      <a href="/timetable" class="btn-timetable btn-ghost-cta">Build My Timetable →</a>
+      <a href="/sba" class="btn-timetable btn-ghost-cta">Track SBA Tasks →</a>
+      <a href="/techniques" class="btn-timetable btn-ghost-cta">Study Techniques →</a>
+      {#if hasAnxiety || hasProcrastination}
+        <div class="challenge-tip">
+          {#if hasAnxiety}⚡ Your profile shows exam anxiety — the <strong>Pomodoro 50/10</strong> technique is proven to lower pre-exam stress.{/if}
+          {#if hasProcrastination && !hasAnxiety}🎯 Try <strong>active recall (blurting)</strong> to make the first 5 minutes feel easy.{/if}
+        </div>
+      {/if}
+    </div>
+
+    <button class="restart-btn" on:click={restart}>↩ Retake Assessment</button>
+
+  <!-- close dummy div -->
+  </div>
       {#if saveStatus === 'sent'}
         <div class="save-success">✓ Check your email — magic link sent. Click it to save your profile.</div>
       {:else}
@@ -457,9 +466,6 @@
           <p class="save-error">Something went wrong. Try again or use Google.</p>
         {/if}
       {/if}
-      </div>
-    </details>
-
     <!-- Quick links -->
     <div class="next-steps">
       <p class="next-steps-label">Explore your tools</p>
@@ -475,6 +481,9 @@
     </div>
 
     <button class="restart-btn" on:click={restart}>↩ Retake Assessment</button>
+
+  <!-- close dummy div -->
+  </div>
 
   {:else}
     <!-- ════════════ ASSESSMENT FORM ════════════ -->
@@ -731,63 +740,11 @@
     line-height: 1.6;
   }
 
-  /* Primary CTA block */
+  /* Post-assessment CTA */
   .primary-cta-block {
     margin-top: 1.5rem;
     text-align: center;
     animation: fadeUp .4s ease both;
-  }
-
-  .cta-sub {
-    font-size: .78rem;
-    color: var(--muted);
-    font-weight: 300;
-    margin-top: .1rem;
-  }
-
-  /* Collapsible save card */
-  .save-card-collapsible {
-    background: rgba(255, 244, 232, 0.03);
-    border: 1px solid rgba(255, 244, 232, 0.08);
-    border-radius: 12px;
-    padding: 0;
-    margin-top: 1rem;
-    animation: fadeUp .5s ease both;
-  }
-
-  .save-summary {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: .85rem 1.2rem;
-    cursor: pointer;
-    font-family: var(--font-head);
-    font-size: .8rem;
-    font-weight: 600;
-    color: var(--muted);
-    list-style: none;
-    user-select: none;
-    transition: color .15s;
-  }
-  .save-summary::-webkit-details-marker { display: none; }
-  .save-summary:hover { color: var(--text); }
-
-  .save-chevron {
-    font-size: 1rem;
-    transition: transform .2s;
-  }
-  details[open] .save-chevron { transform: rotate(90deg); }
-
-  .save-inner {
-    padding: 0 1.2rem 1.2rem;
-  }
-
-  .save-inner p {
-    font-size: .82rem;
-    color: var(--muted);
-    font-weight: 300;
-    margin-bottom: 1rem;
-    line-height: 1.5;
   }
 
   .save-card {

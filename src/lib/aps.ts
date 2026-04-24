@@ -36,16 +36,19 @@ export interface APSResult {
   allRows: APSRow[];
 }
 
-export function computeAPS(subjectMarks: Record<string, string>): APSResult {
+// LO is excluded from APS per NSC and IEB rules
+const LO_SUBJECT = 'Life Orientation';
+
+export function computeAPS(subjectMarks: Record<string, string | number>): APSResult {
   const allRows: APSRow[] = Object.entries(subjectMarks)
     .filter(([, mark]) => !!mark)
     .map(([name, mark]) => {
-      const pct = rangeMid(mark);
+      const pct = typeof mark === 'number' ? mark : rangeMid(mark as string);
       return { name, pct, aps: pctToAPS(pct) };
     })
     .sort((a, b) => b.aps - a.aps);
 
-  const best6 = allRows.slice(0, 6);
+  const best6 = allRows.filter(r => r.name !== LO_SUBJECT).slice(0, 6);
   const total = best6.reduce((sum, r) => sum + r.aps, 0);
 
   return { total, best6, allRows };
@@ -81,4 +84,76 @@ export function passLabel(aps: number): string {
 
 export function examNeeded(sbaPct: number, targetPct: number): number {
   return Math.max(0, Math.round((targetPct - 0.25 * sbaPct) / 0.75));
+}
+
+// ── Wits IEB APS ─────────────────────────────────────────────
+// Wits uses a different scale for IEB candidates:
+// - 90-100% = 8 pts (distinction bonus), 80-89% = 7, 70-79% = 6, etc.
+// - LO is INCLUDED, scored 0–4 on a separate scale
+// - +2 bonus if Maths ≥ 60%, +2 bonus if English (HL or FAL) ≥ 60%
+// - Top 7 subjects (best 6 academic + LO)
+// Source: wits.ac.za undergraduate entry requirements
+
+export interface WitsIEBResult {
+  total: number;        // Wits IEB APS (can exceed 42)
+  basePoints: number;   // subject points before bonuses
+  mathsBonus: number;   // 0 or 2
+  englishBonus: number; // 0 or 2
+  loPoints: number;     // 0–4
+  rows: APSRow[];       // best 6 academic rows
+}
+
+function pctToWitsIEB(p: number): number {
+  if (p >= 90) return 8;
+  if (p >= 80) return 7;
+  if (p >= 70) return 6;
+  if (p >= 60) return 5;
+  if (p >= 50) return 4;
+  if (p >= 40) return 3;
+  if (p >= 30) return 2;
+  return 1;
+}
+
+function pctToLOPoints(p: number): number {
+  if (p >= 80) return 4;
+  if (p >= 60) return 3;
+  if (p >= 40) return 2;
+  if (p >= 20) return 1;
+  return 0;
+}
+
+const MATHS_SUBJECTS = ['Mathematics', 'Mathematical Literacy'];
+const ENGLISH_SUBJECTS = ['English HL', 'English FAL'];
+
+export function computeWitsIEBAPS(subjectMarks: Record<string, string | number>): WitsIEBResult {
+  const allRows = Object.entries(subjectMarks)
+    .filter(([, mark]) => !!mark)
+    .map(([name, mark]) => {
+      const pct = typeof mark === 'number' ? mark : rangeMid(mark as string);
+      return { name, pct, aps: pctToWitsIEB(pct) };
+    });
+
+  const loRow   = allRows.find(r => r.name === LO_SUBJECT);
+  const loPoints = loRow ? pctToLOPoints(loRow.pct) : 0;
+
+  const academic = allRows
+    .filter(r => r.name !== LO_SUBJECT)
+    .sort((a, b) => b.aps - a.aps)
+    .slice(0, 6);
+
+  const basePoints = academic.reduce((s, r) => s + r.aps, 0);
+
+  const mathsRow   = allRows.find(r => MATHS_SUBJECTS.includes(r.name));
+  const englishRow = allRows.find(r => ENGLISH_SUBJECTS.includes(r.name));
+  const mathsBonus   = mathsRow   && mathsRow.pct   >= 60 ? 2 : 0;
+  const englishBonus = englishRow && englishRow.pct >= 60 ? 2 : 0;
+
+  return {
+    total: basePoints + loPoints + mathsBonus + englishBonus,
+    basePoints,
+    mathsBonus,
+    englishBonus,
+    loPoints,
+    rows: academic
+  };
 }
