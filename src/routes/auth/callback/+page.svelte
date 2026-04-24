@@ -9,6 +9,16 @@
 
   onMount(() => {
     debugUrl = window.location.href;
+
+    // Supabase returns errors as query params — detect and show immediately
+    const params = new URLSearchParams(window.location.search);
+    const urlError = params.get('error_description') || params.get('error');
+    if (urlError) {
+      error = decodeURIComponent(urlError.replace(/\+/g, ' '));
+      status = '';
+      return;
+    }
+
     const sb = getSupabase();
     let resolved = false;
 
