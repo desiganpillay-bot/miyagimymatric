@@ -83,32 +83,45 @@
     // Safety: never show spinner forever — clear after 8s regardless
     const safetyTimer = setTimeout(() => { loading = false; }, 8000);
 
+    // ── Step 1: Read localStorage immediately (no auth required) ──
+    try {
+      const raw = localStorage.getItem('mmm_assessment_v1');
+      if (raw) {
+        const state = JSON.parse(raw);
+        const marks: Record<string, string> = state.subjectMarks || {};
+        const subjects = Object.entries(marks)
+          .filter(([, v]) => v)
+          .map(([name, range]) => ({ name, mark: rangeMid(range) }))
+          .sort((a, b) => a.mark - b.mark);
+        localSubjects = subjects;
+        localAPS = state.apsTotal ?? 0;
+        hasLocalAssessment = true;
+
+        // Use localStorage as source of truth for display
+        currentAps = localAPS;
+        profile = {
+          exam_system: state.answers?.exam_system ?? 'caps',
+          streak_current: null,
+          consented_at: null,
+          terms_version: null,
+        };
+
+        // Set ring offset
+        const pct = Math.min(100, Math.round((localAPS / 42) * 100));
+        ringOffset = CIRCUMFERENCE * (1 - pct / 100);
+      }
+    } catch {}
+
+    // Show data immediately — don't wait for auth
+    loading = false;
+    clearTimeout(safetyTimer);
+
+    // ── Step 2: Try to enrich from Supabase (non-blocking) ──
     try {
       const sb = getSupabase();
+      if (!sb) return;
       const { data: { session } } = await sb.auth.getSession();
-
-      if (!session) {
-        // Check localStorage for assessment data — show useful state even without sign-in
-        try {
-          const raw = localStorage.getItem('mmm_assessment_v1');
-          if (raw) {
-            const state = JSON.parse(raw);
-            const marks: Record<string, string> = state.subjectMarks || {};
-            const subjects = Object.entries(marks)
-              .filter(([, v]) => v)
-              .map(([name, range]) => ({ name, mark: rangeMid(range) }))
-              .sort((a, b) => a.mark - b.mark);
-            if (subjects.length > 0) {
-              hasLocalAssessment = true;
-              localSubjects = subjects;
-              localAPS = $apsResult.total;
-            }
-          }
-        } catch {}
-        return;
-      }
-
-      authed = true;
+      if (!session) return;
       const uid = session.user.id;
 
       // Fetch all dashboard data in parallel
@@ -172,52 +185,15 @@
       <p>Loading your plan…</p>
     </div>
 
-  {:else if !authed}
-    <!-- ── Unauthenticated ───────────────────────────────── -->
+  {:else if !hasLocalAssessment}
+    <!-- ── No assessment at all — send to assessment ───── -->
     <div class="unauth-wrap">
-      {#if hasLocalAssessment}
-        <!-- Assessment done, not signed in -->
-        <div class="badge">Your Plan is Ready</div>
-        <h1>My Plan</h1>
-        <p class="subtitle">Your assessment is saved on this device. Sign in to sync across devices — or go straight to your tools.</p>
-
-        <div class="plan-ready-card">
-          <div class="plan-aps-row">
-            <div class="plan-aps-block">
-              <div class="plan-aps-num">{localAPS}</div>
-              <div class="plan-aps-label">Current APS / 42</div>
-            </div>
-            <div class="plan-subjects">
-              <div class="plan-subjects-label">Subjects needing most work</div>
-              {#each localSubjects.slice(0, 3) as s}
-                <div class="plan-subject-row">
-                  <span class="plan-subj-name">{s.name}</span>
-                  <span class="plan-subj-mark" style="color: {s.mark < 50 ? 'var(--danger)' : s.mark < 60 ? 'var(--accent)' : 'var(--accent3)'}">~{s.mark}%</span>
-                </div>
-              {/each}
-            </div>
-          </div>
-          <div class="plan-actions">
-            <button class="btn btn-next" on:click={() => goto('/timetable')}>Build My Timetable →</button>
-            <button class="btn btn-ghost-sm" on:click={() => goto('/sba')}>Track SBA Tasks →</button>
-            <button class="btn btn-ghost-sm" on:click={() => goto('/assessment')}>Sign In to Save →</button>
-          </div>
-        </div>
-
-      {:else}
-        <!-- No assessment at all -->
-        <div class="badge">Your Sensei Awaits</div>
-        <h1>My Plan</h1>
-        <p class="subtitle">Complete your self-assessment first to unlock your personalised dashboard.</p>
-        <div class="unauth-card">
-          <div class="unauth-icon">🎯</div>
-          <h2>Start here</h2>
-          <p>Take the 5-minute self-assessment to get your APS score, subject insights, and a personalised study plan.</p>
-          <button class="btn btn-next" on:click={() => goto('/assessment')}>
-            Start My Assessment →
-          </button>
-        </div>
-      {/if}
+      <div class="unauth-icon">🎯</div>
+      <h2>Start here</h2>
+      <p>Take the 5-minute self-assessment to get your APS score, subject insights, and a personalised study plan.</p>
+      <button class="btn btn-next" on:click={() => goto('/assessment')}>
+        Start My Assessment →
+      </button>
     </div>
 
   {:else}
