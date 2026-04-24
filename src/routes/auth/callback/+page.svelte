@@ -9,29 +9,20 @@
   onMount(async () => {
     const sb = getSupabase();
 
-    const code = new URLSearchParams(window.location.search).get('code');
-    let session = null;
-    let authError = null;
+    // PKCE flow — Supabase parses the code from the full search string
+    const { data, error: authError } = await sb.auth.exchangeCodeForSession(
+      window.location.search
+    );
 
-    if (code) {
-      // PKCE flow — exchange code for session
-      const { data, error: e } = await sb.auth.exchangeCodeForSession(code);
-      session = data?.session ?? null;
-      authError = e;
-    } else {
-      // Implicit flow — Supabase auto-parses hash fragment on client init
-      const { data, error: e } = await sb.auth.getSession();
-      session = data?.session ?? null;
-      authError = e;
-    }
-
-    if (authError || !session) {
+    if (authError || !data.session) {
       error = authError?.message ?? 'Sign-in failed. Please try again.';
       status = '';
       return;
     }
 
-    const user = session.user;
+    const session = data.session;
+
+    const user = data.session.user;
 
     // Persist POPIA consent to DB if not already done
     try {

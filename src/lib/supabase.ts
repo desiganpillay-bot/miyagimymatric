@@ -13,7 +13,12 @@ export function getSupabase() {
     return null as unknown as ReturnType<typeof createClient>;
   }
   if (!_client) {
-    _client = createClient(supabaseUrl, supabaseKey);
+    _client = createClient(supabaseUrl, supabaseKey, {
+      auth: {
+        flowType: 'pkce',
+        detectSessionInUrl: true,
+      },
+    });
   }
   return _client;
 }
