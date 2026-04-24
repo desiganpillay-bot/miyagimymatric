@@ -9,24 +9,29 @@
   onMount(async () => {
     const sb = getSupabase();
 
-    // Extract code from URL — exchangeCodeForSession needs the raw code, not the full search string
     const code = new URLSearchParams(window.location.search).get('code');
+    let session = null;
+    let authError = null;
 
-    if (!code) {
-      error = 'No sign-in code received. Please try again.';
-      status = '';
-      return;
+    if (code) {
+      // PKCE flow — exchange code for session
+      const { data, error: e } = await sb.auth.exchangeCodeForSession(code);
+      session = data?.session ?? null;
+      authError = e;
+    } else {
+      // Implicit flow — Supabase auto-parses hash fragment on client init
+      const { data, error: e } = await sb.auth.getSession();
+      session = data?.session ?? null;
+      authError = e;
     }
 
-    const { data, error: authError } = await sb.auth.exchangeCodeForSession(code);
-
-    if (authError || !data.session) {
+    if (authError || !session) {
       error = authError?.message ?? 'Sign-in failed. Please try again.';
       status = '';
       return;
     }
 
-    const user = data.session.user;
+    const user = session.user;
 
     // Persist POPIA consent to DB if not already done
     try {
