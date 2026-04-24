@@ -27,12 +27,13 @@
     '/panic':      '🚨 Panic Mode',
     '/share':      'My APS Card',
     '/assessment': 'Assessment',
+    '/deep':       'Deep Scan',
   };
 
   // Routes that never show nav or top bar
   const UTILITY = ['/auth/callback', '/privacy', '/terms', '/how-it-works'];
   // Routes that are public (no auth redirect)
-  const PUBLIC = ['/', '/assessment', '/auth/callback', '/privacy', '/terms', '/how-it-works', '/panic', '/resources', '/techniques', '/subjects', '/timetable', '/sba', '/marks', '/dashboard', '/pomodoro', '/share', '/sensei'];
+  const PUBLIC = ['/', '/assessment', '/auth/callback', '/privacy', '/terms', '/how-it-works', '/panic', '/resources', '/techniques', '/subjects', '/timetable', '/sba', '/marks', '/dashboard', '/pomodoro', '/share', '/sensei', '/deep'];
 
   let authed    = false;
   let localAPS  = 0;
