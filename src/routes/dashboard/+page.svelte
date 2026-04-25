@@ -269,7 +269,32 @@
         <span class="streak-num">{streak}</span>
         <span class="streak-label">day{streak === 1 ? '' : 's'} streak</span>
       </div>
-      <p class="streak-sub">Keep studying daily to build your streak.</p>
+      {#if streak === 0}
+        <p class="streak-sub">Open the app and study today to start your streak.</p>
+      {:else if streak < 7}
+        <p class="streak-sub">Keep going — {7 - streak} more day{7 - streak === 1 ? '' : 's'} to a week streak.</p>
+      {:else}
+        <p class="streak-sub">🏆 {streak}-day streak. Don't break it.</p>
+      {/if}
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+      <a href="/panic" class="qa-btn panic-btn">
+        <span class="qa-icon">🚨</span>
+        <span class="qa-label">Panic Mode</span>
+        <span class="qa-sub">Rescue plan now</span>
+      </a>
+      <a href="/share" class="qa-btn share-btn">
+        <span class="qa-icon">📤</span>
+        <span class="qa-label">Share APS</span>
+        <span class="qa-sub">My APS card</span>
+      </a>
+      <a href="/deep" class="qa-btn deep-btn">
+        <span class="qa-icon">🎯</span>
+        <span class="qa-label">Deep Scan</span>
+        <span class="qa-sub">Study profile</span>
+      </a>
     </div>
 
     <!-- Row 3: Recent Marks -->
@@ -605,6 +630,35 @@
     color: var(--muted);
     margin: 0;
   }
+
+  /* ── Quick actions ───────────────────────────────── */
+  .quick-actions {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: .6rem; margin-bottom: 1rem;
+  }
+  .qa-btn {
+    display: flex; flex-direction: column; align-items: center;
+    gap: .2rem; padding: .9rem .5rem;
+    border-radius: 16px; text-decoration: none;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    transition: border-color .15s, background .15s;
+    text-align: center;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .qa-btn:hover { background: rgba(255,244,232,.04); }
+  .panic-btn { border-color: rgba(248,113,113,.25); }
+  .panic-btn:hover { border-color: rgba(248,113,113,.5); background: rgba(248,113,113,.06); }
+  .share-btn { border-color: rgba(56,189,248,.25); }
+  .share-btn:hover { border-color: rgba(56,189,248,.5); background: rgba(56,189,248,.06); }
+  .deep-btn  { border-color: rgba(124,77,255,.25); }
+  .deep-btn:hover  { border-color: rgba(124,77,255,.5); background: rgba(124,77,255,.06); }
+  .qa-icon  { font-size: 1.3rem; line-height: 1; }
+  .qa-label {
+    font-family: var(--font-head); font-size: .75rem; font-weight: 700;
+    color: var(--text);
+  }
+  .qa-sub { font-size: .62rem; color: var(--muted); font-weight: 300; }
 
   /* ── Recent marks ────────────────────────────────── */
   .marks-card {
