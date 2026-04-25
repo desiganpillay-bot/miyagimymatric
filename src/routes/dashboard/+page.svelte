@@ -10,6 +10,8 @@
   type Profile = {
     exam_system: string | null;
     streak_current: number | null;
+    streak_longest: number | null;
+    xp_total: number | null;
     consented_at: string | null;
     terms_version: string | null;
   };
@@ -28,6 +30,8 @@
   let targetAps: number | null = null;
   let currentAps = 0;
   let streak = 0;
+  let xp = 0;
+  let longestStreak = 0;
   let recentMarks: Mark[] = [];
   let nextTask: SbaTask | null = null;
 
@@ -127,7 +131,7 @@
       // Fetch all dashboard data in parallel
       const [profileRes, goalRes, marksRes, taskRes] = await Promise.all([
         sb.from('profiles')
-          .select('exam_system, streak_current, consented_at, terms_version')
+          .select('exam_system, streak_current, streak_longest, xp_total, consented_at, terms_version')
           .eq('id', uid)
           .single(),
         sb.from('goals')
@@ -154,6 +158,8 @@
       recentMarks = (marksRes.data ?? []) as Mark[];
       nextTask = taskRes.data?.[0] ?? null;
       streak = profile?.streak_current ?? 0;
+      longestStreak = profile?.streak_longest ?? 0;
+      xp = profile?.xp_total ?? 0;
 
       // Current APS: use store value (from localStorage assessment marks)
       currentAps = $apsResult.total ?? 0;
@@ -262,19 +268,35 @@
 
     </div>
 
-    <!-- Row 2: Streak -->
+    <!-- Row 2: Streak + XP -->
     <div class="card streak-card">
-      <div class="streak-inner">
-        <span class="streak-flame">🔥</span>
-        <span class="streak-num">{streak}</span>
-        <span class="streak-label">day{streak === 1 ? '' : 's'} streak</span>
+      <div class="streak-row">
+        <div class="streak-main">
+          <span class="streak-flame">🔥</span>
+          <span class="streak-num">{streak}</span>
+          <span class="streak-label">day streak</span>
+        </div>
+        <div class="streak-divider"></div>
+        <div class="xp-block">
+          <span class="xp-num">{xp}</span>
+          <span class="xp-label">XP</span>
+        </div>
+        {#if longestStreak > streak && longestStreak > 0}
+          <div class="streak-divider"></div>
+          <div class="xp-block">
+            <span class="xp-num">{longestStreak}</span>
+            <span class="xp-label">Best</span>
+          </div>
+        {/if}
       </div>
       {#if streak === 0}
-        <p class="streak-sub">Open the app and study today to start your streak.</p>
+        <p class="streak-sub">Study today to start your streak.</p>
       {:else if streak < 7}
-        <p class="streak-sub">Keep going — {7 - streak} more day{7 - streak === 1 ? '' : 's'} to a week streak.</p>
-      {:else}
+        <p class="streak-sub">{7 - streak} more day{7 - streak === 1 ? '' : 's'} to a week streak.</p>
+      {:else if streak < 30}
         <p class="streak-sub">🏆 {streak}-day streak. Don't break it.</p>
+      {:else}
+        <p class="streak-sub">🔥 {streak} days. Legendary.</p>
       {/if}
     </div>
 
@@ -625,8 +647,22 @@
     color: var(--muted);
   }
 
+  .streak-row {
+    display: flex; align-items: center; gap: 1rem; margin-bottom: .4rem;
+  }
+  .streak-main { display: flex; align-items: center; gap: .4rem; }
+  .streak-divider { width: 1px; height: 28px; background: var(--border); }
+  .xp-block { display: flex; flex-direction: column; align-items: center; }
+  .xp-num {
+    font-family: var(--font-head); font-size: 1.1rem; font-weight: 800;
+    color: var(--accent); line-height: 1;
+  }
+  .xp-label {
+    font-size: .6rem; font-weight: 600; color: var(--muted);
+    text-transform: uppercase; letter-spacing: .06em;
+  }
   .streak-sub {
-    font-size: 0.82rem;
+    font-size: 0.78rem;
     color: var(--muted);
     margin: 0;
   }
