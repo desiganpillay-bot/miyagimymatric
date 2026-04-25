@@ -176,6 +176,58 @@
     subjectMarks.update(marks => ({ ...marks, [subj]: mark }));
   }
 
+  // ── Report card OCR ───────────────────────────────────────
+  let ocrStatus: 'idle' | 'loading' | 'done' | 'error' = 'idle';
+  let ocrMessage = '';
+  let ocrCount = 0;
+
+  function markToRange(pct: number): string {
+    if (pct >= 90) return '90-100';
+    if (pct >= 80) return '80-89';
+    if (pct >= 70) return '70-79';
+    if (pct >= 60) return '60-69';
+    if (pct >= 50) return '50-59';
+    if (pct >= 40) return '40-49';
+    if (pct >= 30) return '30-39';
+    return '0-29';
+  }
+
+  async function handleReportPhoto(e: Event) {
+    const input = e.currentTarget as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+    input.value = '';
+    ocrStatus = 'loading';
+    ocrMessage = '';
+    ocrCount = 0;
+
+    try {
+      const fd = new FormData();
+      fd.append('image', file);
+      const res = await fetch('/api/parse-report', { method: 'POST', body: fd });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({ message: 'Unknown error' }));
+        throw new Error(err.message || `Error ${res.status}`);
+      }
+      const data = await res.json();
+      const subjects: Array<{ matchedSubject: string; mark: number }> = data.subjects;
+      if (!subjects.length) throw new Error('No marks found in the photo — try a clearer image');
+      subjectMarks.update(current => {
+        const next = { ...current };
+        for (const item of subjects) {
+          next[item.matchedSubject] = markToRange(item.mark);
+        }
+        return next;
+      });
+      ocrCount = subjects.length;
+      ocrStatus = 'done';
+      ocrMessage = `Imported ${subjects.length} subject${subjects.length !== 1 ? 's' : ''} — check and adjust below.`;
+    } catch (err) {
+      ocrStatus = 'error';
+      ocrMessage = err instanceof Error ? err.message : 'Something went wrong — please try again.';
+    }
+  }
+
   function nextSection() {
     if ($currentSection < sections.length - 1) {
       currentSection.update(n => n + 1);
@@ -615,6 +667,46 @@
           />
 
         {:else if q.type === 'subject_table'}
+          <!-- Photo import banner -->
+          <div class="ocr-banner {ocrStatus}">
+            {#if ocrStatus === 'idle'}
+              <div class="ocr-hint">
+                <span class="ocr-icon">📷</span>
+                <div class="ocr-text">
+                  <strong>Got your report card?</strong>
+                  <span>Take a photo and we'll fill in your marks automatically.</span>
+                </div>
+                <label class="ocr-btn" tabindex="0" role="button">
+                  Import photo
+                  <input type="file" accept="image/*" capture="environment" on:change={handleReportPhoto} style="display:none" />
+                </label>
+              </div>
+            {:else if ocrStatus === 'loading'}
+              <div class="ocr-hint">
+                <span class="ocr-spinner"></span>
+                <span>Reading your report card…</span>
+              </div>
+            {:else if ocrStatus === 'done'}
+              <div class="ocr-hint">
+                <span class="ocr-icon">✅</span>
+                <span class="ocr-msg">{ocrMessage}</span>
+                <label class="ocr-btn ocr-btn-sm" tabindex="0" role="button">
+                  Try again
+                  <input type="file" accept="image/*" capture="environment" on:change={handleReportPhoto} style="display:none" />
+                </label>
+              </div>
+            {:else}
+              <div class="ocr-hint ocr-err-row">
+                <span class="ocr-icon">⚠️</span>
+                <span class="ocr-msg err">{ocrMessage}</span>
+                <label class="ocr-btn ocr-btn-sm" tabindex="0" role="button">
+                  Retry
+                  <input type="file" accept="image/*" capture="environment" on:change={handleReportPhoto} style="display:none" />
+                </label>
+              </div>
+            {/if}
+          </div>
+
           <div class="subject-grid">
             {#each SUBJECTS as s}
               <div class="subj-row">
@@ -835,4 +927,74 @@
     margin: .25rem 0 0 !important;
     line-height: 1.4 !important;
   }
+
+  /* ── OCR photo import banner ──────────────────────────────── */
+  .ocr-banner {
+    background: var(--surface2);
+    border: 1px dashed var(--border);
+    border-radius: var(--radius);
+    padding: 1rem 1.2rem;
+    margin-bottom: 1.2rem;
+    transition: border-color .2s;
+  }
+  .ocr-banner.done { border-color: rgba(74,222,128,.35); }
+  .ocr-banner.error { border-color: rgba(248,113,113,.35); }
+  .ocr-banner.loading { border-color: var(--accent); }
+
+  .ocr-hint {
+    display: flex;
+    align-items: center;
+    gap: .9rem;
+    flex-wrap: wrap;
+  }
+  .ocr-err-row { gap: .6rem; }
+
+  .ocr-icon { font-size: 1.4rem; flex-shrink: 0; }
+
+  .ocr-text {
+    display: flex;
+    flex-direction: column;
+    gap: .15rem;
+    flex: 1;
+    min-width: 140px;
+  }
+  .ocr-text strong { font-size: .9rem; font-weight: 600; }
+  .ocr-text span { font-size: .8rem; color: var(--muted); }
+
+  .ocr-msg { font-size: .85rem; flex: 1; }
+  .ocr-msg.err { color: var(--danger); }
+
+  .ocr-btn {
+    background: var(--accent);
+    color: #0d1117;
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: .8rem;
+    padding: .5rem 1.1rem;
+    border-radius: 100px;
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: opacity .15s;
+  }
+  .ocr-btn:hover { opacity: .85; }
+  .ocr-btn-sm {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-size: .75rem;
+    padding: .35rem .8rem;
+  }
+
+  .ocr-spinner {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin .7s linear infinite;
+    flex-shrink: 0;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
 </style>
