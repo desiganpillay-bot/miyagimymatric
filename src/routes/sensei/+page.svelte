@@ -31,7 +31,7 @@
     insight: 'You\'re not avoiding Sciences because you\'re lazy. You\'re avoiding it because hitting a wall alone at 11pm with no clear next move is a genuinely bad feeling, and your brain has learned to route around it. The fix isn\'t willpower. It\'s removing the solo.',
     strength: 'Self-honesty. Your confidence ratings match your marks almost exactly — you\'re not delusional about your position, which makes the plan actually work.',
     risk: 'High self-awareness without structural support becomes "I know what\'s wrong" paralysis. Knowing the problem isn\'t the same as fixing it.',
-    aps: { current: 31, upStatus: 'MET ✓', witsGap: 4 },
+    aps: { current: 34, upStatus: 'MET ✓', witsGap: 4 },
     subjects: [
       { name: 'Mathematics',   mark: 97, confidence: 7.5, band: 'STRONG', type: 'maintenance' },
       { name: 'CAT',           mark: 90, confidence: 7.5, band: 'STRONG', type: 'maintenance' },

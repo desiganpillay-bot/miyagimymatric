@@ -123,7 +123,7 @@ function pctToLOPoints(p: number): number {
 }
 
 const MATHS_SUBJECTS = ['Mathematics', 'Mathematical Literacy'];
-const ENGLISH_SUBJECTS = ['English HL', 'English FAL'];
+const ENGLISH_SUBJECTS = ['English HL', 'English FAL', 'English Home Language', 'English First Additional Language'];
 
 export function computeWitsIEBAPS(subjectMarks: Record<string, string | number>): WitsIEBResult {
   const allRows = Object.entries(subjectMarks)

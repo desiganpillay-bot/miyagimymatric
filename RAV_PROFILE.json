@@ -55,7 +55,7 @@
     {
       "name": "History",
       "cycle1_mark_pct": 82,
-      "aps_points": 6,
+      "aps_points": 7,
       "priority_band": "STRONG",
       "confidence_rating": 7.5,
       "confidence_gap_type": "maintenance",
@@ -75,7 +75,7 @@
       "name": "Afrikaans First Additional Language",
       "short_name": "Afrikaans",
       "cycle1_mark_pct": 54,
-      "aps_points": 3,
+      "aps_points": 4,
       "priority_band": "HIGH",
       "confidence_rating": 3.5,
       "confidence_gap_type": "real_gap",
@@ -85,7 +85,7 @@
       "name": "Physical Sciences",
       "short_name": "Sciences",
       "cycle1_mark_pct": 43,
-      "aps_points": 2,
+      "aps_points": 3,
       "priority_band": "HIGH",
       "confidence_rating": 3.5,
       "confidence_gap_type": "real_gap",
@@ -106,8 +106,8 @@
     }
   ],
   "aps": {
-    "cycle1_computed": 31,
-    "computation_note": "Based on IEB APS scale: 90-100=7, 80-89=6, 70-79=5, 60-69=4, 50-59=3, 40-49=2, 30-39=1. Maths(7) + CAT(7) + History(6) + English(6) + Afrikaans(3) + Sciences(2) = 31. LO excluded pending admin completion. LO completion expected to add material points.",
+    "cycle1_computed": 34,
+    "computation_note": "Standard APS scale: 80-100=7, 70-79=6, 60-69=5, 50-59=4, 40-49=3, 30-39=2, 0-29=1. Maths(7) + CAT(7) + History(7) + English(6) + Afrikaans(4) + Sciences(3) = 34. LO excluded (best 6 rule). Wits IEB scale: Maths(8)+CAT(8)+History(7)+English(6)+Afrikaans(4)+Sciences(3)+MathsBonus(2)+EnglishBonus(2) = 40. Wits BCom IEB requirement = 44, gap = 4.",
     "aps_at_full_lo": "TBC — depends on final LO admin completion",
     "highest_leverage_action": "LO community service admin completion (no learning curve)"
   },
@@ -148,10 +148,10 @@
       "subjects": [
         { "subject": "Mathematics", "confidence": 7.5, "mark_pct": 97, "gap_type": "maintenance" },
         { "subject": "CAT", "confidence": 7.5, "mark_pct": 90, "gap_type": "maintenance" },
-        { "subject": "History", "confidence": 7.5, "mark_pct": 82, "gap_type": "maintenance" },
-        { "subject": "English", "confidence": 5.5, "mark_pct": 76, "gap_type": "imposter_anxiety" },
-        { "subject": "Afrikaans", "confidence": 3.5, "mark_pct": 54, "gap_type": "real_gap" },
-        { "subject": "Physical Sciences", "confidence": 3.5, "mark_pct": 43, "gap_type": "real_gap" },
+        { "subject": "History", "confidence": 7.5, "mark_pct": 82, "gap_type": "maintenance", "aps_points": 7 },
+        { "subject": "English", "confidence": 5.5, "mark_pct": 76, "gap_type": "imposter_anxiety", "aps_points": 6 },
+        { "subject": "Afrikaans", "confidence": 3.5, "mark_pct": 54, "gap_type": "real_gap", "aps_points": 4 },
+        { "subject": "Physical Sciences", "confidence": 3.5, "mark_pct": 43, "gap_type": "real_gap", "aps_points": 3 },
         { "subject": "LO (exams)", "confidence": 7.5, "mark_pct": null, "gap_type": "maintenance" },
         { "subject": "LO (admin)", "confidence": 1.5, "mark_pct": null, "gap_type": "structural_collapse" }
       ],
