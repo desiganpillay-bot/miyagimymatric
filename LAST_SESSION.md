@@ -1,68 +1,39 @@
 # LAST SESSION — Matric Study Guide
-_Generated: 2026-04-24 13:32 — auto-generated at launch. Do not edit manually._
-_Source: ~/Desktop/Claude Recovery/claude-code-sessions/_
+_Generated: 2026-04-25 — Session 10_
 
 ---
 
-## Most Recent Session
-- **Date:** 2026-04-14 22:22
-- **Title:** Miyagi - Tuning
-- **Turns:** 70
-- **Duration:** 176h 17m
-- **Model:** claude-sonnet-4-6
+## Date: 2026-04-25 | Session 10
+**Title:** Sensei mode, /deep assessment, APS fixes, dashboard quick-actions
 
-## Files Modified This Session
+## Files Changed
+- `src/routes/sensei/+page.svelte` — CREATED: Fortnite Victory Royale intro + full Rav v2 profile
+- `src/routes/+layout.svelte` — secret door long-press, /sensei + /deep added to PUBLIC + PAGE_TITLES
+- `src/routes/deep/+page.svelte` — CREATED: v2 Deep Assessment (12 questions, 7 archetypes, generated profile)
+- `src/routes/techniques/+page.svelte` — CREATED: 7 technique cards (was 404)
+- `src/routes/panic/+page.svelte` — paper selector for all multi-paper subjects, SBA mode
+- `src/routes/dashboard/+page.svelte` — quick-action buttons (Panic, Share, Deep Scan), streak copy
+- `src/routes/assessment/+page.svelte` — Wits IEB APS wired to live panel + results
+- `src/lib/aps.ts` — ENGLISH_SUBJECTS expanded to include full subject names
+- `src/lib/stores/assessment.ts` — witsIEBResult derived store added
+- `RAV_PROFILE.json` — corrected APS values (34 not 31)
 
-- `src/routes/assessment/+page.svelte`
-- `src/lib/constants.ts`
-- `src/lib/aps.ts`
-- `src/routes/share/+page.svelte`
-- `STATUS.md`
-- `src/routes/+page.svelte`
-- `src/app.html`
-- `src/lib/supabase.ts`
-- `src/lib/auth.ts`
-- `src/lib/stores/assessment.ts`
-- `src/lib/highValueTopics.ts`
-- `src/lib/storage.ts`
-- `Miyagi.zip`
-- `src/routes/timetable/+page.svelte`
-- `src/routes/sba/+page.svelte`
+## Commits
+- `e8982fb` — Sensei mode + Victory Royale intro, Rav profile, techniques page, panic overhaul
+- `9bd5c45` — /deep v2 Deep Assessment (7 dimensions, 7 archetypes)
+- `db281eb` — Fix: conf as number template cast in /deep
+- `5dd8ffe` — Fix: Rav APS 31→34, English subject name matching for Wits IEB bonus
+- `c2d85ad` — Dashboard quick-actions (Panic, Share, Deep Scan) + streak copy
 
-## Active Plan (at session end)
-```
-# Plan: Timetable Full Rebuild
+## Key Facts
+- Standard APS scale is 80-100=7 (RAV_PROFILE.json was wrongly using 90-100=7)
+- Rav correct APS: 34 standard / 40 Wits IEB / gap to Wits BCom (needs 44 IEB) = 4
+- D7 (honesty flag) deliberately excluded from /sensei — Desi's territory per brief
+- /sensei is hardcoded from RAV_PROFILE.json. /deep is the dynamic version for all users.
+- GitHub bot token rotated — user set new token via terminal. Not stored in chat.
+- Google OAuth secret STILL needs pasting into Supabase (carried from session 9, unconfirmed)
 
-## Context
-The current timetable (`src/routes/timetable/+page.svelte`) is a manual-edit grid with no smart distribution, no fixed day structure, and no personalized tasks. All slots land Mon/Tue only. `matric_final.html` contains the full JS engine to port. This is the last build before the tool is usable end-to-end for a real learner.
-
----
-
-## File to modify
-- `src/routes/timetable/+page.svelte` — complete rewrite, single file only
-
-## Reference
-- `matric_final.html` — source of all five algorithms to port
-
----
-
-## Build steps (in order)
-
-### 1. Data model + assessment read
-- Read `mmm_assessment_v1` from localStorage on mount
-- Extract: `subjectMarks`, `subjectRatings`, `answers.learning_style`, `answers.goal`, `answers.exam_system`, `answers.challenges`, `answers.past_papers`
-```
-
-## Session History (last 6)
-
-- 2026-04-14 22:22 (176h 17m) | 70t | Miyagi - Tuning
-- 2026-04-08 12:27 (25h 25m) | 7t | Fix looping error in application
-- 2026-04-07 10:52 (1h 19m) | 20t | Debug looping errors and improve results
-- 2026-04-07 02:58 (1h 58m) | 38t | Execute pending tasks and operations
-- 2026-04-07 01:01 (0m) | 0t | Miyagi sprint 2
-- 2026-04-06 21:33 (2h 36m) | 40t | Ingest data and create summary with recommendations
-
----
-_Total sessions found for this project: 6_
-_STATUS.md is the authoritative source of truth for what is built and open._
-_This file provides session timing and file-change context only._
+## Start Next Session Here
+1. **Streak + XP on dashboard** (~30 min) — `profiles.streak_current` already fetched in onMount, just needs XP column read + display widget update
+2. **Timetable rebuild** (2-3 hrs) — see NEXT SPRINT spec in STATUS.md for full grid spec
+3. **Confirm Google OAuth** — paste secret `****ul9p` (Apr 24) into Supabase → Auth → Providers → Google → Save

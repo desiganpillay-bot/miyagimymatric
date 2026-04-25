@@ -1,5 +1,5 @@
 # STATUS.md — Miyagi My Matric
-_Last updated: 2026-04-24 (session 9)_
+_Last updated: 2026-04-25 (session 10)_
 
 ---
 
@@ -44,13 +44,16 @@ _Last updated: 2026-04-24 (session 9)_
 
 ### ⚡ NEXT SPRINT (start here next session)
 
-**Sprint goal: Surface streak + XP on dashboard, /share and /panic links, report card auto-import**
+**Sprint goal: Streak + XP on dashboard, timetable rebuild, report card OCR**
 
-1. Surface streak + XP on dashboard (schema already has these columns)
-2. Add /share and /panic to dashboard quick-actions
-3. Report card photo → auto-import (Claude Haiku OCR)
-4. Parent read-only share link
-5. WhatsApp daily nudge integration
+Item 2 (/share + /panic + /deep quick-actions on dashboard) is ✅ DONE this session.
+
+Remaining in least-to-most effort order:
+1. **Surface streak + XP on dashboard** — `profiles.streak_current` already fetched in onMount, just needs XP column read + display card update. 30 min.
+2. **Timetable rebuild** — full 30-min grid, fixed blocks, stretch mode, smart subject distribution. 2-3 hrs. Spec below.
+3. **Report card photo → auto-import** — Claude Haiku OCR via `/api/parse-report` server route. Half day.
+4. **Parent read-only share link** — new route + auth scoping.
+5. **WhatsApp daily nudge** — needs Twilio/WhatsApp Business API, external dependency.
 
 Build in this order:
 
@@ -92,12 +95,16 @@ Manual slot edit preserved. localStorage persist preserved.
 
 | Priority | Item | Notes |
 |----------|------|-------|
+| **Next** | **Streak + XP display on dashboard** | `streak_current` already fetched; just needs XP column + display |
 | **Next** | **Timetable rebuild** | See sprint detail above |
+| Deferred | Report card OCR | Claude Haiku via `/api/parse-report` |
+| Deferred | Parent read-only share link | Auth scoping needed |
+| Deferred | WhatsApp nudge | External API dependency |
 | Deferred | Marks → Supabase sync | Not blocking learner value |
 | Deferred | Pomodoro session logging | Not blocking learner value |
-| **Immediate** | **Paste new Google OAuth secret into Supabase** | New secret `****ul9p` (Apr 24) created — must be saved in Supabase → Auth → Providers → Google |
+| **Immediate** | **Paste new Google OAuth secret into Supabase** | New secret `****ul9p` (Apr 24) — must be saved in Supabase → Auth → Providers → Google |
 | Deferred | Remove debug URL from callback page | After auth confirmed working |
-| Deferred | Delete old Google secret `****qfxR` (Apr 20) from Google Cloud Console | After new secret confirmed working |
+| Deferred | Delete old Google secret `****qfxR` (Apr 20) from Google Cloud Console | After new secret confirmed |
 | Deferred | Subject strategy pages (dynamic routes) | Nice to have |
 | Deferred | Report upload + AI parsing | Phase 3 |
 | Deferred | PWA / offline cache | After core features stable |
@@ -229,6 +236,33 @@ Manual slot edit preserved. localStorage persist preserved.
 
 ## SESSION LOG
 _Session history written here by Claude at end of each session_
+
+### 2026-04-25 — Session 10: Sensei mode, /deep, APS fixes, dashboard quick-actions
+
+**Built:**
+- `/sensei` page: Fortnite Victory Royale intro animation (crown drop → VICTORY slam → ROYALE rise → #1 badge → confetti), full Rav v2 profile (archetype, APS band, 4 priorities, confidence map bars, 6 collapsible dimension cards, May 21 milestone)
+- Secret door: long-press M logo 3s → pulsing glow → haptic vibrate → `/sensei`. D7 honesty flag deliberately excluded per brief.
+- `/deep` page: v2 Deep Assessment — 12 questions across 7 dimensions, 7 archetype taxonomy (Calibrated Outperformer, Silent Achiever, Blind Spot Builder, Lone Ranger, Momentum Hunter, Sprinter, Methodical Grinder), archetype reveal animation, generated profile. Saves to `mmm_deep_v1` localStorage. Re-take flow for Rav's May 21 re-measure.
+- `/techniques` page: created (was 404) — 7 collapsible evidence-based technique cards
+- Panic mode: paper selector for all multi-paper subjects, SBA task-due mode, Physical Sciences Paper 1/2
+- Dashboard: three quick-action buttons added (Panic Mode, Share APS, Deep Scan) with colour-coded borders. Streak copy improved (contextual messaging at 0 / <7 / 7+ days).
+
+**Fixed:**
+- Wits IEB APS: 90-100% now correctly shows 8pts (was 7). `witsIEBResult` derived store wired to live APS panel and results comparison.
+- Rav's APS corrected: RAV_PROFILE.json used wrong scale (90-100=7) vs correct standard scale (80-100=7). Real APS = 34 (not 31). History 82%=7 (not 6), Afrikaans 54%=4 (not 3), Sciences 43%=3 (not 2). Wits IEB = 40, gap = 4 (Wits BCom IEB requires 44).
+- `ENGLISH_SUBJECTS` in aps.ts: added "English Home Language" and "English First Additional Language" — Wits IEB English bonus was silently not applying for users with full subject names.
+- Layout PUBLIC array: all inner routes were breaking for unauthenticated users — fixed by expanding PUBLIC.
+- GitHub bot token rotated (old: `ghp_6EtR7...` expired, new token set via terminal by user — not stored in chat).
+
+**Decisions:**
+- Rav profile is hardcoded in `/sensei`, not dynamically computed — intentional. The v2 deep assessment at `/deep` is the dynamic version for all users.
+- `/deep` archetypes use signal-pattern matching (not ML) — sufficient for current scale.
+- RAV_PROFILE.json committed to repo as source of truth for Rav's assessment data.
+
+**Open:**
+- Google OAuth secret still needs pasting into Supabase (carried from session 9)
+- Streak + XP display on dashboard (next, ~30 min)
+- Timetable rebuild (next major build)
 
 ### 2026-04-24 — Google OAuth auth debugging + supabase.ts restore (session 9)
 
