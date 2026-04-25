@@ -1,39 +1,41 @@
 # LAST SESSION — Matric Study Guide
-_Generated: 2026-04-25 — Session 10_
+_Generated: 2026-04-25 — Session 11_
 
 ---
 
-## Date: 2026-04-25 | Session 10
-**Title:** Sensei mode, /deep assessment, APS fixes, dashboard quick-actions
+## Date: 2026-04-25 | Session 11
+**Title:** Report card photo → OCR auto-import via Claude Haiku
+
+## What Was Done This Session
+
+### Built
+- **`/api/parse-report` server route** — POST endpoint accepting image uploads (JPEG/PNG/WebP, max 10MB). Converts to base64, calls Claude Haiku 4.5 vision, extracts subject marks, maps to the 17-item SUBJECTS constant, validates and sanitises output, returns `{ subjects: [{ subject, mark, matchedSubject }] }`.
+- **Assessment page photo import UI** — banner inserted above the subjects grid on section 3. Tap "Import photo" → picks from gallery or camera → uploads to `/api/parse-report` → pre-fills all mark% dropdowns automatically. Four states: idle / loading (spinner) / done (count + "Try again") / error (message + "Retry").
+
+### Key Implementation Details
+- `markToRange(pct)` converts raw % to the MARK_RANGES bucket ('0-29' … '90-100')
+- `capture="environment"` on the file input opens rear camera on mobile by default
+- OCR never blocks the user — if it fails, marks can still be filled manually
+- All output sanitised server-side before returning to client
 
 ## Files Changed
-- `src/routes/sensei/+page.svelte` — CREATED: Fortnite Victory Royale intro + full Rav v2 profile
-- `src/routes/+layout.svelte` — secret door long-press, /sensei + /deep added to PUBLIC + PAGE_TITLES
-- `src/routes/deep/+page.svelte` — CREATED: v2 Deep Assessment (12 questions, 7 archetypes, generated profile)
-- `src/routes/techniques/+page.svelte` — CREATED: 7 technique cards (was 404)
-- `src/routes/panic/+page.svelte` — paper selector for all multi-paper subjects, SBA mode
-- `src/routes/dashboard/+page.svelte` — quick-action buttons (Panic, Share, Deep Scan), streak copy
-- `src/routes/assessment/+page.svelte` — Wits IEB APS wired to live panel + results
-- `src/lib/aps.ts` — ENGLISH_SUBJECTS expanded to include full subject names
-- `src/lib/stores/assessment.ts` — witsIEBResult derived store added
-- `RAV_PROFILE.json` — corrected APS values (34 not 31)
+- `src/routes/api/parse-report/+server.ts` — CREATED
+- `src/routes/assessment/+page.svelte` — photo import banner + state vars + `handleReportPhoto` + `markToRange` + OCR CSS
 
 ## Commits
-- `e8982fb` — Sensei mode + Victory Royale intro, Rav profile, techniques page, panic overhaul
-- `9bd5c45` — /deep v2 Deep Assessment (7 dimensions, 7 archetypes)
-- `db281eb` — Fix: conf as number template cast in /deep
-- `5dd8ffe` — Fix: Rav APS 31→34, English subject name matching for Wits IEB bonus
-- `c2d85ad` — Dashboard quick-actions (Panic, Share, Deep Scan) + streak copy
-
-## Key Facts
-- Standard APS scale is 80-100=7 (RAV_PROFILE.json was wrongly using 90-100=7)
-- Rav correct APS: 34 standard / 40 Wits IEB / gap to Wits BCom (needs 44 IEB) = 4
-- D7 (honesty flag) deliberately excluded from /sensei — Desi's territory per brief
-- /sensei is hardcoded from RAV_PROFILE.json. /deep is the dynamic version for all users.
-- GitHub bot token rotated — user set new token via terminal. Not stored in chat.
-- Google OAuth secret STILL needs pasting into Supabase (carried from session 9, unconfirmed)
+- `ff062e6` — Feat: report card photo → OCR auto-import via Claude Haiku
 
 ## Start Next Session Here
-1. **Streak + XP on dashboard** (~30 min) — `profiles.streak_current` already fetched in onMount, just needs XP column read + display widget update
-2. **Timetable rebuild** (2-3 hrs) — see NEXT SPRINT spec in STATUS.md for full grid spec
-3. **Confirm Google OAuth** — paste secret `****ul9p` (Apr 24) into Supabase → Auth → Providers → Google → Save
+
+**Priority order:**
+1. **Add `ANTHROPIC_API_KEY` to Vercel env** (user action, 2 min) — Vercel dashboard → Settings → Environment Variables. OCR is live in code but will 500 in production without this.
+2. **Parent read-only share link** (~1–2 hrs) — new route (`/parent` or `/view/[token]`) with auth scoping so Rav's dad can view the profile without editing. Probably a signed URL or a separate session mode.
+3. **WhatsApp daily nudge** — Twilio/WhatsApp Business API, external dependency, lowest priority.
+
+## Key Facts To Carry Forward
+- Standard APS scale: 80-100=7 (NOT 90-100=7)
+- Rav: standard APS = 34, Wits IEB = 40, Wits BCom requires 44 IEB, gap = 4
+- `/deep` saves to `mmm_deep_v1` localStorage. Re-measure date: 21 May 2026.
+- GitHub PAT: rotated 2026-04-25, set via terminal by user. Do not use old tokens.
+- Svelte 4: no runes, no `as TypeName` in templates, use `on:click=` not `onclick=`
+- AI model for OCR: `claude-haiku-4-5-20251001` (not Sonnet — cheaper, sufficient)

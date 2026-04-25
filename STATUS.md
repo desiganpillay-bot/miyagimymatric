@@ -1,5 +1,5 @@
 # STATUS.md — Miyagi My Matric
-_Last updated: 2026-04-25 (session 10)_
+_Last updated: 2026-04-25 (session 11)_
 
 ---
 
@@ -44,16 +44,15 @@ _Last updated: 2026-04-25 (session 10)_
 
 ### ⚡ NEXT SPRINT (start here next session)
 
-**Sprint goal: Streak + XP on dashboard, timetable rebuild, report card OCR**
+**Sprint goal: Parent share link**
 
-Item 2 (/share + /panic + /deep quick-actions on dashboard) is ✅ DONE this session.
+Completed this session:
+- ✅ Report card photo → OCR auto-import (`/api/parse-report`, Claude Haiku, `ANTHROPIC_API_KEY` needed in Vercel env)
 
 Remaining in least-to-most effort order:
-1. **Surface streak + XP on dashboard** — `profiles.streak_current` already fetched in onMount, just needs XP column read + display card update. 30 min.
-2. **Timetable rebuild** — full 30-min grid, fixed blocks, stretch mode, smart subject distribution. 2-3 hrs. Spec below.
-3. **Report card photo → auto-import** — Claude Haiku OCR via `/api/parse-report` server route. Half day.
-4. **Parent read-only share link** — new route + auth scoping.
-5. **WhatsApp daily nudge** — needs Twilio/WhatsApp Business API, external dependency.
+1. **Add `ANTHROPIC_API_KEY` to Vercel env vars** (user action — 2 min) — required for report card OCR to work in production. Dashboard → Settings → Environment Variables.
+2. **Parent read-only share link** — new route + auth scoping so Rav's parent can view profile without editing.
+3. **WhatsApp daily nudge** — Twilio/WhatsApp Business API, external dependency, lowest priority.
 
 Build in this order:
 
@@ -194,6 +193,7 @@ Manual slot edit preserved. localStorage persist preserved.
 | Path | Type | Status |
 |------|------|--------|
 | `src/routes/+page.svelte` | Landing page | ✅ Current |
+| `src/routes/api/parse-report/+server.ts` | Report card OCR API | ✅ Current |
 | `src/routes/assessment/+page.svelte` | Assessment tool | ✅ Current |
 | `src/routes/auth/callback/+page.svelte` | Auth callback | ✅ Current |
 | `src/routes/dashboard/+page.svelte` | Dashboard | ✅ Current |
@@ -236,6 +236,24 @@ Manual slot edit preserved. localStorage persist preserved.
 
 ## SESSION LOG
 _Session history written here by Claude at end of each session_
+
+### 2026-04-25 — Session 11: Report card OCR auto-import
+
+**Built:**
+- `src/routes/api/parse-report/+server.ts` — SvelteKit POST endpoint. Accepts multipart form upload (image ≤10MB, JPEG/PNG/WebP). Converts to base64, calls Claude Haiku 4.5 vision with a structured prompt that maps extracted subjects to the 17-item SUBJECTS constant. Returns `{ subjects: [{ subject, mark, matchedSubject }] }`. Validates and sanitises all output before returning.
+- Assessment page — "Import photo" banner in the subjects section (between question header and subject grid). States: idle (shows "Import photo" CTA) / loading (spinner) / done (success count + "Try again") / error (message + "Retry"). Tapping the label opens file picker (with `capture="environment"` for mobile camera). Marks are converted from raw % to the correct MARK_RANGES bucket via `markToRange()`, then pre-filled into `subjectMarks` store.
+
+**Decisions:**
+- Used Claude Haiku (not Sonnet) — sufficient for OCR, ~10x cheaper
+- Server validates file type + size before calling Anthropic (prevents abuse)
+- OCR errors never break the assessment — user can ignore and fill manually
+
+**Open:**
+- `ANTHROPIC_API_KEY` must be added to Vercel env vars before OCR works in production (user action)
+- Parent read-only share link (next build)
+- WhatsApp nudge (lowest priority, external dependency)
+
+**Commit:** `ff062e6`
 
 ### 2026-04-25 — Session 10: Sensei mode, /deep, APS fixes, dashboard quick-actions
 
