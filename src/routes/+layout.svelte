@@ -31,9 +31,9 @@
   };
 
   // Routes that never show nav or top bar
-  const UTILITY = ['/auth/callback', '/privacy', '/terms', '/how-it-works'];
+  const UTILITY = ['/auth/callback', '/privacy', '/terms', '/how-it-works', '/parent'];
   // Routes that are public (no auth redirect)
-  const PUBLIC = ['/', '/assessment', '/auth/callback', '/privacy', '/terms', '/how-it-works', '/panic', '/resources', '/techniques', '/subjects', '/timetable', '/sba', '/marks', '/dashboard', '/pomodoro', '/share', '/sensei', '/deep'];
+  const PUBLIC = ['/', '/assessment', '/auth/callback', '/privacy', '/terms', '/how-it-works', '/panic', '/resources', '/techniques', '/subjects', '/timetable', '/sba', '/marks', '/dashboard', '/pomodoro', '/share', '/sensei', '/deep', '/parent'];
 
   let authed    = false;
   let localAPS  = 0;

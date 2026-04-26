@@ -12,9 +12,11 @@
   let grade      = '12';
   let prelimDays = 0;
   let finalDays  = 0;
-  let downloaded = false;
-  let shared     = false;
-  let canShare   = false;
+  let downloaded        = false;
+  let shared            = false;
+  let canShare          = false;
+  let parentLinkCopied  = false;
+  let parentLink        = '';
 
   const DATES = {
     caps:  { prelims: new Date('2026-08-25'), finals: new Date('2026-10-21') },
@@ -32,6 +34,45 @@
     if (pts >= 5) return '#7C4DFF';
     if (pts >= 4) return '#FFB300';
     return '#FF5C8A';
+  }
+
+  function generateParentLink(): string {
+    try {
+      const raw = localStorage.getItem('mmm_assessment_v1');
+      if (!raw) return '';
+      const state = JSON.parse(raw);
+      const payload = {
+        subjectMarks: state.subjectMarks || {},
+        answers: {
+          exam_system:  state.answers?.exam_system,
+          grade:        state.answers?.grade,
+          field:        state.answers?.field,
+          universities: state.answers?.universities,
+          weekly_hours: state.answers?.weekly_hours,
+          sba_attitude: state.answers?.sba_attitude,
+          challenges:   state.answers?.challenges
+        }
+      };
+      const encoded = btoa(JSON.stringify(payload));
+      return `${window.location.origin}/parent?d=${encoded}`;
+    } catch {
+      return '';
+    }
+  }
+
+  async function copyParentLink() {
+    const link = generateParentLink();
+    if (!link) return;
+    parentLink = link;
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: 'My Matric Progress', text: 'Here is my study profile — read-only view.', url: link });
+      } else {
+        await navigator.clipboard.writeText(link);
+      }
+      parentLinkCopied = true;
+      setTimeout(() => { parentLinkCopied = false; }, 3000);
+    } catch {}
   }
 
   onMount(() => {
@@ -191,6 +232,20 @@
     On iPhone: tap Share → Save to Photos.<br>
     On Android: screenshot the card above.
   </p>
+
+  <!-- Parent link section -->
+  <div class="parent-section">
+    <div class="parent-header">
+      <span class="parent-icon">👨‍👩‍👦</span>
+      <div class="parent-text">
+        <strong>Share with a parent</strong>
+        <span>Send a read-only profile link — no login required on their end.</span>
+      </div>
+    </div>
+    <button class="btn btn-parent" on:click={copyParentLink}>
+      {parentLinkCopied ? '✓ Link copied!' : (canShare ? '↑ Share parent link' : '⧉ Copy parent link')}
+    </button>
+  </div>
 
   <div class="back-links">
     <a href="/dashboard" class="back-link-item">← My Plan</a>
@@ -432,8 +487,41 @@
   }
   .back-link-item:hover { color: var(--text); }
 
+  /* Parent link section */
+  .parent-section {
+    width: 100%;
+    max-width: 360px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem 1.2rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: .8rem;
+  }
+  .parent-header { display: flex; align-items: flex-start; gap: .8rem; }
+  .parent-icon   { font-size: 1.3rem; flex-shrink: 0; }
+  .parent-text   { display: flex; flex-direction: column; gap: .15rem; }
+  .parent-text strong { font-size: .88rem; font-weight: 600; }
+  .parent-text span   { font-size: .78rem; color: var(--muted); }
+  .btn-parent {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: .8rem;
+    padding: .55rem 1rem;
+    border-radius: 100px;
+    cursor: pointer;
+    transition: border-color .15s;
+    width: 100%;
+  }
+  .btn-parent:hover { border-color: var(--accent2); }
+
   @media print {
-    .share-actions, .share-hint, .back-links, .page-intro { display: none; }
+    .share-actions, .share-hint, .back-links, .parent-section, .page-intro { display: none; }
     .share-card { box-shadow: none; border: none; }
   }
 </style>
