@@ -203,7 +203,7 @@
     <div class="rc-links">
       <a href="https://www.saexampapers.co.za" target="_blank" rel="noopener" class="rc-link">SA Exam Papers →</a>
       <a href="https://www.education.gov.za/Curriculum/NationalSeniorCertificate(NSC)Examinations/NSCPastExaminationpapers.aspx" target="_blank" rel="noopener" class="rc-link">DBE Past Papers →</a>
-      <a href="https://www.ieb.co.za/past-papers" target="_blank" rel="noopener" class="rc-link">IEB Past Papers →</a>
+      <a href="https://www.ieb.co.za/past-papers/" target="_blank" rel="noopener" class="rc-link">IEB Past Papers →</a>
     </div>
   </div>
 

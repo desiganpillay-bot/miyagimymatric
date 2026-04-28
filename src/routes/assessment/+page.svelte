@@ -356,8 +356,17 @@
         <div class="aps-score {scoreClass(aps)}" style="font-size: 2.5rem">{aps}</div>
         <div class="aps-denom">/42</div>
         <div style="padding-bottom: 4px; font-size: .82rem; color: var(--muted); margin-left: .5rem">
-          Your current APS<br><span style="font-size: .72rem">Best 6 subjects, std. 7-pt scale</span>
+          Standard APS<br><span style="font-size: .72rem">Best 6 subjects, std. 7-pt scale</span>
         </div>
+        {#if $witsIEBResult}
+          <div style="margin-left: 1.2rem; padding-left: 1.2rem; border-left: 2px solid var(--border)">
+            <div class="aps-score {scoreClass($witsIEBResult.total)}" style="font-size: 2.5rem">{$witsIEBResult.total}</div>
+            <div class="aps-denom">/~56</div>
+            <div style="padding-bottom: 4px; font-size: .82rem; color: var(--muted); margin-left: .5rem">
+              Wits IEB APS<br><span style="font-size: .72rem">Incl. distinctions + bonuses</span>
+            </div>
+          </div>
+        {/if}
       </div>
       {#each resultUnis as uni}
         {@const req = resultField.apsReqs[uni.id]}
@@ -678,7 +687,7 @@
                 </div>
                 <label class="ocr-btn" tabindex="0" role="button">
                   Import photo
-                  <input type="file" accept="image/*" capture="environment" on:change={handleReportPhoto} style="display:none" />
+                  <input type="file" accept="image/*" on:change={handleReportPhoto} style="display:none" />
                 </label>
               </div>
             {:else if ocrStatus === 'loading'}
@@ -692,7 +701,7 @@
                 <span class="ocr-msg">{ocrMessage}</span>
                 <label class="ocr-btn ocr-btn-sm" tabindex="0" role="button">
                   Try again
-                  <input type="file" accept="image/*" capture="environment" on:change={handleReportPhoto} style="display:none" />
+                  <input type="file" accept="image/*" on:change={handleReportPhoto} style="display:none" />
                 </label>
               </div>
             {:else}
@@ -701,7 +710,7 @@
                 <span class="ocr-msg err">{ocrMessage}</span>
                 <label class="ocr-btn ocr-btn-sm" tabindex="0" role="button">
                   Retry
-                  <input type="file" accept="image/*" capture="environment" on:change={handleReportPhoto} style="display:none" />
+                  <input type="file" accept="image/*" on:change={handleReportPhoto} style="display:none" />
                 </label>
               </div>
             {/if}
